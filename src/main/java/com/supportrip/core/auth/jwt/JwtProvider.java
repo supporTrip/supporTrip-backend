@@ -1,6 +1,11 @@
 package com.supportrip.core.auth.jwt;
 
+import com.supportrip.core.auth.jwt.exception.ExpiredTokenException;
+import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -45,5 +50,29 @@ public class JwtProvider {
                 .expiration(expiresIn)
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public AuthInfo parse(String token) {
+        try {
+            Claims claims = getClaims(secretKey, token);
+            return extractAuthInfo(claims);
+        } catch (MalformedJwtException | IllegalArgumentException exception) {
+            throw new InvalidTokenTypeException();
+        } catch (ExpiredJwtException exception) {
+            throw new ExpiredTokenException();
+        }
+    }
+
+    private Claims getClaims(SecretKey key, String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    private AuthInfo extractAuthInfo(Claims claims) {
+        Long userId = claims.get(AuthInfo.USER_ID_KEY, Long.class);
+        return new AuthInfo(userId);
     }
 }
