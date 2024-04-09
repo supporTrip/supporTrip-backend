@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/supportrip
+    username: root
+    password: kim12589
+
+jwt:
+  secret: GlNvPCg1woWq3ExfZxDw4aqzAb86qWngW2QqT7LwkCPaoNWt6sKxOTAufAAAJcCym3RDK88Bpov8T7aZ9qkp4A==
+  access-token-valid-millis: 300000
+  refresh-token-valid-millis: 86400000
