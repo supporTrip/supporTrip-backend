@@ -4,12 +4,17 @@ import com.supportrip.core.auth.dto.AuthPayload;
 import com.supportrip.core.auth.dto.OidcIdTokenPayload;
 import com.supportrip.core.auth.jwt.exception.ExpiredTokenException;
 import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
+import com.supportrip.core.auth.kakao.KakaoPublicKeyManager;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.spec.ECGenParameterSpec;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
@@ -17,6 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 class JwtProviderTest {
     private static final String SECRET = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
@@ -25,7 +33,9 @@ class JwtProviderTest {
 
     private static final Long USER_ID = 1L;
 
-    private final JwtProvider jwtProvider = new JwtProvider(SECRET, ACCESS_TOKEN_VALID_MILLIS, REFRESH_TOKEN_VALID_MILLIS);
+    private KakaoPublicKeyManager kakaoPublicKeyManager = mock(KakaoPublicKeyManager.class);
+
+    private final JwtProvider jwtProvider = new JwtProvider(SECRET, ACCESS_TOKEN_VALID_MILLIS, REFRESH_TOKEN_VALID_MILLIS, kakaoPublicKeyManager);
 
     @Test
     @DisplayName("JWT Access Token을 생성한다.")
@@ -50,7 +60,6 @@ class JwtProviderTest {
         String token = jwtProvider.generateRefreshToken(authPayload);
 
         // then
-        System.out.println(token);
         assertThat(token).isNotNull();
     }
 
@@ -58,7 +67,7 @@ class JwtProviderTest {
     @DisplayName("JWT에서 AuthPayload를 가져오는데 성공한다.")
     void parseAccessTokenSuccess() {
         // given
-        String validToken = JwtTestSupport.generateToken(new AuthPayload(1L), new Date(), ACCESS_TOKEN_VALID_MILLIS);
+        String validToken = JwtTestSupport.generateToken(AuthPayload.from(1L), new Date(), ACCESS_TOKEN_VALID_MILLIS);
 
         // when
         AuthPayload parsed = jwtProvider.parseAccessToken(validToken);
@@ -84,7 +93,7 @@ class JwtProviderTest {
     void parseExpiredAccessTokenFail() {
         // given
         Date yesterday = Date.from(Instant.now().minus(1, TimeUnit.DAYS.toChronoUnit()));
-        String expiredToken = JwtTestSupport.generateToken(new AuthPayload(1L), yesterday, ACCESS_TOKEN_VALID_MILLIS);
+        String expiredToken = JwtTestSupport.generateToken(AuthPayload.from(1L), yesterday, ACCESS_TOKEN_VALID_MILLIS);
 
         // expected
         assertThatThrownBy(() -> jwtProvider.parseAccessToken(expiredToken))
@@ -95,7 +104,7 @@ class JwtProviderTest {
     @DisplayName("JWT가 만료되지 않은 경우 true를 반환한다.")
     void validateTokenSuccess() {
         // given
-        String validToken = JwtTestSupport.generateToken(new AuthPayload(1L), new Date(), ACCESS_TOKEN_VALID_MILLIS);
+        String validToken = JwtTestSupport.generateToken(AuthPayload.from(1L), new Date(), ACCESS_TOKEN_VALID_MILLIS);
 
         // when
         boolean isValid = jwtProvider.validateToken(validToken);
@@ -109,7 +118,7 @@ class JwtProviderTest {
     void validateTokenFail() {
         // given
         Date yesterday = Date.from(Instant.now().minus(1, TimeUnit.DAYS.toChronoUnit()));
-        String expiredToken = JwtTestSupport.generateToken(new AuthPayload(1L), yesterday, ACCESS_TOKEN_VALID_MILLIS);
+        String expiredToken = JwtTestSupport.generateToken(AuthPayload.from(1L), yesterday, ACCESS_TOKEN_VALID_MILLIS);
 
         // when
         boolean isValid = jwtProvider.validateToken(expiredToken);
@@ -130,6 +139,8 @@ class JwtProviderTest {
         final Date tomorrow = Date.from(Instant.now().plus(1, TimeUnit.DAYS.toChronoUnit()));
 
         String idToken = JwtTestSupport.generateIdToken(issuer, audience, Long.toString(USER_ID), today, tomorrow, picture);
+
+        given(kakaoPublicKeyManager.getPublicKey(any())).willReturn(JwtTestSupport.SECURE_KEY_PAIR.getPublic());
 
         // when
         OidcIdTokenPayload idTokenPayload = jwtProvider.parseIdToken(idToken);
@@ -161,6 +172,8 @@ class JwtProviderTest {
 
         String idToken = JwtTestSupport.generateIdToken(issuer, audience, Long.toString(USER_ID), today, yesterday, picture);
 
+        given(kakaoPublicKeyManager.getPublicKey(any())).willReturn(JwtTestSupport.SECURE_KEY_PAIR.getPublic());
+
         // expected
         assertThatThrownBy(() -> jwtProvider.parseIdToken(idToken))
                 .isInstanceOf(ExpiredTokenException.class);
@@ -178,6 +191,8 @@ class JwtProviderTest {
     }
 
     static class JwtTestSupport {
+        private static final KeyPair SECURE_KEY_PAIR = generateSecureKeyPair();
+
         private static String generateToken(AuthPayload authPayload, Date issuedAt, int tokenValidMillis) {
             Date expiresIn = new Date(issuedAt.getTime() + tokenValidMillis);
 
@@ -201,12 +216,23 @@ class JwtProviderTest {
                     .subject(sub)
                     .issuedAt(iat)
                     .expiration(exp)
-                    .signWith(Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)))
+                    .signWith(SECURE_KEY_PAIR.getPrivate(), SignatureAlgorithm.ES256)
                     .compact();
         }
 
         private static long toSeconds(Date date) {
             return date.getTime() / 1000;
+        }
+
+        private static KeyPair generateSecureKeyPair() {
+            try {
+                KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC");
+                ECGenParameterSpec ecSpec = new ECGenParameterSpec("secp256r1");
+                keyPairGenerator.initialize(ecSpec);
+                return keyPairGenerator.generateKeyPair();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

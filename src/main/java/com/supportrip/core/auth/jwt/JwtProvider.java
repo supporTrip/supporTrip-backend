@@ -1,9 +1,12 @@
 package com.supportrip.core.auth.jwt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.supportrip.core.auth.dto.AuthPayload;
 import com.supportrip.core.auth.dto.OidcIdTokenPayload;
 import com.supportrip.core.auth.jwt.exception.ExpiredTokenException;
 import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
+import com.supportrip.core.auth.kakao.KakaoPublicKeyManager;
+import com.supportrip.core.auth.util.JwtUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +15,8 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;
 import java.util.Date;
-
-import static com.supportrip.core.error.ErrorInfo.EXPIRED_TOKEN;
-import static com.supportrip.core.error.ErrorInfo.INVALID_TOKEN_TYPE;
 
 @Slf4j
 @Component
@@ -24,12 +25,16 @@ public class JwtProvider {
     private final int refreshTokenValidMilliseconds;
     private final SecretKey secretKey;
 
+    private final KakaoPublicKeyManager kakaoPublicKeyManager;
+
     public JwtProvider(@Value("${jwt.secret}") String secret,
                        @Value("${jwt.access-token-valid-millis}") int accessTokenValidMilliseconds,
-                       @Value("${jwt.refresh-token-valid-millis}") int refreshTokenValidMilliseconds) {
+                       @Value("${jwt.refresh-token-valid-millis}") int refreshTokenValidMilliseconds,
+                       KakaoPublicKeyManager kakaoPublicKeyManager) {
         this.accessTokenValidMilliseconds = accessTokenValidMilliseconds;
         this.refreshTokenValidMilliseconds = refreshTokenValidMilliseconds;
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.kakaoPublicKeyManager = kakaoPublicKeyManager;
     }
 
     public String generateAccessToken(AuthPayload authPayload) {
@@ -45,9 +50,9 @@ public class JwtProvider {
             getClaims(secretKey, token);
             return true;
         } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException exception) {
-            log.info(INVALID_TOKEN_TYPE.getMessage());
+            log.warn("Invalid Token Exception: ", exception);
         } catch (ExpiredJwtException exception) {
-            log.info(EXPIRED_TOKEN.getMessage());
+            log.info("Expired Token Exception: ", exception);
         }
         return false;
     }
@@ -57,19 +62,29 @@ public class JwtProvider {
             Claims claims = getClaims(secretKey, accessToken);
             return AuthPayload.from(claims);
         } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException exception) {
+            log.warn("Invalid Token Type Exception: ", exception);
             throw new InvalidTokenTypeException();
         } catch (ExpiredJwtException exception) {
+            log.warn("Expired Token Exception: ", exception);
             throw new ExpiredTokenException();
         }
     }
 
     public OidcIdTokenPayload parseIdToken(String idToken) {
         try {
-            Claims claims = getClaims(secretKey, idToken);
+            Claims claims = Jwts.parser()
+                    .verifyWith(getPublicKey(idToken))
+                    .build()
+                    .parseSignedClaims(idToken)
+                    .getPayload();
+
             return OidcIdTokenPayload.from(claims);
-        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException exception) {
+        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException |
+                 JsonProcessingException exception) {
+            log.warn("Invalid Token Type Exception: ", exception);
             throw new InvalidTokenTypeException();
         } catch (ExpiredJwtException exception) {
+            log.warn("Expired Token Exception: ", exception);
             throw new ExpiredTokenException();
         }
     }
@@ -80,6 +95,11 @@ public class JwtProvider {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    private PublicKey getPublicKey(String idToken) throws JsonProcessingException {
+        String kid = JwtUtil.extractKidFrom(idToken);
+        return kakaoPublicKeyManager.getPublicKey(kid);
     }
 
     private String generateToken(AuthPayload authPayload, int tokenValidMilliseconds) {
