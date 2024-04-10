@@ -1,6 +1,8 @@
 package com.supportrip.core.auth.dto;
 
 import io.jsonwebtoken.Claims;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Map;
@@ -11,7 +13,8 @@ public class AuthPayload {
 
     private final Long userId;
 
-    public AuthPayload(Long userId) {
+    @Builder(access = AccessLevel.PRIVATE)
+    private AuthPayload(Long userId) {
         this.userId = userId;
     }
 
@@ -21,7 +24,15 @@ public class AuthPayload {
 
     public static AuthPayload from(Claims claims) {
         Long userId = castToLong(claims.get(USER_ID_KEY));
-        return new AuthPayload(userId);
+        return AuthPayload.builder()
+                .userId(userId)
+                .build();
+    }
+
+    public static AuthPayload from(Long userId) {
+        return AuthPayload.builder()
+                .userId(userId)
+                .build();
     }
 
     private static Long castToLong(Object value) {

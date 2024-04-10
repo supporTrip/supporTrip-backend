@@ -31,7 +31,7 @@ class JwtProviderTest {
     @DisplayName("JWT Access Token을 생성한다.")
     void generateAccessToken() {
         // given
-        AuthPayload authPayload = new AuthPayload(USER_ID);
+        AuthPayload authPayload = AuthPayload.from(USER_ID);
 
         // when
         String token = jwtProvider.generateAccessToken(authPayload);
@@ -44,7 +44,7 @@ class JwtProviderTest {
     @DisplayName("JWT Refresh Token을 생성한다.")
     void generateRefreshToken() {
         // given
-        AuthPayload authPayload = new AuthPayload(USER_ID);
+        AuthPayload authPayload = AuthPayload.from(USER_ID);
 
         // when
         String token = jwtProvider.generateRefreshToken(authPayload);
