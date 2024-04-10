@@ -29,13 +29,17 @@ public class UserSocials {
     @Column(name = "nonce")
     private int nonce;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @Builder(access = AccessLevel.PRIVATE)
-    private UserSocials(Long id, User user, SocialLoginVender vender, String subject, int nonce) {
+    private UserSocials(Long id, User user, SocialLoginVender vender, String subject, int nonce, String refreshToken) {
         this.id = id;
         this.user = user;
         this.vender = vender;
         this.subject = subject;
         this.nonce = nonce;
+        this.refreshToken = refreshToken;
     }
 
     public static UserSocials of(User user, SocialLoginVender vender, String subject) {
