@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/api/v1/login")
+    @PostMapping("/api/v1/auth/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request.getCode());
     }
