@@ -49,4 +49,8 @@ public class UserSocials {
                 .subject(subject)
                 .build();
     }
+
+    public void replaceRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
