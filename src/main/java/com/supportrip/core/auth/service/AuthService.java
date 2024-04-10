@@ -6,8 +6,8 @@ import com.supportrip.core.auth.dto.OidcIdTokenPayload;
 import com.supportrip.core.auth.dto.OidcKakaoTokenResponse;
 import com.supportrip.core.auth.jwt.JwtProvider;
 import com.supportrip.core.auth.kakao.OidcKakaoAuthenticationClient;
+import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserSocials;
-import com.supportrip.core.user.exception.UserSocialsNotFoundException;
 import com.supportrip.core.user.repository.UserRepository;
 import com.supportrip.core.user.repository.UserSocialsRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,14 @@ import static com.supportrip.core.user.domain.SocialLoginVender.KAKAO;
 public class AuthService {
     private final JwtProvider jwtProvider;
     private final OidcKakaoAuthenticationClient oidcKakaoAuthenticationClient;
+    private final UserRepository userRepository;
     private final UserSocialsRepository userSocialsRepository;
 
     @Transactional
     public LoginResponse login(String code) {
         OidcKakaoTokenResponse tokenResponse = oidcKakaoAuthenticationClient.getTokenResponse(code);
         OidcIdTokenPayload idTokenPayload = jwtProvider.parseIdToken(tokenResponse.getIdToken());
-        UserSocials userSocials = getUserSocials(idTokenPayload);
+        UserSocials userSocials = getOrSignIn(idTokenPayload);
 
         // TODO: Oidc 검증 (state & nonce 동일 여부)
 
@@ -41,8 +42,18 @@ public class AuthService {
         return LoginResponse.of(accessToken, refreshToken);
     }
 
-    private UserSocials getUserSocials(OidcIdTokenPayload idTokenPayload) {
+    private UserSocials getOrSignIn(OidcIdTokenPayload idTokenPayload) {
         return userSocialsRepository.findByVenderAndSubject(KAKAO, idTokenPayload.getSub())
-                .orElseThrow(UserSocialsNotFoundException::new);
+                .orElseGet(() -> signIn(idTokenPayload));
+    }
+
+    private UserSocials signIn(OidcIdTokenPayload idTokenPayload) {
+        User user = User.initialUserOf(idTokenPayload.getPicture());
+        userRepository.save(user);
+
+        UserSocials userSocials = UserSocials.of(user, KAKAO, idTokenPayload.getSub());
+        userSocialsRepository.save(userSocials);
+
+        return userSocials;
     }
 }
