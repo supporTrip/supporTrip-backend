@@ -38,9 +38,6 @@ public class User extends BaseEntity {
     @Column(name = "role")
     private Role role;
 
-    @Column(name = "point")
-    private int point;
-
     @AttributeOverride(name = "created_at", column = @Column(name = "joined_at"))
     private LocalDateTime joinedAt;
 
@@ -50,8 +47,14 @@ public class User extends BaseEntity {
     @Column(name = "pin_number")
     private String pinNumber;
 
+    @Column(name = "enabeld")
+    private boolean enabled;
+
+    @Column(name = "locked_at")
+    private LocalDateTime lockedAt;
+
     @Builder(access = AccessLevel.PRIVATE)
-    public User(Long id, String name, String email, String gender, String phoneNumber, LocalDate birthDay, Role role, int point, LocalDateTime joinedAt, String profileImageUrl, String pinNumber) {
+    private User(Long id, String name, String email, String gender, String phoneNumber, LocalDate birthDay, Role role, LocalDateTime joinedAt, String profileImageUrl, String pinNumber, boolean enabled, LocalDateTime lockedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -59,10 +62,11 @@ public class User extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.birthDay = birthDay;
         this.role = role;
-        this.point = point;
         this.joinedAt = joinedAt;
         this.profileImageUrl = profileImageUrl;
         this.pinNumber = pinNumber;
+        this.enabled = enabled;
+        this.lockedAt = lockedAt;
     }
 
     public static User initialUserOf(String profileImageUrl) {
