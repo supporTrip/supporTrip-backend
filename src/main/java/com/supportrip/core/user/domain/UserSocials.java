@@ -2,6 +2,7 @@ package com.supportrip.core.user.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,11 +29,20 @@ public class UserSocials {
     @Column(name = "nonce")
     private int nonce;
 
-    public UserSocials(Long id, User user, SocialLoginVender vender, String subject, int nonce) {
+    @Builder(access = AccessLevel.PRIVATE)
+    private UserSocials(Long id, User user, SocialLoginVender vender, String subject, int nonce) {
         this.id = id;
         this.user = user;
         this.vender = vender;
         this.subject = subject;
         this.nonce = nonce;
+    }
+
+    public static UserSocials of(User user, SocialLoginVender vender, String subject) {
+        return UserSocials.builder()
+                .user(user)
+                .vender(vender)
+                .subject(subject)
+                .build();
     }
 }

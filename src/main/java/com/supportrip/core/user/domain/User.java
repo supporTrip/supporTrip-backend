@@ -50,7 +50,7 @@ public class User extends BaseEntity {
     @Column(name = "pin_number")
     private String pinNumber;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     public User(Long id, String name, String email, String gender, String phoneNumber, LocalDate birthDay, Role role, int point, LocalDateTime joinedAt, String profileImageUrl, String pinNumber) {
         this.id = id;
         this.name = name;
@@ -63,5 +63,25 @@ public class User extends BaseEntity {
         this.joinedAt = joinedAt;
         this.profileImageUrl = profileImageUrl;
         this.pinNumber = pinNumber;
+    }
+
+    public static User initialUserOf(String profileImageUrl) {
+        return of(null, null, null, null, null, Role.USER, profileImageUrl);
+    }
+
+    public static User userOf(String name, String email, String gender, String phoneNumber, LocalDate birthDay, String profileImageUrl) {
+        return of(name, email, gender, phoneNumber, birthDay, Role.USER, profileImageUrl);
+    }
+
+    private static User of(String name, String email, String gender, String phoneNumber, LocalDate birthDay, Role role, String profileImageUrl) {
+        return User.builder()
+                .name(name)
+                .email(email)
+                .gender(gender)
+                .phoneNumber(phoneNumber)
+                .birthDay(birthDay)
+                .role(role)
+                .profileImageUrl(profileImageUrl)
+                .build();
     }
 }
