@@ -1,8 +1,12 @@
 package com.supportrip.core.auth.util;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -38,5 +42,28 @@ class JwtUtilTest {
         // expected
         assertThatThrownBy(() -> JwtUtil.extractKidFrom(INVALID_TOKEN))
                 .isInstanceOf(JsonParseException.class);
+    }
+
+    @Test
+    @DisplayName("정상적인 Bearer token인 경우 token을 추출해 반환한다.")
+    void extractTokenSuccess() {
+        // given
+        final String VALID_BEARER_TOKEN = "Bearer abcdefghijklmnopqrstuvwxyz";
+
+        // when
+        String token = JwtUtil.extractTokenFrom(VALID_BEARER_TOKEN);
+
+        // then
+        assertThat(token).isEqualTo("abcdefghijklmnopqrstuvwxyz");
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", " ", "abcdefghijklmnopqrstuvwxyz"})
+    @DisplayName("유효하지 않은 Bearer token인 경우 예외가 발생한다.")
+    void extractTokenSuccess(String invalidBearerToken) {
+        // expected
+        assertThatThrownBy(() -> JwtUtil.extractTokenFrom(invalidBearerToken))
+                .isInstanceOf(InvalidTokenTypeException.class);
     }
 }

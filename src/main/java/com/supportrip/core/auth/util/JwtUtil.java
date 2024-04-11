@@ -2,6 +2,7 @@ package com.supportrip.core.auth.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,15 @@ import java.util.Base64;
 
 @Slf4j
 public class JwtUtil {
+    private static final String AUTHORIZATION_HEADER_TOKEN_PREFIX = "Bearer ";
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    public static String extractTokenFrom(String header) {
+        if (!StringUtils.hasText(header) || !header.startsWith(AUTHORIZATION_HEADER_TOKEN_PREFIX)) {
+            throw new InvalidTokenTypeException();
+        }
+        return header.substring(AUTHORIZATION_HEADER_TOKEN_PREFIX.length());
+    }
 
     public static String extractKidFrom(String idToken) throws JsonProcessingException {
         if (!StringUtils.hasText(idToken)) {
