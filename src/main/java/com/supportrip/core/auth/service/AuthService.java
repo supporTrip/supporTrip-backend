@@ -5,7 +5,9 @@ import com.supportrip.core.auth.dto.LoginResponse;
 import com.supportrip.core.auth.dto.OidcIdTokenPayload;
 import com.supportrip.core.auth.dto.OidcKakaoTokenResponse;
 import com.supportrip.core.auth.jwt.JwtProvider;
+import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
 import com.supportrip.core.auth.kakao.OidcKakaoAuthenticationClient;
+import com.supportrip.core.auth.util.JwtUtil;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserSocials;
 import com.supportrip.core.user.repository.UserRepository;
@@ -40,6 +42,20 @@ public class AuthService {
         userSocials.replaceRefreshToken(refreshToken);
 
         return LoginResponse.of(accessToken, refreshToken);
+    }
+
+    public String regenerateAccessToken(String authorization) {
+        String refreshToken = JwtUtil.extractTokenFrom(authorization);
+        AuthPayload authPayload = jwtProvider.parseRefreshToken(refreshToken);
+
+        validateRefreshToken(authPayload, refreshToken);
+
+        return jwtProvider.generateAccessToken(authPayload);
+    }
+
+    private void validateRefreshToken(AuthPayload authPayload, String refreshToken) {
+        userSocialsRepository.findByVenderAndUserIdAndRefreshToken(KAKAO, authPayload.getUserId(), refreshToken)
+                .orElseThrow(InvalidTokenTypeException::new);
     }
 
     private UserSocials getOrSignIn(OidcIdTokenPayload idTokenPayload) {
