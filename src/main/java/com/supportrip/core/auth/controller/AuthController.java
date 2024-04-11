@@ -7,8 +7,8 @@ import com.supportrip.core.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/api/v1/auth/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+    @GetMapping("/api/v1/auth/login")
+    public LoginResponse login(@Valid LoginRequest request) {
         return authService.login(request.getCode());
     }
 
