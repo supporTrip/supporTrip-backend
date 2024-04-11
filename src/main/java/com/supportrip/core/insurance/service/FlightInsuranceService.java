@@ -36,8 +36,8 @@ public class FlightInsuranceService {
         List<FlightInsurance> findFlightInsurances = flightInsuranceRepository.findByAgeAndPlan(age, requestDTO.getPlanName());
 
         //선택된 카테고리가 포함되어있는 보험상품 필터
-        List<FlightInsurance> filteredInsurances = flightInsuranceFilter(findFlightInsurances, requestDTO.getOverseasMedicalExpenses(),
-                requestDTO.getPhoneLoss(), requestDTO.getFlightDelay(),
+        List<FlightInsurance> filteredInsurances = flightInsuranceFilter(findFlightInsurances,
+                requestDTO.getFlightDelay(),
                 requestDTO.getPassportLoss(), requestDTO.getFoodPoisoning());
 
         //보험료 게산
@@ -75,18 +75,12 @@ public class FlightInsuranceService {
     /**
      * 여행자 보험 특약 카테고리 필터
      */
-    private List<FlightInsurance> flightInsuranceFilter(List<FlightInsurance> findFlightInsurance, boolean overseasMedicalExpenses,
-                                                        boolean phoneLoss, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
+    private List<FlightInsurance> flightInsuranceFilter(List<FlightInsurance> findFlightInsurance,
+                                                        boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
 
         List<String> selectedList = new ArrayList<>();
         List<FlightInsurance> newFlightInsurance = new ArrayList<>();
 
-        if (overseasMedicalExpenses) {
-            selectedList.add("overseasMedicalExpenses");
-        }
-        if (phoneLoss) {
-            selectedList.add("phoneLoss");
-        }
         if (flightDelay) {
             selectedList.add("flightDelay");
         }
@@ -100,17 +94,7 @@ public class FlightInsuranceService {
         for (FlightInsurance flightInsurance : findFlightInsurance) {
             boolean isAllInclude = true;
             for (String s : selectedList) {
-                if (s.equals("overseasMedicalExpenses")) {
-                    if (!flightInsurance.isOverseasMedicalExpenses()) {
-                        isAllInclude = false;
-                        break;
-                    }
-                } else if (s.equals("phoneLoss")) {
-                    if (!flightInsurance.isPhoneLoss()) {
-                        isAllInclude = false;
-                        break;
-                    }
-                } else if (s.equals("flightDelay")) {
+                if (s.equals("flightDelay")) {
                     if (!flightInsurance.isFlightDelay()) {
                         isAllInclude = false;
                         break;
