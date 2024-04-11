@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class InsuranceCompany {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "insurance_company_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name", nullable = false)
