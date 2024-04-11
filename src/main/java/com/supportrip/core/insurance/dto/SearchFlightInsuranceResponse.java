@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Getter
-public class SearchFlightInsuranceResponseDTO {
+public class SearchFlightInsuranceResponse {
     private Long id;
     private String insuranceName;
     private int premium;
@@ -15,10 +15,10 @@ public class SearchFlightInsuranceResponseDTO {
     private String planName;
     private String companyName;
     private String logoImageUrl;
-    private List<Top3SpecialContractResponseDTO> specialContracts;
+    private List<Top3SpecialContractResponse> specialContracts;
 
     @Builder
-    public SearchFlightInsuranceResponseDTO(Long id, String insuranceName, int premium, int minJoinAge, int maxJoinAge, String planName, String companyName, String logoImageUrl, List<Top3SpecialContractResponseDTO> specialContracts) {
+    public SearchFlightInsuranceResponse(Long id, String insuranceName, int premium, int minJoinAge, int maxJoinAge, String planName, String companyName, String logoImageUrl, List<Top3SpecialContractResponse> specialContracts) {
         this.id = id;
         this.insuranceName = insuranceName;
         this.premium = premium;
@@ -30,8 +30,8 @@ public class SearchFlightInsuranceResponseDTO {
         this.specialContracts = specialContracts;
     }
 
-    public static SearchFlightInsuranceResponseDTO toDTO(FlightInsurance flightInsurance, List<Top3SpecialContractResponseDTO> specialContracts) {
-        SearchFlightInsuranceResponseDTO responseDTO = SearchFlightInsuranceResponseDTO.builder()
+    public static SearchFlightInsuranceResponse toDTO(FlightInsurance flightInsurance, List<Top3SpecialContractResponse> specialContracts) {
+        SearchFlightInsuranceResponse responseDTO = SearchFlightInsuranceResponse.builder()
                 .id(flightInsurance.getId())
                 .insuranceName(flightInsurance.getName())
                 .premium(flightInsurance.getPremium())

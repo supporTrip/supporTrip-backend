@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-public class SearchFlightInsuranceRequestDTO {
+public class SearchFlightInsuranceRequest {
     @NotNull(message = "출발시간을 입력해주세요")
     private LocalDateTime departAt;
 
@@ -28,7 +28,7 @@ public class SearchFlightInsuranceRequestDTO {
     private Boolean foodPoisoning;
 
     @Builder
-    public SearchFlightInsuranceRequestDTO(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
+    public SearchFlightInsuranceRequest(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         this.departAt = departAt;
         this.arrivalAt = arrivalAt;
         this.birthDay = birthDay;
@@ -40,7 +40,7 @@ public class SearchFlightInsuranceRequestDTO {
     }
 
     @Builder
-    public static SearchFlightInsuranceRequestDTO of(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
+    public static SearchFlightInsuranceRequest of(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         return builder()
                 .departAt(departAt)
                 .arrivalAt(arrivalAt)

@@ -1,7 +1,7 @@
 package com.supportrip.core.insurance.controller;
 
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequestDTO;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponseDTO;
+import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequest;
+import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponse;
 import com.supportrip.core.insurance.service.FlightInsuranceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,8 @@ public class FlightInsuranceApiController {
     private final FlightInsuranceService flightInsuranceService;
 
     @GetMapping("/api/v1/flight-insurance/search")
-    public ResponseEntity<List<SearchFlightInsuranceResponseDTO>> searchFlightInsurance(@Valid SearchFlightInsuranceRequestDTO requestDTO) {
-        List<SearchFlightInsuranceResponseDTO> flightInsurances = flightInsuranceService.findFlightInsuranceFilter(requestDTO);
+    public ResponseEntity<List<SearchFlightInsuranceResponse>> searchFlightInsurance(@Valid SearchFlightInsuranceRequest requestDTO) {
+        List<SearchFlightInsuranceResponse> flightInsurances = flightInsuranceService.findFlightInsuranceFilter(requestDTO);
 
         return ResponseEntity.ok(flightInsurances);
     }

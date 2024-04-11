@@ -5,26 +5,26 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Top3SpecialContractResponseDTO {
+public class Top3SpecialContractResponse {
 
     private String name;
     private int coveragePrice;
 
     @Builder
-    public Top3SpecialContractResponseDTO(String name, int coveragePrice) {
+    public Top3SpecialContractResponse(String name, int coveragePrice) {
         this.name = name;
         this.coveragePrice = coveragePrice;
     }
 
-    public static Top3SpecialContractResponseDTO standardDTO(SpecialContract findSpecialContract) {
-        return Top3SpecialContractResponseDTO.builder()
+    public static Top3SpecialContractResponse standardDTO(SpecialContract findSpecialContract) {
+        return Top3SpecialContractResponse.builder()
                 .name(findSpecialContract.getName())
                 .coveragePrice(findSpecialContract.getStandardPrice())
                 .build();
     }
 
-    public static Top3SpecialContractResponseDTO advancedDTO(SpecialContract findSpecialContract) {
-        return Top3SpecialContractResponseDTO.builder()
+    public static Top3SpecialContractResponse advancedDTO(SpecialContract findSpecialContract) {
+        return Top3SpecialContractResponse.builder()
                 .name(findSpecialContract.getName())
                 .coveragePrice(findSpecialContract.getAdvancedPrice())
                 .build();
