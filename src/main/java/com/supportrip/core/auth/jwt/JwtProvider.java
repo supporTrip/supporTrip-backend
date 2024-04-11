@@ -6,7 +6,6 @@ import com.supportrip.core.auth.dto.OidcIdTokenPayload;
 import com.supportrip.core.auth.jwt.exception.ExpiredTokenException;
 import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
 import com.supportrip.core.auth.kakao.KakaoPublicKeyManager;
-import com.supportrip.core.auth.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

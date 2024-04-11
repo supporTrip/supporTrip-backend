@@ -5,9 +5,9 @@ import com.supportrip.core.auth.dto.LoginResponse;
 import com.supportrip.core.auth.dto.OidcIdTokenPayload;
 import com.supportrip.core.auth.dto.OidcKakaoTokenResponse;
 import com.supportrip.core.auth.jwt.JwtProvider;
+import com.supportrip.core.auth.jwt.JwtUtil;
 import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
-import com.supportrip.core.auth.kakao.OidcKakaoAuthenticationClient;
-import com.supportrip.core.auth.util.JwtUtil;
+import com.supportrip.core.auth.kakao.OidcKakaoAuthClient;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserSocials;
 import com.supportrip.core.user.repository.UserRepository;
@@ -22,13 +22,13 @@ import static com.supportrip.core.user.domain.SocialLoginVender.KAKAO;
 @RequiredArgsConstructor
 public class AuthService {
     private final JwtProvider jwtProvider;
-    private final OidcKakaoAuthenticationClient oidcKakaoAuthenticationClient;
+    private final OidcKakaoAuthClient oidcKakaoAuthClient;
     private final UserRepository userRepository;
     private final UserSocialsRepository userSocialsRepository;
 
     @Transactional
     public LoginResponse login(String code) {
-        OidcKakaoTokenResponse tokenResponse = oidcKakaoAuthenticationClient.getTokenResponse(code);
+        OidcKakaoTokenResponse tokenResponse = oidcKakaoAuthClient.getTokenResponse(code);
         OidcIdTokenPayload idTokenPayload = jwtProvider.parseIdToken(tokenResponse.getIdToken());
         UserSocials userSocials = getOrSignIn(idTokenPayload);
 
