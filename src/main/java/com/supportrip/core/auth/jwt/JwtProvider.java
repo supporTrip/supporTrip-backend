@@ -7,7 +7,10 @@ import com.supportrip.core.auth.jwt.exception.ExpiredTokenException;
 import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
 import com.supportrip.core.auth.kakao.KakaoPublicKeyManager;
 import com.supportrip.core.auth.util.JwtUtil;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,25 +52,20 @@ public class JwtProvider {
         try {
             getClaims(secretKey, token);
             return true;
-        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException exception) {
-            log.warn("Invalid Token Exception: ", exception);
         } catch (ExpiredJwtException exception) {
             log.info("Expired Token Exception: ", exception);
+        } catch (JwtException | IllegalArgumentException exception) {
+            log.warn("Invalid Token Exception: ", exception);
         }
         return false;
     }
 
     public AuthPayload parseAccessToken(String accessToken) {
-        try {
-            Claims claims = getClaims(secretKey, accessToken);
-            return AuthPayload.from(claims);
-        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException exception) {
-            log.warn("Invalid Token Type Exception: ", exception);
-            throw new InvalidTokenTypeException();
-        } catch (ExpiredJwtException exception) {
-            log.warn("Expired Token Exception: ", exception);
-            throw new ExpiredTokenException();
-        }
+        return parse(accessToken);
+    }
+
+    public AuthPayload parseRefreshToken(String refreshToken) {
+        return parse(refreshToken);
     }
 
     public OidcIdTokenPayload parseIdToken(String idToken) {
@@ -79,13 +77,25 @@ public class JwtProvider {
                     .getPayload();
 
             return OidcIdTokenPayload.from(claims);
-        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException |
-                 JsonProcessingException exception) {
-            log.warn("Invalid Token Type Exception: ", exception);
-            throw new InvalidTokenTypeException();
         } catch (ExpiredJwtException exception) {
             log.warn("Expired Token Exception: ", exception);
             throw new ExpiredTokenException();
+        } catch (JwtException | IllegalArgumentException | JsonProcessingException exception) {
+            log.warn("Invalid Token Type Exception: ", exception);
+            throw new InvalidTokenTypeException();
+        }
+    }
+
+    private AuthPayload parse(String accessToken) {
+        try {
+            Claims claims = getClaims(secretKey, accessToken);
+            return AuthPayload.from(claims);
+        } catch (ExpiredJwtException exception) {
+            log.warn("Expired Token Exception: ", exception);
+            throw new ExpiredTokenException();
+        } catch (JwtException | IllegalArgumentException exception) {
+            log.warn("Invalid Token Type Exception: ", exception);
+            throw new InvalidTokenTypeException();
         }
     }
 
