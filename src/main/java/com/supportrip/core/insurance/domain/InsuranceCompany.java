@@ -33,7 +33,6 @@ public class InsuranceCompany {
         InsuranceCompanyUrl = insuranceCompanyUrl;
     }
 
-    //==정적 팩토리 메서드==//
     public static InsuranceCompany from(String name) {
         return builder()
                 .name(name)

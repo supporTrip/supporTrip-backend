@@ -70,7 +70,6 @@ public class FlightInsurance {
         this.foodPoisoning = foodPoisoning;
     }
 
-    //==정적 팩토리 메서드==//
     public static FlightInsurance of(Long id, InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean overseasMedicalExpenses, boolean phoneLoss, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
         return builder()
                 .id(id)

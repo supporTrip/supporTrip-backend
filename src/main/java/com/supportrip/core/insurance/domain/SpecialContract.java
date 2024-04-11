@@ -50,7 +50,6 @@ public class SpecialContract {
         this.advancedPrice = advancedPrice;
     }
 
-    //==정적 팩토리 메서드==//
     public static SpecialContract of(FlightInsurance flightInsurance, String name, int basicPrice, int standardPrice, int advancedPrice) {
         return builder()
                 .flightInsurance(flightInsurance)

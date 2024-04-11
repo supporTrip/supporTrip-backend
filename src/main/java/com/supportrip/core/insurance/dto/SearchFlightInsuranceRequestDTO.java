@@ -43,7 +43,6 @@ public class SearchFlightInsuranceRequestDTO {
         this.foodPoisoning = foodPoisoning == null ? Boolean.FALSE : foodPoisoning;
     }
 
-    //정적 팩토리 메서드
     @Builder
     public static SearchFlightInsuranceRequestDTO of(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean overseasMedicalExpenses, Boolean phoneLoss, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         return builder()
