@@ -4,19 +4,15 @@ import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.insurance.domain.InsuranceCompany;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class FlightInsuranceCalculatePremiumServiceTest {
 
-    @Autowired
-    FlightInsuranceCalculatePremiumService calculatePremiumService;
+    FlightInsuranceCalculatePremiumService calculatePremiumService = new FlightInsuranceCalculatePremiumService();
 
     @Test
     @DisplayName("보험료 계산")
