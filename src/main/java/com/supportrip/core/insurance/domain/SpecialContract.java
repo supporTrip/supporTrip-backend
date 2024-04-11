@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class SpecialContract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "special_contract_id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

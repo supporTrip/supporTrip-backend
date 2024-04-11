@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class FlightInsurance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "flight_insurance_id")
+    @Column(name = "id")
     private Long id;
 
     @OneToOne
