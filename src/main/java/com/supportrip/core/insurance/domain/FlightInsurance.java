@@ -35,12 +35,6 @@ public class FlightInsurance {
     @Column(name = "plan_name", nullable = false)
     private String planName;
 
-    @Column(name = "overseas_medical_expenses", nullable = false)
-    private boolean overseasMedicalExpenses;
-
-    @Column(name = "phone_loss", nullable = false)
-    private boolean phoneLoss;
-
     @Column(name = "flight_delay", nullable = false)
     private boolean flightDelay;
 
@@ -55,7 +49,7 @@ public class FlightInsurance {
     }
 
     @Builder
-    private FlightInsurance(Long id, InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean overseasMedicalExpenses, boolean phoneLoss, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
+    private FlightInsurance(Long id, InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
         this.id = id;
         this.insuranceCompany = insuranceCompany;
         this.name = name;
@@ -63,14 +57,12 @@ public class FlightInsurance {
         this.minJoinAge = minJoinAge;
         this.maxJoinAge = maxJoinAge;
         this.planName = planName;
-        this.overseasMedicalExpenses = overseasMedicalExpenses;
-        this.phoneLoss = phoneLoss;
         this.flightDelay = flightDelay;
         this.passportLoss = passportLoss;
         this.foodPoisoning = foodPoisoning;
     }
 
-    public static FlightInsurance of(InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean overseasMedicalExpenses, boolean phoneLoss, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
+    public static FlightInsurance of(InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
         return builder()
                 .insuranceCompany(insuranceCompany)
                 .name(name)
@@ -78,8 +70,6 @@ public class FlightInsurance {
                 .minJoinAge(minJoinAge)
                 .maxJoinAge(maxJoinAge)
                 .planName(planName)
-                .overseasMedicalExpenses(overseasMedicalExpenses)
-                .phoneLoss(phoneLoss)
                 .flightDelay(flightDelay)
                 .passportLoss(passportLoss)
                 .foodPoisoning(foodPoisoning)

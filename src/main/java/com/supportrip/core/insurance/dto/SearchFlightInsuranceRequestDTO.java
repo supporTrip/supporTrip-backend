@@ -23,36 +23,30 @@ public class SearchFlightInsuranceRequestDTO {
     private String gender;
 
     private String planName;
-    private Boolean overseasMedicalExpenses;
-    private Boolean phoneLoss;
     private Boolean flightDelay;
     private Boolean passportLoss;
     private Boolean foodPoisoning;
 
     @Builder
-    public SearchFlightInsuranceRequestDTO(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean overseasMedicalExpenses, Boolean phoneLoss, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
+    public SearchFlightInsuranceRequestDTO(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         this.departAt = departAt;
         this.arrivalAt = arrivalAt;
         this.birthDay = birthDay;
         this.gender = gender;
         this.planName = planName == null ? "standard" : planName;
-        this.overseasMedicalExpenses = overseasMedicalExpenses == null ? Boolean.FALSE : overseasMedicalExpenses;
-        this.phoneLoss = phoneLoss == null ? Boolean.FALSE : phoneLoss;
         this.flightDelay = flightDelay == null ? Boolean.FALSE : flightDelay;
         this.passportLoss = passportLoss == null ? Boolean.FALSE : passportLoss;
         this.foodPoisoning = foodPoisoning == null ? Boolean.FALSE : foodPoisoning;
     }
 
     @Builder
-    public static SearchFlightInsuranceRequestDTO of(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean overseasMedicalExpenses, Boolean phoneLoss, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
+    public static SearchFlightInsuranceRequestDTO of(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         return builder()
                 .departAt(departAt)
                 .arrivalAt(arrivalAt)
                 .birthDay(birthDay)
                 .gender(gender)
                 .planName(planName)
-                .overseasMedicalExpenses(overseasMedicalExpenses)
-                .phoneLoss(phoneLoss)
                 .flightDelay(flightDelay)
                 .passportLoss(passportLoss)
                 .foodPoisoning(foodPoisoning)
