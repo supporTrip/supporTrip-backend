@@ -1,7 +1,6 @@
 package com.supportrip.core.insurance.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "flight_insurance")
 public class FlightInsurance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,34 +20,34 @@ public class FlightInsurance {
     @JoinColumn(name = "insurance_company_id")
     private InsuranceCompany insuranceCompany;
 
-    @NotNull
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
+    @Column(name = "premium", nullable = false)
     private int premium;
 
-    @NotNull
+    @Column(name = "min_join_age", nullable = false)
     private int minJoinAge;
 
-    @NotNull
+    @Column(name = "max_join_age", nullable = false)
     private int maxJoinAge;
 
-    @NotNull
+    @Column(name = "plan_name", nullable = false)
     private String planName;
 
-    @NotNull
+    @Column(name = "overseas_medical_expenses", nullable = false)
     private boolean overseasMedicalExpenses;
 
-    @NotNull
+    @Column(name = "phone_loss", nullable = false)
     private boolean phoneLoss;
 
-    @NotNull
+    @Column(name = "flight_delay", nullable = false)
     private boolean flightDelay;
 
-    @NotNull
+    @Column(name = "passport_loss", nullable = false)
     private boolean passportLoss;
 
-    @NotNull
+    @Column(name = "food_poisoning", nullable = false)
     private boolean foodPoisoning;
 
     public void setPremium(int premium) {
