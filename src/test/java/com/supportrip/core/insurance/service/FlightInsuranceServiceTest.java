@@ -3,8 +3,8 @@ package com.supportrip.core.insurance.service;
 import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.insurance.domain.InsuranceCompany;
 import com.supportrip.core.insurance.domain.SpecialContract;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequestDTO;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponseDTO;
+import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequest;
+import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponse;
 import com.supportrip.core.insurance.repository.FlightInsuranceRepository;
 import com.supportrip.core.insurance.repository.SpecialContractRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -78,7 +78,7 @@ class FlightInsuranceServiceTest {
         when(calculatePremiumService.calculatePremium(eq(25), eq(4), eq("male"), eq(mockCalPremium)))
                 .thenReturn(mockCalExpected);
 
-        SearchFlightInsuranceRequestDTO requestDTO = SearchFlightInsuranceRequestDTO.of(
+        SearchFlightInsuranceRequest requestDTO = SearchFlightInsuranceRequest.of(
                 LocalDateTime.of(2024, 4, 8, 10, 0),
                 LocalDateTime.of(2024, 4, 12, 18, 0),
                 LocalDate.of(1998, 5, 10),
@@ -89,7 +89,7 @@ class FlightInsuranceServiceTest {
                 true
         );
 
-        List<SearchFlightInsuranceResponseDTO> result = flightInsuranceService.findFlightInsuranceFilter(requestDTO);
+        List<SearchFlightInsuranceResponse> result = flightInsuranceService.findFlightInsuranceFilter(requestDTO);
 
         assertNotNull(result);
         assertEquals(1, result.size());

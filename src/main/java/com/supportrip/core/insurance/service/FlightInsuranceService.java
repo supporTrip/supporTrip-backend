@@ -2,9 +2,9 @@ package com.supportrip.core.insurance.service;
 
 import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.insurance.domain.SpecialContract;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequestDTO;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponseDTO;
-import com.supportrip.core.insurance.dto.Top3SpecialContractResponseDTO;
+import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequest;
+import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponse;
+import com.supportrip.core.insurance.dto.Top3SpecialContractResponse;
 import com.supportrip.core.insurance.repository.FlightInsuranceRepository;
 import com.supportrip.core.insurance.repository.SpecialContractRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class FlightInsuranceService {
     /**
      * 필터링 검색
      */
-    public List<SearchFlightInsuranceResponseDTO> findFlightInsuranceFilter(SearchFlightInsuranceRequestDTO requestDTO) {
+    public List<SearchFlightInsuranceResponse> findFlightInsuranceFilter(SearchFlightInsuranceRequest requestDTO) {
 
         int age = calculateAge(requestDTO.getBirthDay());
         int period = calculatePeriod(requestDTO.getDepartAt(), requestDTO.getArrivalAt());
@@ -50,26 +50,26 @@ public class FlightInsuranceService {
     /**
      * 여행자 보험 상품에 특약 상위3개 리스트로 추가
      */
-    private List<SearchFlightInsuranceResponseDTO> addTop3SpecialContract(List<FlightInsurance> flightInsurances, String planName) {
-        List<SearchFlightInsuranceResponseDTO> searchFlightInsuranceResponseDTOS = new ArrayList<>();
+    private List<SearchFlightInsuranceResponse> addTop3SpecialContract(List<FlightInsurance> flightInsurances, String planName) {
+        List<SearchFlightInsuranceResponse> searchFlightInsuranceResponses = new ArrayList<>();
 
         for (FlightInsurance flightInsurance : flightInsurances) {
             List<SpecialContract> findSpecialContracts = specialContractRepository.findByFlightInsuranceId(flightInsurance.getId(), PageRequest.of(0, 3));
-            List<Top3SpecialContractResponseDTO> contractTop3ResponseDTOS = new ArrayList<>();
+            List<Top3SpecialContractResponse> contractTop3ResponseDTOS = new ArrayList<>();
             for (SpecialContract findSpecialContract : findSpecialContracts) {
-                Top3SpecialContractResponseDTO top3SpecialContractResponseDTO;
+                Top3SpecialContractResponse top3SpecialContractResponse;
                 if (planName.equals("standard")) {
-                    top3SpecialContractResponseDTO = Top3SpecialContractResponseDTO.standardDTO(findSpecialContract);
+                    top3SpecialContractResponse = Top3SpecialContractResponse.standardDTO(findSpecialContract);
                 } else {
-                    top3SpecialContractResponseDTO = Top3SpecialContractResponseDTO.advancedDTO(findSpecialContract);
+                    top3SpecialContractResponse = Top3SpecialContractResponse.advancedDTO(findSpecialContract);
                 }
-                contractTop3ResponseDTOS.add(top3SpecialContractResponseDTO);
+                contractTop3ResponseDTOS.add(top3SpecialContractResponse);
             }
-            SearchFlightInsuranceResponseDTO searchFlightInsuranceResponseDTO = SearchFlightInsuranceResponseDTO.toDTO(flightInsurance, contractTop3ResponseDTOS);
-            searchFlightInsuranceResponseDTOS.add(searchFlightInsuranceResponseDTO);
+            SearchFlightInsuranceResponse searchFlightInsuranceResponse = SearchFlightInsuranceResponse.toDTO(flightInsurance, contractTop3ResponseDTOS);
+            searchFlightInsuranceResponses.add(searchFlightInsuranceResponse);
         }
 
-        return searchFlightInsuranceResponseDTOS;
+        return searchFlightInsuranceResponses;
     }
 
     /**
