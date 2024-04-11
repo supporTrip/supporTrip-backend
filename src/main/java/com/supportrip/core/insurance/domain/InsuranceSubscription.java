@@ -1,7 +1,6 @@
 package com.supportrip.core.insurance.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "insurance_subscription")
 public class InsuranceSubscription {
 
     @Id
@@ -24,10 +24,10 @@ public class InsuranceSubscription {
 
 //    private Users users;
 
-    @NotNull
+    @Column(name = "coverage_start_at", nullable = false)
     private LocalDateTime coverageStartAt;
 
-    @NotNull
+    @Column(name = "coverage_end_at", nullable = false)
     private LocalDateTime coverageEndAt;
 
     private LocalDateTime createdAt;
