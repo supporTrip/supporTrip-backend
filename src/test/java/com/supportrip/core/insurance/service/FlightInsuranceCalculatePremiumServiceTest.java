@@ -23,17 +23,19 @@ class FlightInsuranceCalculatePremiumServiceTest {
     void calculatePremium() {
         //given
         int period = 4;
+        int age = 20;
         String gender = "female";
 
         InsuranceCompany insuranceCompany = InsuranceCompany.from("한화생명");
         List<FlightInsurance> flightInsurances = Arrays.asList(
                 FlightInsurance.of(1L, insuranceCompany, "한화생명 해외여행자 보험", 1000, 15, 60, "standard", true, true, true, true, true)
+
         );
 
         //when
-        List<FlightInsurance> result = calculatePremiumService.calculatePremium(period, gender, flightInsurances);
+        List<FlightInsurance> result = calculatePremiumService.calculatePremium(age, period, gender, flightInsurances);
 
         //then
-        assertEquals(6190, result.get(0).getPremium());
+        assertEquals(5190, result.get(0).getPremium());
     }
 }

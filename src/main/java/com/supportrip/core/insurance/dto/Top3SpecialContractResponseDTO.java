@@ -16,13 +16,6 @@ public class Top3SpecialContractResponseDTO {
         this.coveragePrice = coveragePrice;
     }
 
-    public static Top3SpecialContractResponseDTO basicDTO(SpecialContract specialContract) {
-        return Top3SpecialContractResponseDTO.builder()
-                .name(specialContract.getName())
-                .coveragePrice(specialContract.getBasicPrice())
-                .build();
-    }
-
     public static Top3SpecialContractResponseDTO standardDTO(SpecialContract findSpecialContract) {
         return Top3SpecialContractResponseDTO.builder()
                 .name(findSpecialContract.getName())
