@@ -20,4 +20,9 @@ public class OidcKakaoAuthenticationToken extends AbstractAuthenticationToken {
     public Object getPrincipal() {
         return oidcUser;
     }
+
+    @Override
+    public boolean isAuthenticated() {
+        return true;
+    }
 }
