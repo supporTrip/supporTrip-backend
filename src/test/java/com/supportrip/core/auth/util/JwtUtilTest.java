@@ -1,6 +1,7 @@
 package com.supportrip.core.auth.util;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.supportrip.core.auth.jwt.JwtUtil;
 import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

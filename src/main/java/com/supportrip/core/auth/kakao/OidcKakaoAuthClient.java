@@ -10,7 +10,7 @@ import org.springframework.web.client.RestClientException;
 
 @Slf4j
 @Component
-public class OidcKakaoAuthenticationClient {
+public class OidcKakaoAuthClient {
     private final KakaoAuthAPI kakaoAuthAPI;
 
     private final String grantType;
@@ -18,11 +18,11 @@ public class OidcKakaoAuthenticationClient {
     private final String redirectUri;
     private final String clientSecret;
 
-    public OidcKakaoAuthenticationClient(@Value("${security.oauth2.kakao.authorization-grant-type}") String grantType,
-                                         @Value("${security.oauth2.kakao.client-id}") String clientId,
-                                         @Value("${security.oauth2.kakao.redirect-url}") String redirectUri,
-                                         @Value("${security.oauth2.kakao.client-secret}") String clientSecret,
-                                         KakaoAuthAPI kakaoAuthAPI) {
+    public OidcKakaoAuthClient(@Value("${security.oauth2.kakao.authorization-grant-type}") String grantType,
+                               @Value("${security.oauth2.kakao.client-id}") String clientId,
+                               @Value("${security.oauth2.kakao.redirect-url}") String redirectUri,
+                               @Value("${security.oauth2.kakao.client-secret}") String clientSecret,
+                               KakaoAuthAPI kakaoAuthAPI) {
         this.grantType = grantType;
         this.clientId = clientId;
         this.redirectUri = redirectUri;

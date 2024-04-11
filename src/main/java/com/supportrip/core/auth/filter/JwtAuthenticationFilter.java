@@ -4,7 +4,7 @@ import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.auth.dto.AuthPayload;
 import com.supportrip.core.auth.jwt.JwtProvider;
 import com.supportrip.core.auth.kakao.OidcKakaoAuthenticationToken;
-import com.supportrip.core.auth.util.JwtUtil;
+import com.supportrip.core.auth.jwt.JwtUtil;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.exception.UserNotFoundException;
 import com.supportrip.core.user.repository.UserRepository;
