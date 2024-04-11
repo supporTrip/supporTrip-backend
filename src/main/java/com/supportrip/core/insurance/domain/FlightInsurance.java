@@ -70,9 +70,8 @@ public class FlightInsurance {
         this.foodPoisoning = foodPoisoning;
     }
 
-    public static FlightInsurance of(Long id, InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean overseasMedicalExpenses, boolean phoneLoss, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
+    public static FlightInsurance of(InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean overseasMedicalExpenses, boolean phoneLoss, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
         return builder()
-                .id(id)
                 .insuranceCompany(insuranceCompany)
                 .name(name)
                 .premium(premium)

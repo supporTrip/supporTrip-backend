@@ -28,7 +28,7 @@ class FlightInsuranceCalculatePremiumServiceTest {
 
         InsuranceCompany insuranceCompany = InsuranceCompany.from("한화생명");
         List<FlightInsurance> flightInsurances = Arrays.asList(
-                FlightInsurance.of(1L, insuranceCompany, "한화생명 해외여행자 보험", 1000, 15, 60, "standard", true, true, true, true, true)
+                FlightInsurance.of(insuranceCompany, "한화생명 해외여행자 보험", 1000, 15, 60, "standard", true, true, true, true, true)
 
         );
 
