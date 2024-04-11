@@ -43,9 +43,9 @@ class KakaoPublicKeyManagerTest {
         given(kakaoAuthAPI.fetchPublicKey()).willReturn(keyResponse);
 
         // when
-        LocalDateTime before = LocalDateTime.now();
+        LocalDateTime before = LocalDateTime.now().minusNanos(1);
         kakaoPublicKeyManager.init();
-        LocalDateTime after = LocalDateTime.now();
+        LocalDateTime after = LocalDateTime.now().plusNanos(1);
 
         // then
         assertThat(kakaoPublicKeyManager.getExpiresIn()).isAfter(before.plusDays(1));
