@@ -41,7 +41,7 @@ public class FlightInsuranceService {
                 requestDTO.getPassportLoss(), requestDTO.getFoodPoisoning());
 
         //보험료 게산
-        List<FlightInsurance> flightInsurances = calculatePremiumService.calculatePremium(period, requestDTO.getGender(), filteredInsurances);
+        List<FlightInsurance> flightInsurances = calculatePremiumService.calculatePremium(age, period, requestDTO.getGender(), filteredInsurances);
 
         //특약 상위3개 추가
         return addTop3SpecialContract(flightInsurances, requestDTO.getPlanName());
@@ -58,9 +58,7 @@ public class FlightInsuranceService {
             List<Top3SpecialContractResponseDTO> contractTop3ResponseDTOS = new ArrayList<>();
             for (SpecialContract findSpecialContract : findSpecialContracts) {
                 Top3SpecialContractResponseDTO top3SpecialContractResponseDTO;
-                if (planName.equals("basic")) {
-                    top3SpecialContractResponseDTO = Top3SpecialContractResponseDTO.basicDTO(findSpecialContract);
-                } else if (planName.equals("standard")) {
+                if (planName.equals("standard")) {
                     top3SpecialContractResponseDTO = Top3SpecialContractResponseDTO.standardDTO(findSpecialContract);
                 } else {
                     top3SpecialContractResponseDTO = Top3SpecialContractResponseDTO.advancedDTO(findSpecialContract);

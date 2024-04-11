@@ -35,7 +35,7 @@ public class SearchFlightInsuranceRequestDTO {
         this.arrivalAt = arrivalAt;
         this.birthDay = birthDay;
         this.gender = gender;
-        this.planName = planName == null ? "basic" : planName;
+        this.planName = planName == null ? "standard" : planName;
         this.overseasMedicalExpenses = overseasMedicalExpenses == null ? Boolean.FALSE : overseasMedicalExpenses;
         this.phoneLoss = phoneLoss == null ? Boolean.FALSE : phoneLoss;
         this.flightDelay = flightDelay == null ? Boolean.FALSE : flightDelay;

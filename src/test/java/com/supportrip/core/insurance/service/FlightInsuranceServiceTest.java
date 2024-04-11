@@ -75,7 +75,7 @@ class FlightInsuranceServiceTest {
                 .thenReturn(mockSpecialContracts1);
         when(specialContractRepository.findByFlightInsuranceId(eq(2L), any(Pageable.class)))
                 .thenReturn(mockSpecialContracts2);*/
-        when(calculatePremiumService.calculatePremium(eq(4), eq("male"), eq(mockCalPremium)))
+        when(calculatePremiumService.calculatePremium(eq(25), eq(4), eq("male"), eq(mockCalPremium)))
                 .thenReturn(mockCalExpected);
 
         SearchFlightInsuranceRequestDTO requestDTO = SearchFlightInsuranceRequestDTO.of(
