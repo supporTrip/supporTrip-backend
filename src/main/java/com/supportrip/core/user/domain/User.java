@@ -7,9 +7,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -36,6 +39,7 @@ public class User extends BaseEntity {
     private LocalDate birthDay;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @AttributeOverride(name = "created_at", column = @Column(name = "joined_at"))
@@ -47,7 +51,7 @@ public class User extends BaseEntity {
     @Column(name = "pin_number")
     private String pinNumber;
 
-    @Column(name = "enabeld")
+    @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
     @Column(name = "locked_at")
@@ -87,5 +91,17 @@ public class User extends BaseEntity {
                 .role(role)
                 .profileImageUrl(profileImageUrl)
                 .build();
+    }
+
+    public Set<GrantedAuthority> getAuthorities() {
+        return Set.of(new SimpleGrantedAuthority(role.toRoleKey()));
+    }
+
+    public boolean isLocked() {
+        return lockedAt != null;
+    }
+
+    public void replacePinNumber(String pinNumber) {
+        this.pinNumber = pinNumber;
     }
 }

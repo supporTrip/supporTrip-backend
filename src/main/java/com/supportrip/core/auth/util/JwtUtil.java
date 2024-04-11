@@ -16,8 +16,16 @@ public class JwtUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static String extractTokenFrom(String header) {
-        if (!StringUtils.hasText(header) || !header.startsWith(AUTHORIZATION_HEADER_TOKEN_PREFIX)) {
+        String token = extractTokenWithoutThrow(header);
+        if (token == null) {
             throw new InvalidTokenTypeException();
+        }
+        return token;
+    }
+
+    public static String extractTokenWithoutThrow(String header) {
+        if (!StringUtils.hasText(header) || !header.startsWith(AUTHORIZATION_HEADER_TOKEN_PREFIX)) {
+            return null;
         }
         return header.substring(AUTHORIZATION_HEADER_TOKEN_PREFIX.length());
     }
