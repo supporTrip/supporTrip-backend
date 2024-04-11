@@ -66,4 +66,16 @@ class JwtUtilTest {
         assertThatThrownBy(() -> JwtUtil.extractTokenFrom(invalidBearerToken))
                 .isInstanceOf(InvalidTokenTypeException.class);
     }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", " ", "abcdefghijklmnopqrstuvwxyz"})
+    @DisplayName("유효하지 않은 Bearer token인 경우 null을 반환한다.")
+    void extractTokenWithoutThrowFail(String invalidBearerToken) {
+        // when
+        String token = JwtUtil.extractTokenWithoutThrow(invalidBearerToken);
+
+        // then
+        assertThat(token).isNull();
+    }
 }
