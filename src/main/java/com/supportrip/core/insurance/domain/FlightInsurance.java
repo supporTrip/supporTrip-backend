@@ -48,7 +48,7 @@ public class FlightInsurance {
         this.premium = premium;
     }
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private FlightInsurance(Long id, InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
         this.id = id;
         this.insuranceCompany = insuranceCompany;

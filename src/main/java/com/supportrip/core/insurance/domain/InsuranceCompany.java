@@ -25,7 +25,7 @@ public class InsuranceCompany {
     @Column(name = "insurance_company_url", nullable = false)
     private String InsuranceCompanyUrl;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private InsuranceCompany(Long id, String name, String logoImageUrl, String insuranceCompanyUrl) {
         this.id = id;
         this.name = name;

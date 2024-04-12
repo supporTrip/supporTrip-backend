@@ -39,7 +39,7 @@ public class SpecialContract {
         this.flightInsurance = flightInsurance;
     }
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private SpecialContract(Long id, FlightInsurance flightInsurance, String name, String description, int basicPrice, int standardPrice, int advancedPrice) {
         this.id = id;
         this.flightInsurance = flightInsurance;

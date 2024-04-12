@@ -2,6 +2,7 @@ package com.supportrip.core.insurance.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -27,7 +28,7 @@ public class SearchFlightInsuranceRequest {
     private Boolean passportLoss;
     private Boolean foodPoisoning;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     public SearchFlightInsuranceRequest(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         this.departAt = departAt;
         this.arrivalAt = arrivalAt;
@@ -39,7 +40,6 @@ public class SearchFlightInsuranceRequest {
         this.foodPoisoning = foodPoisoning == null ? Boolean.FALSE : foodPoisoning;
     }
 
-    @Builder
     public static SearchFlightInsuranceRequest of(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         return builder()
                 .departAt(departAt)
