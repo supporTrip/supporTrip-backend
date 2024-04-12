@@ -17,7 +17,7 @@ public class SearchFlightInsuranceResponse {
     private String logoImageUrl;
     private List<Top3SpecialContractResponse> specialContracts;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     public SearchFlightInsuranceResponse(Long id, String insuranceName, int premium, int minJoinAge, int maxJoinAge, String planName, String companyName, String logoImageUrl, List<Top3SpecialContractResponse> specialContracts) {
         this.id = id;
         this.insuranceName = insuranceName;

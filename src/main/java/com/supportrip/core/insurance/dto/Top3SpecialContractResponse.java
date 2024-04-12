@@ -1,6 +1,7 @@
 package com.supportrip.core.insurance.dto;
 
 import com.supportrip.core.insurance.domain.SpecialContract;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +11,7 @@ public class Top3SpecialContractResponse {
     private String name;
     private int coveragePrice;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private Top3SpecialContractResponse(String name, int coveragePrice) {
         this.name = name;
         this.coveragePrice = coveragePrice;
