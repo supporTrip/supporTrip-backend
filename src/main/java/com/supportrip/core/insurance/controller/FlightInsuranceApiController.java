@@ -16,9 +16,9 @@ import java.util.List;
 public class FlightInsuranceApiController {
     private final FlightInsuranceService flightInsuranceService;
 
-    @GetMapping("/api/v1/flight-insurance/search")
-    public ResponseEntity<List<SearchFlightInsuranceResponse>> searchFlightInsurance(@Valid SearchFlightInsuranceRequest requestDTO) {
-        List<SearchFlightInsuranceResponse> flightInsurances = flightInsuranceService.findFlightInsuranceFilter(requestDTO);
+    @GetMapping("/api/v1/flight-insurances/search")
+    public ResponseEntity<List<SearchFlightInsuranceResponse>> searchFlightInsurance(@Valid SearchFlightInsuranceRequest request) {
+        List<SearchFlightInsuranceResponse> flightInsurances = flightInsuranceService.findFlightInsuranceFilter(request);
 
         return ResponseEntity.ok(flightInsurances);
     }

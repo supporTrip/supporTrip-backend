@@ -27,24 +27,24 @@ public class FlightInsuranceService {
     /**
      * 필터링 검색
      */
-    public List<SearchFlightInsuranceResponse> findFlightInsuranceFilter(SearchFlightInsuranceRequest requestDTO) {
+    public List<SearchFlightInsuranceResponse> findFlightInsuranceFilter(SearchFlightInsuranceRequest request) {
 
-        int age = calculateAge(requestDTO.getBirthDay());
-        int period = calculatePeriod(requestDTO.getDepartAt(), requestDTO.getArrivalAt());
+        int age = calculateAge(request.getBirthDay());
+        int period = calculatePeriod(request.getDepartAt(), request.getArrivalAt());
 
         //연령대와 플랜이 일치하는 보험상품 모두 조회
-        List<FlightInsurance> findFlightInsurances = flightInsuranceRepository.findByAgeAndPlan(age, requestDTO.getPlanName());
+        List<FlightInsurance> findFlightInsurances = flightInsuranceRepository.findByAgeAndPlan(age, request.getPlanName());
 
         //선택된 카테고리가 포함되어있는 보험상품 필터
         List<FlightInsurance> filteredInsurances = flightInsuranceFilter(findFlightInsurances,
-                requestDTO.getFlightDelay(),
-                requestDTO.getPassportLoss(), requestDTO.getFoodPoisoning());
+                request.getFlightDelay(),
+                request.getPassportLoss(), request.getFoodPoisoning());
 
         //보험료 게산
-        List<FlightInsurance> flightInsurances = calculatePremiumService.calculatePremium(age, period, requestDTO.getGender(), filteredInsurances);
+        List<FlightInsurance> flightInsurances = calculatePremiumService.calculatePremium(age, period, request.getGender(), filteredInsurances);
 
         //특약 상위3개 추가
-        return addTop3SpecialContract(flightInsurances, requestDTO.getPlanName());
+        return addTop3SpecialContract(flightInsurances, request.getPlanName());
     }
 
     /**
@@ -55,17 +55,17 @@ public class FlightInsuranceService {
 
         for (FlightInsurance flightInsurance : flightInsurances) {
             List<SpecialContract> findSpecialContracts = specialContractRepository.findByFlightInsuranceId(flightInsurance.getId(), PageRequest.of(0, 3));
-            List<Top3SpecialContractResponse> contractTop3ResponseDTOS = new ArrayList<>();
+            List<Top3SpecialContractResponse> contractTop3Responses = new ArrayList<>();
             for (SpecialContract findSpecialContract : findSpecialContracts) {
                 Top3SpecialContractResponse top3SpecialContractResponse;
                 if (planName.equals("standard")) {
-                    top3SpecialContractResponse = Top3SpecialContractResponse.standardDTO(findSpecialContract);
+                    top3SpecialContractResponse = Top3SpecialContractResponse.standard(findSpecialContract);
                 } else {
-                    top3SpecialContractResponse = Top3SpecialContractResponse.advancedDTO(findSpecialContract);
+                    top3SpecialContractResponse = Top3SpecialContractResponse.advanced(findSpecialContract);
                 }
-                contractTop3ResponseDTOS.add(top3SpecialContractResponse);
+                contractTop3Responses.add(top3SpecialContractResponse);
             }
-            SearchFlightInsuranceResponse searchFlightInsuranceResponse = SearchFlightInsuranceResponse.toDTO(flightInsurance, contractTop3ResponseDTOS);
+            SearchFlightInsuranceResponse searchFlightInsuranceResponse = SearchFlightInsuranceResponse.toDTO(flightInsurance, contractTop3Responses);
             searchFlightInsuranceResponses.add(searchFlightInsuranceResponse);
         }
 

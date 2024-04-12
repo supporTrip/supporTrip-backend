@@ -31,7 +31,7 @@ public class SearchFlightInsuranceResponse {
     }
 
     public static SearchFlightInsuranceResponse toDTO(FlightInsurance flightInsurance, List<Top3SpecialContractResponse> specialContracts) {
-        SearchFlightInsuranceResponse responseDTO = SearchFlightInsuranceResponse.builder()
+        SearchFlightInsuranceResponse response = SearchFlightInsuranceResponse.builder()
                 .id(flightInsurance.getId())
                 .insuranceName(flightInsurance.getName())
                 .premium(flightInsurance.getPremium())
@@ -42,7 +42,7 @@ public class SearchFlightInsuranceResponse {
                 .logoImageUrl(flightInsurance.getInsuranceCompany().getLogoImageUrl())
                 .specialContracts(specialContracts)
                 .build();
-        return responseDTO;
+        return response;
     }
 
 
