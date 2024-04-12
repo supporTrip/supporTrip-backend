@@ -11,19 +11,19 @@ public class Top3SpecialContractResponse {
     private int coveragePrice;
 
     @Builder
-    public Top3SpecialContractResponse(String name, int coveragePrice) {
+    private Top3SpecialContractResponse(String name, int coveragePrice) {
         this.name = name;
         this.coveragePrice = coveragePrice;
     }
 
-    public static Top3SpecialContractResponse standardDTO(SpecialContract findSpecialContract) {
+    public static Top3SpecialContractResponse standard(SpecialContract findSpecialContract) {
         return Top3SpecialContractResponse.builder()
                 .name(findSpecialContract.getName())
                 .coveragePrice(findSpecialContract.getStandardPrice())
                 .build();
     }
 
-    public static Top3SpecialContractResponse advancedDTO(SpecialContract findSpecialContract) {
+    public static Top3SpecialContractResponse advanced(SpecialContract findSpecialContract) {
         return Top3SpecialContractResponse.builder()
                 .name(findSpecialContract.getName())
                 .coveragePrice(findSpecialContract.getAdvancedPrice())

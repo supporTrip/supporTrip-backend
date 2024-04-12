@@ -78,7 +78,7 @@ class FlightInsuranceServiceTest {
         when(calculatePremiumService.calculatePremium(eq(25), eq(4), eq("male"), eq(mockCalPremium)))
                 .thenReturn(mockCalExpected);
 
-        SearchFlightInsuranceRequest requestDTO = SearchFlightInsuranceRequest.of(
+        SearchFlightInsuranceRequest request = SearchFlightInsuranceRequest.of(
                 LocalDateTime.of(2024, 4, 8, 10, 0),
                 LocalDateTime.of(2024, 4, 12, 18, 0),
                 LocalDate.of(1998, 5, 10),
@@ -89,7 +89,7 @@ class FlightInsuranceServiceTest {
                 true
         );
 
-        List<SearchFlightInsuranceResponse> result = flightInsuranceService.findFlightInsuranceFilter(requestDTO);
+        List<SearchFlightInsuranceResponse> result = flightInsuranceService.findFlightInsuranceFilter(request);
 
         assertNotNull(result);
         assertEquals(1, result.size());
