@@ -9,6 +9,7 @@ import static org.springframework.http.HttpStatus.*;
 public enum ErrorInfo {
     // 400
     INVALID_INPUT(BAD_REQUEST, "400-01", "잘못된 입력입니다."),
+    DUPLICATE_FOREIGN_ACCOUNT(BAD_REQUEST, "400-02", "중복된 계좌 생성 요청입니다."),
 
     // 401
     UNAUTHORIZED_REQUEST(UNAUTHORIZED, "401-01", "로그인이 필요한 요청입니다."),
