@@ -27,6 +27,9 @@ public class LinkedAccount {
     @Column(name = "account_number")
     private String accountNumber;
 
+    @Column(name = "total_amount")
+    private Double totalAmount;
+
     @Builder(access = AccessLevel.PRIVATE)
     private LinkedAccount(Long id, User user, Bank bank, String accountNumber) {
         this.id = id;
