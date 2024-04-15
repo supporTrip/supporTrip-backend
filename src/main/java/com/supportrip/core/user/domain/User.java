@@ -104,4 +104,8 @@ public class User extends BaseEntity {
     public void replacePinNumber(String pinNumber) {
         this.pinNumber = pinNumber;
     }
+
+    public boolean isInitialUser() {
+        return name == null;
+    }
 }
