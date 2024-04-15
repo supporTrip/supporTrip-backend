@@ -36,9 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-<<<<<<< HEAD
-src/main/resources/application.yml
-src/main/resources/application.propertites
-
 application.yml
 application.properties
+
