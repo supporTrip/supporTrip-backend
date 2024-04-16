@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table(name = "exchange_trading")
@@ -33,9 +35,9 @@ public class ExchangeTrading {
     private String targetPrice;
 
     @Column(name = "began_at")
-    private String beganAt;
+    private LocalDateTime beganAt;
 
     @Column(name = "completed_at")
-    private String completedAt;
+    private LocalDateTime completedAt;
 
 }

@@ -25,9 +25,10 @@ public class AccountService {
     private final BankRepository bankRepository;
     private final ForeignAccountRepository foreignAccountRepository;
     public ForeignAccountResponse generateForeignAccount(Long userId, ForeignAccountRequest foreignAccountRequest) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
 
-        if(foreignAccountRepository.findByUser(user)!=null)
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        if(foreignAccountRepository.findByUser(user).isPresent())
             throw new ForeignAccountDuplicateException();
 
         Bank bank = bankRepository.findByName(foreignAccountRequest.getBankName());

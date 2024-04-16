@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -30,10 +29,6 @@ public class ForeignAccount extends BaseEntity {
 
     @Column(name = "account_number")
     private String accountNumber;
-
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
 
     @Column(name = "total_usd")
     private Double totalUSD;
@@ -87,12 +82,11 @@ public class ForeignAccount extends BaseEntity {
     private Double totalTWD;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ForeignAccount(Long id, User user, Bank bank, String accountNumber, LocalDateTime createdAt, Double totalUSD, Double totalJPY, Double totalEUR, Double totalGBP, Double totalCAD, Double totalAUD, Double totalNZD, Double totalSGD, Double totalHKD, Double totalCNY, Double totalCHF, Double totalMYR, Double totalPHP, Double totalIDR, Double totalTHB, Double totalVND, Double totalTWD) {
+    private ForeignAccount(Long id, User user, Bank bank, String accountNumber, Double totalUSD, Double totalJPY, Double totalEUR, Double totalGBP, Double totalCAD, Double totalAUD, Double totalNZD, Double totalSGD, Double totalHKD, Double totalCNY, Double totalCHF, Double totalMYR, Double totalPHP, Double totalIDR, Double totalTHB, Double totalVND, Double totalTWD) {
         this.id = id;
         this.user = user;
         this.bank = bank;
         this.accountNumber = accountNumber;
-        this.createdAt = createdAt;
         this.totalUSD = totalUSD;
         this.totalJPY = totalJPY;
         this.totalEUR = totalEUR;
