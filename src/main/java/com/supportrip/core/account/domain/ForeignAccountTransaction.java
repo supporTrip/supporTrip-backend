@@ -1,5 +1,6 @@
 package com.supportrip.core.account.domain;
 
+import com.supportrip.core.common.BaseEntity;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
 import com.supportrip.core.user.domain.User;
 import jakarta.persistence.*;
@@ -14,16 +15,14 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "foreign_account_transaction")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ForeignAccountTransaction {
+@AttributeOverride(name = "createdAt", column = @Column(name = "transacted_at"))
+public class ForeignAccountTransaction extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "amount")
     private Double amount;
-
-    @Column(name = "transacted_at")
-    private LocalDateTime transactedAt;
 
     @Column(name = "target_exchange_rate")
     private Double targetExchangeRate;
@@ -40,21 +39,19 @@ public class ForeignAccountTransaction {
     private ExchangeTrading exchangeTrading;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ForeignAccountTransaction(Long id, Double amount, LocalDateTime transactedAt, Double targetExchangeRate, Double targetCurrencyTotalAmount, ForeignAccount foreignAccount, ExchangeTrading exchangeTrading) {
+    private ForeignAccountTransaction(Long id, Double amount, Double targetExchangeRate, Double targetCurrencyTotalAmount, ForeignAccount foreignAccount, ExchangeTrading exchangeTrading) {
         this.id = id;
         this.amount = amount;
-        this.transactedAt = transactedAt;
         this.targetExchangeRate = targetExchangeRate;
         this.targetCurrencyTotalAmount = targetCurrencyTotalAmount;
         this.foreignAccount = foreignAccount;
         this.exchangeTrading = exchangeTrading;
     }
 
-    public static ForeignAccountTransaction of(Double amount, LocalDateTime transactedAt, Double targetExchangeRate, Double targetCurrencyTotalAmount,
+    public static ForeignAccountTransaction of(Double amount, Double targetExchangeRate, Double targetCurrencyTotalAmount,
                                                ForeignAccount foreignAccount, ExchangeTrading exchangeTrading){
         return ForeignAccountTransaction.builder()
                 .amount(amount)
-                .transactedAt(transactedAt)
                 .targetExchangeRate(targetExchangeRate)
                 .targetCurrencyTotalAmount(targetCurrencyTotalAmount)
                 .foreignAccount(foreignAccount)
