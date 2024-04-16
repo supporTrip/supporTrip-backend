@@ -41,4 +41,5 @@ public class OidcKakaoTokenResponse {
                 .scope(scope)
                 .build();
     }
+
 }
