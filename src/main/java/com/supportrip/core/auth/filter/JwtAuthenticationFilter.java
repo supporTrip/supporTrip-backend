@@ -1,10 +1,15 @@
 package com.supportrip.core.auth.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.auth.dto.AuthPayload;
 import com.supportrip.core.auth.jwt.JwtProvider;
-import com.supportrip.core.auth.kakao.OidcKakaoAuthenticationToken;
 import com.supportrip.core.auth.jwt.JwtUtil;
+import com.supportrip.core.auth.jwt.exception.ExpiredTokenException;
+import com.supportrip.core.auth.kakao.OidcKakaoAuthenticationToken;
+import com.supportrip.core.error.ErrorInfo;
+import com.supportrip.core.error.ErrorResponse;
+import com.supportrip.core.error.exception.BusinessException;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.exception.UserNotFoundException;
 import com.supportrip.core.user.repository.UserRepository;
@@ -13,10 +18,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -29,6 +36,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -36,11 +44,16 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String authorizationHeader = httpRequest.getHeader(HttpHeaders.AUTHORIZATION);
         String token = JwtUtil.extractTokenWithoutThrow(authorizationHeader);
 
-        if (StringUtils.hasText(token) && jwtProvider.validateToken(token)) {
-            AuthPayload authPayload = jwtProvider.parseAccessToken(token);
-            log.info("User[ID={}] has been authenticated", authPayload.getUserId());
-            Authentication authentication = getAuthentication(authPayload);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            if (StringUtils.hasText(token) && jwtProvider.validateToken(token)) {
+                AuthPayload authPayload = jwtProvider.parseAccessToken(token);
+                log.info("User[ID={}] has been authenticated", authPayload.getUserId());
+                Authentication authentication = getAuthentication(authPayload);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (ExpiredTokenException exception) {
+            sendError((HttpServletResponse) response, exception);
+            return;
         }
 
         chain.doFilter(request, response);
@@ -51,5 +64,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(LogLevel.ERROR));
         OidcUser oidcUser = OidcUser.from(user);
         return new OidcKakaoAuthenticationToken(oidcUser);
+    }
+
+    private void sendError(HttpServletResponse response, BusinessException exception) throws IOException {
+        ErrorInfo errorInfo = exception.getErrorInfo();
+        ErrorResponse errorResponse = ErrorResponse.from(errorInfo);
+
+        byte[] responseBody = objectMapper.writeValueAsBytes(errorResponse);
+        response.setStatus(errorInfo.getHttpStatus().value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getOutputStream().write(responseBody);
     }
 }
