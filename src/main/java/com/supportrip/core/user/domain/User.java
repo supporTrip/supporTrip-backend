@@ -91,12 +91,13 @@ public class User extends BaseEntity {
                 .build();
     }
 
-    public void fillInitialUserInfo(String name, String email, Gender gender, String phoneNumber, LocalDate birthDay) {
+    public void fillInitialUserInfo(String name, String email, Gender gender, String phoneNumber, LocalDate birthDay, String pinNumber) {
         this.name = name;
         this.email = email;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.birthDay = birthDay;
+        this.pinNumber = pinNumber;
     }
 
     public Set<GrantedAuthority> getAuthorities() {
