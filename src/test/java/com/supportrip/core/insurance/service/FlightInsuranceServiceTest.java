@@ -69,12 +69,8 @@ class FlightInsuranceServiceTest {
                 FlightInsurance.of(insuranceCompany1, "한화생명 해외여행자 보험", 4440, 15, 60, "basic", true, true, true)
         );
 
-        when(flightInsuranceRepository.findByAgeAndPlan(eq(25), eq("basic")))
+        when(flightInsuranceRepository.findByAge(eq(25)))
                 .thenReturn(mockFlightInsurances);
-/*        when(specialContractRepository.findByFlightInsuranceId(eq(1L), any(Pageable.class)))
-                .thenReturn(mockSpecialContracts1);
-        when(specialContractRepository.findByFlightInsuranceId(eq(2L), any(Pageable.class)))
-                .thenReturn(mockSpecialContracts2);*/
         when(calculatePremiumService.calculatePremium(eq(25), eq(4), eq("male"), eq(mockCalPremium)))
                 .thenReturn(mockCalExpected);
 

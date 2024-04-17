@@ -17,7 +17,7 @@ public class SearchFlightInsuranceRequest {
     @NotNull(message = "도착시간을 입력해주세요")
     private LocalDateTime arrivalAt;
 
-    @NotNull(message = "생년월일 6자리를 입력해주세요.")
+    @NotNull(message = "생년월일 8자리를 입력해주세요.")
     private LocalDate birthDay;
 
     @NotBlank(message = "성별을 입력해주세요.")
