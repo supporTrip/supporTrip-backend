@@ -1,9 +1,11 @@
 package com.supportrip.core.user.service;
 
 import com.supportrip.core.user.domain.User;
+import com.supportrip.core.user.domain.UserConsentStatus;
 import com.supportrip.core.user.dto.SignUpRequest;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
 import com.supportrip.core.user.exception.UserNotFoundException;
+import com.supportrip.core.user.repository.UserConsentStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final UserConsentStatusRepository userConsentStatusRepository;
 
     @Transactional
     public User signUp(Long userId, SignUpRequest request) {
@@ -30,6 +33,16 @@ public class UserService {
                 request.getPhoneNumber(),
                 request.getBirthDay()
         );
+
+        UserConsentStatus userConsentStatus = UserConsentStatus.of(
+                user,
+                request.getConsentAbove14(),
+                request.getServiceTermsConsent(),
+                request.getConsentPersonalInfo(),
+                request.getAdInfoConsent(),
+                request.getMyDataConsentPersonalInfo()
+        );
+        userConsentStatusRepository.save(userConsentStatus);
 
         return user;
     }
