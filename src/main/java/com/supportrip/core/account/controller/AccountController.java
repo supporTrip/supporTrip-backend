@@ -1,10 +1,9 @@
 package com.supportrip.core.account.controller;
 
-import com.supportrip.core.account.dto.request.ForeignAccountRequest;
-import com.supportrip.core.account.dto.response.ForeignAccountResponse;
+import com.supportrip.core.account.dto.request.GenerateForeignAccountRequest;
+import com.supportrip.core.account.dto.response.GenerateForeignAccountResponse;
 import com.supportrip.core.account.service.AccountService;
 import com.supportrip.core.auth.domain.OidcUser;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +18,8 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/foreign")
-    public ForeignAccountResponse generateForeignAccount(@AuthenticationPrincipal OidcUser oidcUser
-            , @RequestBody ForeignAccountRequest foreignAccountRequest){
-        return accountService.generateForeignAccount(oidcUser.getUserId(), foreignAccountRequest);
+    public GenerateForeignAccountResponse generateForeignAccount(@AuthenticationPrincipal OidcUser oidcUser
+            , @RequestBody GenerateForeignAccountRequest generateForeignAccountRequest){
+        return accountService.generateForeignAccount(oidcUser.getUserId(), generateForeignAccountRequest);
     }
 }
