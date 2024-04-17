@@ -18,6 +18,7 @@ import java.util.Set;
 @Getter
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AttributeOverride(name = "createdAt", column = @Column(name = "joined_at"))
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +31,8 @@ public class User extends BaseEntity {
     private String email;
 
     @Column(name = "gender")
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -41,9 +43,6 @@ public class User extends BaseEntity {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @AttributeOverride(name = "created_at", column = @Column(name = "joined_at"))
-    private LocalDateTime joinedAt;
 
     @Column(name = "profile_image_url")
     private String profileImageUrl;
@@ -58,7 +57,7 @@ public class User extends BaseEntity {
     private LocalDateTime lockedAt;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private User(Long id, String name, String email, String gender, String phoneNumber, LocalDate birthDay, Role role, LocalDateTime joinedAt, String profileImageUrl, String pinNumber, boolean enabled, LocalDateTime lockedAt) {
+    private User(Long id, String name, String email, Gender gender, String phoneNumber, LocalDate birthDay, Role role, String profileImageUrl, String pinNumber, boolean enabled, LocalDateTime lockedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -66,7 +65,6 @@ public class User extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.birthDay = birthDay;
         this.role = role;
-        this.joinedAt = joinedAt;
         this.profileImageUrl = profileImageUrl;
         this.pinNumber = pinNumber;
         this.enabled = enabled;
@@ -77,11 +75,11 @@ public class User extends BaseEntity {
         return of(null, null, null, null, null, Role.USER, profileImageUrl);
     }
 
-    public static User userOf(String name, String email, String gender, String phoneNumber, LocalDate birthDay, String profileImageUrl) {
+    public static User userOf(String name, String email, Gender gender, String phoneNumber, LocalDate birthDay, String profileImageUrl) {
         return of(name, email, gender, phoneNumber, birthDay, Role.USER, profileImageUrl);
     }
 
-    private static User of(String name, String email, String gender, String phoneNumber, LocalDate birthDay, Role role, String profileImageUrl) {
+    private static User of(String name, String email, Gender gender, String phoneNumber, LocalDate birthDay, Role role, String profileImageUrl) {
         return User.builder()
                 .name(name)
                 .email(email)
@@ -91,6 +89,14 @@ public class User extends BaseEntity {
                 .role(role)
                 .profileImageUrl(profileImageUrl)
                 .build();
+    }
+
+    public void fillInitialUserInfo(String name, String email, Gender gender, String phoneNumber, LocalDate birthDay) {
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthDay = birthDay;
     }
 
     public Set<GrantedAuthority> getAuthorities() {
@@ -103,5 +109,9 @@ public class User extends BaseEntity {
 
     public void replacePinNumber(String pinNumber) {
         this.pinNumber = pinNumber;
+    }
+
+    public boolean isInitialUser() {
+        return name == null;
     }
 }

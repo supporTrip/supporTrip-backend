@@ -34,14 +34,14 @@ public class AuthService {
 
         // TODO: Oidc 검증 (state & nonce 동일 여부)
 
-        Long userId = userSocials.getUser().getId();
-        AuthPayload authPayload = AuthPayload.from(userId);
+        User user = userSocials.getUser();
+        AuthPayload authPayload = AuthPayload.from(user.getId());
         String accessToken = jwtProvider.generateAccessToken(authPayload);
         String refreshToken = jwtProvider.generateRefreshToken(authPayload);
 
         userSocials.replaceRefreshToken(refreshToken);
 
-        return LoginResponse.of(accessToken, refreshToken);
+        return LoginResponse.of(accessToken, refreshToken, user.isInitialUser(), user);
     }
 
     public String regenerateAccessToken(String authorization) {
