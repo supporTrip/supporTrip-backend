@@ -31,7 +31,8 @@ public class UserService {
                 request.getEmail(),
                 request.getGender(),
                 request.getPhoneNumber(),
-                request.getBirthDay()
+                request.getBirthDay(),
+                request.getPinNumber()
         );
 
         UserConsentStatus userConsentStatus = UserConsentStatus.of(
