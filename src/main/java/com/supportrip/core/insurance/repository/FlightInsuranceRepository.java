@@ -14,10 +14,8 @@ public interface FlightInsuranceRepository extends JpaRepository<FlightInsurance
      * 나이, 플랜 보험상품 필터 조회
      */
     @Query("SELECT f FROM FlightInsurance f JOIN fetch f.insuranceCompany WHERE " +
-            ":age BETWEEN f.minJoinAge AND f.maxJoinAge AND " +
-            "f.planName = :planName")
-    List<FlightInsurance> findByAgeAndPlan (@Param("age") int age,
-                                            @Param("planName") String planName);
+            ":age BETWEEN f.minJoinAge AND f.maxJoinAge AND ")
+    List<FlightInsurance> findByAge (@Param("age") int age);
 
 
     @Query("SELECT s FROM SpecialContract s WHERE s.id = :id")
