@@ -53,6 +53,7 @@ public class JwtProvider {
             return true;
         } catch (ExpiredJwtException exception) {
             log.info("Expired Token Exception: ", exception);
+            throw new ExpiredTokenException();
         } catch (JwtException | IllegalArgumentException exception) {
             log.warn("Invalid Token Exception: ", exception);
         }
