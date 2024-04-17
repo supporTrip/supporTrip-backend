@@ -33,7 +33,7 @@ public class FlightInsuranceService {
         int period = calculatePeriod(request.getDepartAt(), request.getArrivalAt());
 
         //연령대와 플랜이 일치하는 보험상품 모두 조회
-        List<FlightInsurance> findFlightInsurances = flightInsuranceRepository.findByAgeAndPlan(age, request.getPlanName());
+        List<FlightInsurance> findFlightInsurances = flightInsuranceRepository.findByAge(age);
 
         //선택된 카테고리가 포함되어있는 보험상품 필터
         List<FlightInsurance> filteredInsurances = flightInsuranceFilter(findFlightInsurances,
