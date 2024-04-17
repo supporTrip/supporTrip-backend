@@ -41,7 +41,7 @@ public class AuthService {
 
         userSocials.replaceRefreshToken(refreshToken);
 
-        return LoginResponse.of(accessToken, refreshToken, user.isInitialUser());
+        return LoginResponse.of(accessToken, refreshToken, user.isInitialUser(), user);
     }
 
     public String regenerateAccessToken(String authorization) {
