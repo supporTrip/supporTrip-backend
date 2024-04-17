@@ -5,19 +5,19 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Getter
-@ToString
+@NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class OidcKakaoTokenResponse {
-    private final String tokenType;
-    private final String accessToken;
-    private final String idToken;
-    private final Long expiresIn;
-    private final String refreshToken;
-    private final Long refreshTokenExpiresIn;
-    private final String scope;
+    private String tokenType;
+    private String accessToken;
+    private String idToken;
+    private Long expiresIn;
+    private String refreshToken;
+    private Long refreshTokenExpiresIn;
+    private String scope;
 
     @Builder(access = AccessLevel.PRIVATE)
     private OidcKakaoTokenResponse(String tokenType, String accessToken, String idToken, Long expiresIn, String refreshToken, Long refreshTokenExpiresIn, String scope) {
@@ -41,4 +41,5 @@ public class OidcKakaoTokenResponse {
                 .scope(scope)
                 .build();
     }
+
 }

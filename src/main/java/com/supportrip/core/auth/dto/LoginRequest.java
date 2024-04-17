@@ -20,4 +20,6 @@ public class LoginRequest {
                 .code(code)
                 .build();
     }
+
 }
+
