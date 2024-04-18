@@ -26,12 +26,12 @@ public class SearchFlightInsuranceResponse {
         this.specialContracts = specialContracts;
     }
 
-    public static SearchFlightInsuranceResponse toDTO(FlightInsurance flightInsurance, List<Top3SpecialContractResponse> specialContracts) {
+    public static SearchFlightInsuranceResponse toDTO(FlightInsurance flightInsurance, List<Top3SpecialContractResponse> specialContracts, String planName) {
         SearchFlightInsuranceResponse response = SearchFlightInsuranceResponse.builder()
                 .id(flightInsurance.getId())
                 .insuranceName(flightInsurance.getName())
                 .premium(flightInsurance.getPremium())
-                .planName(flightInsurance.getPlanName())
+                .planName(planName)
                 .companyName(flightInsurance.getInsuranceCompany().getName())
                 .logoImageUrl(flightInsurance.getInsuranceCompany().getLogoImageUrl())
                 .specialContracts(specialContracts)
