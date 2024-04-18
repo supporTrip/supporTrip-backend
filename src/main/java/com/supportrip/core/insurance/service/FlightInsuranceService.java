@@ -144,4 +144,23 @@ public class FlightInsuranceService {
 
         return period.getDays();
     }
+
+    /**
+     * 특정 보험상품 세부조회
+     */
+    public FlightInsuranceDetailResponse findFlightInsuranceDetail(Long flightInsuranceId, FlightInsuranceDetailRequest request) {
+        FlightInsurance flightInsurance = flightInsuranceRepository.findById(flightInsuranceId)
+                .orElseThrow(NotFoundFlightInsuranceException::new);
+
+        List<SpecialContract> specialContracts = specialContractRepository.findByFlightInsuranceId(flightInsuranceId);
+
+        List<SpecialContractResponse> specialContractResponses = new ArrayList<>();
+        for (SpecialContract specialContract : specialContracts) {
+            SpecialContractResponse specialContractResponse = SpecialContractResponse.toDTO(specialContract);
+            specialContractResponses.add(specialContractResponse);
+        }
+
+        return FlightInsuranceDetailResponse.toDTO(flightInsurance, request.getCoverageStartAt(),
+                request.getCoverageEndAt(), request.getPremium(), request.getPlanName(), specialContractResponses);
+    }
 }

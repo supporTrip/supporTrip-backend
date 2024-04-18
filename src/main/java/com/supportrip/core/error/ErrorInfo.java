@@ -24,6 +24,7 @@ public enum ErrorInfo {
     // 404
     USER_NOT_FOUND(NOT_FOUND, "404-01", "해당 유저 정보를 찾을 수 없습니다."),
     USER_SOCIALS_NOT_FOUND(NOT_FOUND, "404-02", "해당 유저의 소셜 로그인 정보를 찾을 수 없습니다."),
+    FLIGHT_INSURANCE_NOT_FOUND(NOT_FOUND, "404-03", "해당 보험 상품를 찾을 수 없습니다."),
 
     // 500
     UNHANDLED_ERROR(INTERNAL_SERVER_ERROR, "500-01", "알 수 없는 오류가 발생했습니다. 관리자에게 연락해주세요."),
