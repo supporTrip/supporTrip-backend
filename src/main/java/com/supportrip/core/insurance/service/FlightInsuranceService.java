@@ -32,7 +32,7 @@ public class FlightInsuranceService {
         int age = calculateAge(request.getBirthDay());
         int period = calculatePeriod(request.getDepartAt(), request.getArrivalAt());
 
-        //연령대와 플랜이 일치하는 보험상품 모두 조회
+        //연령대가 일치하는 보험상품 모두 조회
         List<FlightInsurance> findFlightInsurances = flightInsuranceRepository.findByAge(age);
 
         //선택된 카테고리가 포함되어있는 보험상품 필터
@@ -40,8 +40,8 @@ public class FlightInsuranceService {
                 request.getFlightDelay(),
                 request.getPassportLoss(), request.getFoodPoisoning());
 
-        //보험료 게산
-        List<FlightInsurance> flightInsurances = calculatePremiumService.calculatePremium(age, period, request.getGender(), filteredInsurances);
+        //보험료 계산
+        List<FlightInsurance> flightInsurances = calculatePremiumService.calculatePremium(age, period, request.getPlanName(), request.getGender(), filteredInsurances);
 
         //특약 상위3개 추가
         return addTop3SpecialContract(flightInsurances, request.getPlanName());
@@ -65,7 +65,7 @@ public class FlightInsuranceService {
                 }
                 contractTop3Responses.add(top3SpecialContractResponse);
             }
-            SearchFlightInsuranceResponse searchFlightInsuranceResponse = SearchFlightInsuranceResponse.toDTO(flightInsurance, contractTop3Responses);
+            SearchFlightInsuranceResponse searchFlightInsuranceResponse = SearchFlightInsuranceResponse.toDTO(flightInsurance, contractTop3Responses, planName);
             searchFlightInsuranceResponses.add(searchFlightInsuranceResponse);
         }
 

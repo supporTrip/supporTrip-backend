@@ -12,7 +12,7 @@ public class FlightInsuranceCalculatePremiumService {
     /**
      * 여행기간, 성별, 플랜마다 보험료 책정
      */
-    public List<FlightInsurance> calculatePremium(int age, int period, String gender, List<FlightInsurance> filteredInsurances) {
+    public List<FlightInsurance> calculatePremium(int age, int period, String planName, String gender, List<FlightInsurance> filteredInsurances) {
         List<FlightInsurance> newInsurancePremium = new ArrayList<>();
 
         for (FlightInsurance flightInsurance : filteredInsurances) {
@@ -24,7 +24,7 @@ public class FlightInsuranceCalculatePremiumService {
                 premium *= 1.5;
             }
 
-            if (flightInsurance.getPlanName().equals("advanced")) {
+            if (planName.equals("advanced")) {
                 premium *= 1.5;
             }
 

@@ -11,7 +11,7 @@ import java.util.List;
 public interface FlightInsuranceRepository extends JpaRepository<FlightInsurance, Long> {
 
     /**
-     * 나이, 플랜 보험상품 필터 조회
+     * 나이 보험상품 필터 조회
      */
     @Query("SELECT f FROM FlightInsurance f JOIN fetch f.insuranceCompany WHERE " +
             ":age BETWEEN f.minJoinAge AND f.maxJoinAge")
