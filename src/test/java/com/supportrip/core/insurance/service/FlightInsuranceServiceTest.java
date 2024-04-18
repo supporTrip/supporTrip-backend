@@ -46,8 +46,8 @@ class FlightInsuranceServiceTest {
         InsuranceCompany insuranceCompany2 = InsuranceCompany.from("삼성생명");
 
         List<FlightInsurance> mockFlightInsurances = Arrays.asList(
-                FlightInsurance.of(insuranceCompany1, "한화생명 해외여행자 보험", 1000, 15, 60, "basic", true, true, true),
-                FlightInsurance.of(insuranceCompany2, "삼성생명 해외여행자 보험", 2000, 15, 60, "basic", true, true, false)
+                FlightInsurance.of(insuranceCompany1, "한화생명 해외여행자 보험", 1000, 15, 60, true, true, true),
+                FlightInsurance.of(insuranceCompany2, "삼성생명 해외여행자 보험", 2000, 15, 60, true, true, false)
         );
 
         List<SpecialContract> mockSpecialContracts1 = Arrays.asList(
@@ -66,12 +66,12 @@ class FlightInsuranceServiceTest {
                 mockFlightInsurances.get(0)
         );
         List<FlightInsurance> mockCalExpected = Arrays.asList(
-                FlightInsurance.of(insuranceCompany1, "한화생명 해외여행자 보험", 4440, 15, 60, "basic", true, true, true)
+                FlightInsurance.of(insuranceCompany1, "한화생명 해외여행자 보험", 4440, 15, 60, true, true, true)
         );
 
         when(flightInsuranceRepository.findByAge(eq(25)))
                 .thenReturn(mockFlightInsurances);
-        when(calculatePremiumService.calculatePremium(eq(25), eq(4), eq("male"), eq(mockCalPremium)))
+        when(calculatePremiumService.calculatePremium(eq(25), eq(4), eq("standard"), eq("male"), eq(mockCalPremium)))
                 .thenReturn(mockCalExpected);
 
         SearchFlightInsuranceRequest request = SearchFlightInsuranceRequest.of(
@@ -79,7 +79,7 @@ class FlightInsuranceServiceTest {
                 LocalDateTime.of(2024, 4, 12, 18, 0),
                 LocalDate.of(1998, 5, 10),
                 "male",
-                "basic",
+                "standard",
                 true,
                 true,
                 true
