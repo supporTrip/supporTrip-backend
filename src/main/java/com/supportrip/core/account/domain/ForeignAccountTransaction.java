@@ -2,7 +2,6 @@ package com.supportrip.core.account.domain;
 
 import com.supportrip.core.common.BaseEntity;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
-import com.supportrip.core.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -31,30 +30,32 @@ public class ForeignAccountTransaction extends BaseEntity {
     private Double targetCurrencyTotalAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "foreign_account_id")
-    private ForeignAccount foreignAccount;
+    @JoinColumn(name = "foreign_currency_wallet_id")
+    private ForeignCurrencyWallet foreignCurrencyWallet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exchange_trading_id")
     private ExchangeTrading exchangeTrading;
 
+
+
     @Builder(access = AccessLevel.PRIVATE)
-    private ForeignAccountTransaction(Long id, Double amount, Double targetExchangeRate, Double targetCurrencyTotalAmount, ForeignAccount foreignAccount, ExchangeTrading exchangeTrading) {
+    private ForeignAccountTransaction(Long id, Double amount, Double targetExchangeRate, Double targetCurrencyTotalAmount, ForeignCurrencyWallet foreignCurrencyWallet, ExchangeTrading exchangeTrading) {
         this.id = id;
         this.amount = amount;
         this.targetExchangeRate = targetExchangeRate;
         this.targetCurrencyTotalAmount = targetCurrencyTotalAmount;
-        this.foreignAccount = foreignAccount;
+        this.foreignCurrencyWallet = foreignCurrencyWallet;
         this.exchangeTrading = exchangeTrading;
     }
 
     public static ForeignAccountTransaction of(Double amount, Double targetExchangeRate, Double targetCurrencyTotalAmount,
-                                               ForeignAccount foreignAccount, ExchangeTrading exchangeTrading){
+                                               ForeignCurrencyWallet foreignCurrencyWallet, ExchangeTrading exchangeTrading){
         return ForeignAccountTransaction.builder()
                 .amount(amount)
                 .targetExchangeRate(targetExchangeRate)
                 .targetCurrencyTotalAmount(targetCurrencyTotalAmount)
-                .foreignAccount(foreignAccount)
+                .foreignCurrencyWallet(foreignCurrencyWallet)
                 .exchangeTrading(exchangeTrading)
                 .build();
     }
