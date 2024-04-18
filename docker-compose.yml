@@ -1,0 +1,8 @@
+version: '3'
+services:
+  trothcam:
+    image: rlaxoqkf/support:latest
+    container_name: support
+    restart: always
+    ports:
+      - 8080:8080
