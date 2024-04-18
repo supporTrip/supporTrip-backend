@@ -44,13 +44,13 @@ public class FlightInsuranceService {
         List<FlightInsurance> flightInsurances = calculatePremiumService.calculatePremium(age, period, request.getPlanName(), request.getGender(), filteredInsurances);
 
         //특약 상위3개 추가
-        return addTop3SpecialContract(flightInsurances, request.getPlanName());
+        return addTop3SpecialContract(flightInsurances, request.getPlanName(), request.getDepartAt(), request.getArrivalAt());
     }
 
     /**
      * 여행자 보험 상품에 특약 상위3개 리스트로 추가
      */
-    private List<SearchFlightInsuranceResponse> addTop3SpecialContract(List<FlightInsurance> flightInsurances, String planName) {
+    private List<SearchFlightInsuranceResponse> addTop3SpecialContract(List<FlightInsurance> flightInsurances, String planName, LocalDateTime departAt, LocalDateTime arrivalAt) {
         List<SearchFlightInsuranceResponse> searchFlightInsuranceResponses = new ArrayList<>();
 
         for (FlightInsurance flightInsurance : flightInsurances) {
@@ -65,7 +65,7 @@ public class FlightInsuranceService {
                 }
                 contractTop3Responses.add(top3SpecialContractResponse);
             }
-            SearchFlightInsuranceResponse searchFlightInsuranceResponse = SearchFlightInsuranceResponse.toDTO(flightInsurance, contractTop3Responses, planName);
+            SearchFlightInsuranceResponse searchFlightInsuranceResponse = SearchFlightInsuranceResponse.toDTO(flightInsurance, contractTop3Responses, planName, departAt, arrivalAt);
             searchFlightInsuranceResponses.add(searchFlightInsuranceResponse);
         }
 
