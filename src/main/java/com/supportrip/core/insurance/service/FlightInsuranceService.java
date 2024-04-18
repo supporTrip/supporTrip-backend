@@ -2,9 +2,8 @@ package com.supportrip.core.insurance.service;
 
 import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.insurance.domain.SpecialContract;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequest;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponse;
-import com.supportrip.core.insurance.dto.Top3SpecialContractResponse;
+import com.supportrip.core.insurance.dto.*;
+import com.supportrip.core.insurance.exception.NotFoundFlightInsuranceException;
 import com.supportrip.core.insurance.repository.FlightInsuranceRepository;
 import com.supportrip.core.insurance.repository.SpecialContractRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +53,7 @@ public class FlightInsuranceService {
         List<SearchFlightInsuranceResponse> searchFlightInsuranceResponses = new ArrayList<>();
 
         for (FlightInsurance flightInsurance : flightInsurances) {
-            List<SpecialContract> findSpecialContracts = specialContractRepository.findByFlightInsuranceId(flightInsurance.getId(), PageRequest.of(0, 3));
+            List<SpecialContract> findSpecialContracts = specialContractRepository.findThreeByFlightInsuranceId(flightInsurance.getId(), PageRequest.of(0, 3));
             List<Top3SpecialContractResponse> contractTop3Responses = new ArrayList<>();
             for (SpecialContract findSpecialContract : findSpecialContracts) {
                 Top3SpecialContractResponse top3SpecialContractResponse;
