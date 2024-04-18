@@ -22,4 +22,11 @@ public class FlightInsuranceApiController {
 
         return ResponseEntity.ok(flightInsurances);
     }
+
+    @GetMapping("/api/v1/flight-insurances")
+    public ResponseEntity<List<SearchFlightInsuranceResponse>> pageToFlightInsurance(@Valid SearchFlightInsuranceRequest request) {
+        List<SearchFlightInsuranceResponse> flightInsurances = flightInsuranceService.findFlightInsuranceFilter(request);
+
+        return ResponseEntity.ok(flightInsurances);
+    }
 }
