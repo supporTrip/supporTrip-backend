@@ -32,9 +32,6 @@ public class FlightInsurance {
     @Column(name = "max_join_age", nullable = false)
     private int maxJoinAge;
 
-    @Column(name = "plan_name", nullable = false)
-    private String planName;
-
     @Column(name = "flight_delay", nullable = false)
     private boolean flightDelay;
 
@@ -49,27 +46,25 @@ public class FlightInsurance {
     }
 
     @Builder(access = AccessLevel.PRIVATE)
-    private FlightInsurance(Long id, InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
+    private FlightInsurance(Long id, InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
         this.id = id;
         this.insuranceCompany = insuranceCompany;
         this.name = name;
         this.premium = premium;
         this.minJoinAge = minJoinAge;
         this.maxJoinAge = maxJoinAge;
-        this.planName = planName;
         this.flightDelay = flightDelay;
         this.passportLoss = passportLoss;
         this.foodPoisoning = foodPoisoning;
     }
 
-    public static FlightInsurance of(InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, String planName, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
+    public static FlightInsurance of(InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
         return builder()
                 .insuranceCompany(insuranceCompany)
                 .name(name)
                 .premium(premium)
                 .minJoinAge(minJoinAge)
                 .maxJoinAge(maxJoinAge)
-                .planName(planName)
                 .flightDelay(flightDelay)
                 .passportLoss(passportLoss)
                 .foodPoisoning(foodPoisoning)
