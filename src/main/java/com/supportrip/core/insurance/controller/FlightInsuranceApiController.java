@@ -26,7 +26,7 @@ public class FlightInsuranceApiController {
         return ResponseEntity.ok(flightInsurances);
     }
 
-    @GetMapping("/api/v1/flight-insurance-details/{id}")
+    @GetMapping("/api/v1/flight-insurance/{id}")
     public ResponseEntity<FlightInsuranceDetailResponse> detail(@PathVariable("id") Long flightInsuranceId, @Valid FlightInsuranceDetailRequest request) {
         FlightInsuranceDetailResponse flightInsuranceDetail = flightInsuranceService.findFlightInsuranceDetail(flightInsuranceId, request);
 
