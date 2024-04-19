@@ -1,5 +1,10 @@
 package com.supportrip.core.user.service;
 
+import com.supportrip.core.account.domain.Bank;
+import com.supportrip.core.account.domain.LinkedAccount;
+import com.supportrip.core.account.exception.BankNotFoundException;
+import com.supportrip.core.account.repository.BankRepository;
+import com.supportrip.core.account.repository.LinkedAccountRepository;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserConsentStatus;
 import com.supportrip.core.user.dto.SignUpRequest;
@@ -17,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final UserConsentStatusRepository userConsentStatusRepository;
+    private final BankRepository bankRepository;
+    private final LinkedAccountRepository linkedAccountRepository;
 
     @Transactional
     public User signUp(Long userId, SignUpRequest request) {
@@ -35,13 +42,22 @@ public class UserService {
                 request.getPinNumber()
         );
 
+        Bank bank = bankRepository.findByCode(request.getBank()).orElseThrow(BankNotFoundException::new);
+        LinkedAccount linkedAccount = LinkedAccount.of(user, bank, request.getBankAccountNumber());
+        linkedAccountRepository.save(linkedAccount);
+
         UserConsentStatus userConsentStatus = UserConsentStatus.of(
                 user,
                 request.getConsentAbove14(),
                 request.getServiceTermsConsent(),
                 request.getConsentPersonalInfo(),
                 request.getAdInfoConsent(),
-                request.getMyDataConsentPersonalInfo()
+                request.getMyDataConsentPersonalInfo(),
+                request.getOpenBankingAutoTransferConsent(),
+                request.getOpenBankingFinancialInfoInquiryConsent(),
+                request.getFinancialInfoThirdPartyProvisionConsent(),
+                request.getOpenBankingPersonalInfoThirdPartyProvisionConsent(),
+                request.getPersonalInfoThirdPartyConsentForESigniture()
         );
         userConsentStatusRepository.save(userConsentStatus);
 

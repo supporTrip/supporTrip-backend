@@ -24,6 +24,7 @@ public enum ErrorInfo {
     // 404
     USER_NOT_FOUND(NOT_FOUND, "404-01", "해당 유저 정보를 찾을 수 없습니다."),
     USER_SOCIALS_NOT_FOUND(NOT_FOUND, "404-02", "해당 유저의 소셜 로그인 정보를 찾을 수 없습니다."),
+    BANK_NOT_FOUND(NOT_FOUND, "404-03", "해당 은행 정보를 찾을 수 없습니다."),
     FLIGHT_INSURANCE_NOT_FOUND(NOT_FOUND, "404-04", "해당 보험 상품를 찾을 수 없습니다."),
 
     // 500

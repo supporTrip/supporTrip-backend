@@ -35,8 +35,23 @@ public class UserConsentStatus extends BaseEntity {
     @Column(name = "mydata_consent_personal_info", nullable = false)
     private boolean myDataConsentPersonalInfo;
 
+    @Column(name = "open_banking_auto_transfer_consent", nullable = false)
+    private boolean openBankingAutoTransferConsent;
+
+    @Column(name = "open_banking_financial_info_inquiry_consent", nullable = false)
+    private boolean openBankingFinancialInfoInquiryConsent;
+
+    @Column(name = "financial_info_third_party_provision_consent", nullable = false)
+    private boolean financialInfoThirdPartyProvisionConsent;
+
+    @Column(name = "open_banking_personal_info_third_party_provision_consent", nullable = false)
+    private boolean openBankingPersonalInfoThirdPartyProvisionConsent;
+
+    @Column(name = "personal_info_third_party_consent_for_e_signature", nullable = false)
+    private boolean personalInfoThirdPartyConsentForESigniture;
+
     @Builder(access = AccessLevel.PRIVATE)
-    private UserConsentStatus(Long id, User user, boolean consentAbove14, boolean serviceTermsConsent, boolean consentPersonalInfo, boolean adInfoConsent, boolean myDataConsentPersonalInfo) {
+    private UserConsentStatus(Long id, User user, boolean consentAbove14, boolean serviceTermsConsent, boolean consentPersonalInfo, boolean adInfoConsent, boolean myDataConsentPersonalInfo, boolean openBankingAutoTransferConsent, boolean openBankingFinancialInfoInquiryConsent, boolean financialInfoThirdPartyProvisionConsent, boolean openBankingPersonalInfoThirdPartyProvisionConsent, boolean personalInfoThirdPartyConsentForESigniture) {
         this.id = id;
         this.user = user;
         this.consentAbove14 = consentAbove14;
@@ -44,6 +59,11 @@ public class UserConsentStatus extends BaseEntity {
         this.consentPersonalInfo = consentPersonalInfo;
         this.adInfoConsent = adInfoConsent;
         this.myDataConsentPersonalInfo = myDataConsentPersonalInfo;
+        this.openBankingAutoTransferConsent = openBankingAutoTransferConsent;
+        this.openBankingFinancialInfoInquiryConsent = openBankingFinancialInfoInquiryConsent;
+        this.financialInfoThirdPartyProvisionConsent = financialInfoThirdPartyProvisionConsent;
+        this.openBankingPersonalInfoThirdPartyProvisionConsent = openBankingPersonalInfoThirdPartyProvisionConsent;
+        this.personalInfoThirdPartyConsentForESigniture = personalInfoThirdPartyConsentForESigniture;
     }
 
     public static UserConsentStatus of(User user,
@@ -51,7 +71,12 @@ public class UserConsentStatus extends BaseEntity {
                                        boolean serviceTermsConsent,
                                        boolean consentPersonalInfo,
                                        boolean adInfoConsent,
-                                       boolean myDataConsentPersonalInfo) {
+                                       boolean myDataConsentPersonalInfo,
+                                       boolean openBankingAutoTransferConsent,
+                                       boolean openBankingFinancialInfoInquiryConsent,
+                                       boolean financialInfoThirdPartyProvisionConsent,
+                                       boolean openBankingPersonalInfoThirdPartyProvisionConsent,
+                                       boolean personalInfoThirdPartyConsentForESigniture) {
         return UserConsentStatus.builder()
                 .user(user)
                 .consentAbove14(consentAbove14)
@@ -59,6 +84,11 @@ public class UserConsentStatus extends BaseEntity {
                 .consentPersonalInfo(consentPersonalInfo)
                 .adInfoConsent(adInfoConsent)
                 .myDataConsentPersonalInfo(myDataConsentPersonalInfo)
+                .openBankingAutoTransferConsent(openBankingAutoTransferConsent)
+                .openBankingFinancialInfoInquiryConsent(openBankingFinancialInfoInquiryConsent)
+                .financialInfoThirdPartyProvisionConsent(financialInfoThirdPartyProvisionConsent)
+                .openBankingPersonalInfoThirdPartyProvisionConsent(openBankingPersonalInfoThirdPartyProvisionConsent)
+                .personalInfoThirdPartyConsentForESigniture(personalInfoThirdPartyConsentForESigniture)
                 .build();
     }
 }
