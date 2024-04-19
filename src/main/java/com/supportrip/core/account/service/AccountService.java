@@ -69,7 +69,7 @@ public class AccountService {
 
         List<ForeignCurrencyWallet> foreignCurrencyWallets = foreignCurrencyWalletRepository.findByForeignAccountAndTotalAmountGreaterThan(foreignAccount,0.0);
 
-        if(foreignCurrencyWallets == null)
+        if(foreignCurrencyWallets.isEmpty())
             return ForeignAccountInfoListResponse.of(true, null);
 
         List<ForeignAccountInfoResponse> accountInfoResponses = new ArrayList<>();
