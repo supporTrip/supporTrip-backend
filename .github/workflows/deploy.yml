@@ -30,7 +30,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: create application.yml and privateKey.pem
+      - name: create application.yml
         run: |
           cd ./src/main/resources
           touch ./application.yml
