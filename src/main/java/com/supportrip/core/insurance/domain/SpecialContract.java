@@ -26,9 +26,6 @@ public class SpecialContract {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "basic_price", nullable = false)
-    private int basicPrice;
-
     @Column(name = "standard_price", nullable = false)
     private int standardPrice;
 
@@ -40,21 +37,19 @@ public class SpecialContract {
     }
 
     @Builder(access = AccessLevel.PRIVATE)
-    private SpecialContract(Long id, FlightInsurance flightInsurance, String name, String description, int basicPrice, int standardPrice, int advancedPrice) {
+    private SpecialContract(Long id, FlightInsurance flightInsurance, String name, String description, int standardPrice, int advancedPrice) {
         this.id = id;
         this.flightInsurance = flightInsurance;
         this.name = name;
         this.description = description;
-        this.basicPrice = basicPrice;
         this.standardPrice = standardPrice;
         this.advancedPrice = advancedPrice;
     }
 
-    public static SpecialContract of(FlightInsurance flightInsurance, String name, int basicPrice, int standardPrice, int advancedPrice) {
+    public static SpecialContract of(FlightInsurance flightInsurance, String name, int standardPrice, int advancedPrice) {
         return builder()
                 .flightInsurance(flightInsurance)
                 .name(name)
-                .basicPrice(basicPrice)
                 .standardPrice(standardPrice)
                 .advancedPrice(advancedPrice)
                 .build();

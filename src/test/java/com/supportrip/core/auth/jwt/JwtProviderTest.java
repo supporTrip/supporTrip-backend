@@ -114,17 +114,15 @@ class JwtProviderTest {
     }
 
     @Test
-    @DisplayName("JWT가 만료된 경우 false를 반환한다.")
+    @DisplayName("JWT가 만료된 경우 예외가 발생한다.")
     void validateTokenFail() {
         // given
         Date yesterday = Date.from(Instant.now().minus(1, TimeUnit.DAYS.toChronoUnit()));
         String expiredToken = JwtTestSupport.generateToken(AuthPayload.from(1L), yesterday, ACCESS_TOKEN_VALID_MILLIS);
 
-        // when
-        boolean isValid = jwtProvider.validateToken(expiredToken);
-
-        // then
-        assertThat(isValid).isFalse();
+        // expected
+        assertThatThrownBy(() -> jwtProvider.validateToken(expiredToken))
+                .isInstanceOf(ExpiredTokenException.class);
     }
 
     @Test

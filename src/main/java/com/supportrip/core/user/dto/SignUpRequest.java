@@ -3,6 +3,7 @@ package com.supportrip.core.user.dto;
 import com.supportrip.core.user.domain.Gender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,9 +44,31 @@ public class SignUpRequest {
     private Boolean adInfoConsent;
 
     private Boolean myDataConsentPersonalInfo;
+    
+    @NotBlank(message = "은행을 선택해주세요.")
+    private String bank;
+
+    @NotBlank(message = "계좌 번호를 입력해주세요.")
+    @Size(min = 10, max = 14, message = "10자에서 14자 사이의 숫자를 입력해주세요.")
+    private String bankAccountNumber;
+
+    @NotNull(message = "오픈뱅킹 자동계좌이체 약관 동의에 체크해주세요.")
+    private Boolean openBankingAutoTransferConsent;
+
+    @NotNull(message = "오픈뱅킹 금융정보조회 약관 동의에 체크해주세요.")
+    private Boolean openBankingFinancialInfoInquiryConsent;
+
+    @NotNull(message = "금융정보 제3자 제공 동의에 체크해주세요.")
+    private Boolean financialInfoThirdPartyProvisionConsent;
+
+    @NotNull(message = "개인정보 제3자 제공 동의(오픈 뱅킹)에 체크해주세요.")
+    private Boolean openBankingPersonalInfoThirdPartyProvisionConsent;
+
+    @NotNull(message = "본인인증,전자서명을 위한 개인정보 제3자 제공 동의에 체크해주세요.")
+    private Boolean personalInfoThirdPartyConsentForESigniture;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public SignUpRequest(String name, String email, String phoneNumber, LocalDate birthDay, Gender gender, String pinNumber, Boolean consentAbove14, Boolean serviceTermsConsent, Boolean consentPersonalInfo, Boolean adInfoConsent, Boolean myDataConsentPersonalInfo) {
+    private SignUpRequest(String name, String email, String phoneNumber, LocalDate birthDay, Gender gender, String pinNumber, Boolean consentAbove14, Boolean serviceTermsConsent, Boolean consentPersonalInfo, Boolean adInfoConsent, Boolean myDataConsentPersonalInfo, String bank, String bankAccountNumber, Boolean openBankingAutoTransferConsent, Boolean openBankingFinancialInfoInquiryConsent, Boolean financialInfoThirdPartyProvisionConsent, Boolean openBankingPersonalInfoThirdPartyProvisionConsent, Boolean personalInfoThirdPartyConsentForESigniture) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -57,9 +80,16 @@ public class SignUpRequest {
         this.consentPersonalInfo = consentPersonalInfo;
         this.adInfoConsent = adInfoConsent;
         this.myDataConsentPersonalInfo = myDataConsentPersonalInfo;
+        this.bank = bank;
+        this.bankAccountNumber = bankAccountNumber;
+        this.openBankingAutoTransferConsent = openBankingAutoTransferConsent;
+        this.openBankingFinancialInfoInquiryConsent = openBankingFinancialInfoInquiryConsent;
+        this.financialInfoThirdPartyProvisionConsent = financialInfoThirdPartyProvisionConsent;
+        this.openBankingPersonalInfoThirdPartyProvisionConsent = openBankingPersonalInfoThirdPartyProvisionConsent;
+        this.personalInfoThirdPartyConsentForESigniture = personalInfoThirdPartyConsentForESigniture;
     }
 
-    public static SignUpRequest of(String name, String email, String phoneNumber, LocalDate birthDay, Gender gender, String pinNumber, Boolean consentAbove14, Boolean serviceTermsConsent, Boolean consentPersonalInfo, Boolean adInfoConsent, Boolean myDataConsentPersonalInfo) {
+    public static SignUpRequest of(String name, String email, String phoneNumber, LocalDate birthDay, Gender gender, String pinNumber, String bank, String bankAccountNumber, Boolean consentAbove14, Boolean serviceTermsConsent, Boolean consentPersonalInfo, Boolean adInfoConsent, Boolean myDataConsentPersonalInfo, Boolean openBankingAutoTransferConsent, Boolean openBankingFinancialInfoInquiryConsent, Boolean financialInfoThirdPartyProvisionConsent, Boolean openBankingPersonalInfoThirdPartyProvisionConsent, Boolean personalInfoThirdPartyConsentForESigniture) {
         return SignUpRequest.builder()
                 .name(name)
                 .email(email)
@@ -67,11 +97,18 @@ public class SignUpRequest {
                 .birthDay(birthDay)
                 .gender(gender)
                 .pinNumber(pinNumber)
+                .bank(bank)
+                .bankAccountNumber(bankAccountNumber)
                 .consentAbove14(consentAbove14)
                 .serviceTermsConsent(serviceTermsConsent)
                 .consentPersonalInfo(consentPersonalInfo)
                 .adInfoConsent(resolveSelectableConsent(adInfoConsent))
-                .myDataConsentPersonalInfo(resolveSelectableConsent(adInfoConsent))
+                .myDataConsentPersonalInfo(resolveSelectableConsent(myDataConsentPersonalInfo))
+                .openBankingAutoTransferConsent(openBankingAutoTransferConsent)
+                .openBankingFinancialInfoInquiryConsent(openBankingFinancialInfoInquiryConsent)
+                .financialInfoThirdPartyProvisionConsent(financialInfoThirdPartyProvisionConsent)
+                .openBankingPersonalInfoThirdPartyProvisionConsent(openBankingPersonalInfoThirdPartyProvisionConsent)
+                .personalInfoThirdPartyConsentForESigniture(personalInfoThirdPartyConsentForESigniture)
                 .build();
     }
 
