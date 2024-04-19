@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SpecialContractRepository extends JpaRepository<SpecialContract, Long> {
-    List<SpecialContract> findThreeByFlightInsuranceId(Long id, Pageable pageable);
+    List<SpecialContract> findByFlightInsuranceId(Long id, Pageable pageable);
 
     List<SpecialContract> findByFlightInsuranceId(Long flightInsuranceId);
 }

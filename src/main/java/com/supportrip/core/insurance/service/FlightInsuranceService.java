@@ -53,7 +53,7 @@ public class FlightInsuranceService {
         List<SearchFlightInsuranceResponse> searchFlightInsuranceResponses = new ArrayList<>();
 
         for (FlightInsurance flightInsurance : flightInsurances) {
-            List<SpecialContract> findSpecialContracts = specialContractRepository.findThreeByFlightInsuranceId(flightInsurance.getId(), PageRequest.of(0, 3));
+            List<SpecialContract> findSpecialContracts = specialContractRepository.findByFlightInsuranceId(flightInsurance.getId(), PageRequest.of(0, 3));
             List<Top3SpecialContractResponse> contractTop3Responses = new ArrayList<>();
             for (SpecialContract findSpecialContract : findSpecialContracts) {
                 Top3SpecialContractResponse top3SpecialContractResponse;
