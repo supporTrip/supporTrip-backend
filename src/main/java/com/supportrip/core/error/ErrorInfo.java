@@ -20,6 +20,7 @@ public enum ErrorInfo {
 
     // 403
     ACCESS_DENIED(FORBIDDEN, "403-01", "권한이 없어 해당 요청을 처리할 수 없습니다."),
+    EXCHANGE_ACCESS_DENIED(FORBIDDEN, "403-02", "외화 계좌가 없어 환전 거래를 할 수 없습니다."),
 
     // 404
     USER_NOT_FOUND(NOT_FOUND, "404-01", "해당 유저 정보를 찾을 수 없습니다."),
