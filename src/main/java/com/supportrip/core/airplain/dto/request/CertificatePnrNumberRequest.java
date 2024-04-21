@@ -1,14 +1,10 @@
 package com.supportrip.core.airplain.dto.request;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class CertificatePnrNumberRequest {
-    private final String country;
-    private final String pnrNumber;
-    private final LocalDateTime departAt;
+    private String pnrNumber;
 }
