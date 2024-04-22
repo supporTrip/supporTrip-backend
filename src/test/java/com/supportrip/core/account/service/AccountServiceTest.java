@@ -73,7 +73,7 @@ class AccountServiceTest {
     void getforeignAccountInfo(){
         Long userId = 1L;
         User user = User.initialUserOf("profile_img");
-        Bank bank = Bank.of("우리은행", "bank_img");
+        Bank bank = Bank.of("우리은행", "WOORI", "bank_img");
         ForeignAccount foreignAccount = ForeignAccount.of(user, bank, "1111");
         List<ForeignCurrencyWallet> walletList = new ArrayList<>();
         Country country = Country.of("미국", "미국국기", "미국달러");
