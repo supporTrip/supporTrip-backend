@@ -11,6 +11,7 @@ public enum ErrorInfo {
     INVALID_INPUT(BAD_REQUEST, "400-01", "잘못된 입력입니다."),
     ALREADY_SIGNED_UP_USER(BAD_REQUEST, "400-02", "이미 회원 가입이 완료된 계정입니다."),
     DUPLICATE_FOREIGN_ACCOUNT(BAD_REQUEST, "400-03", "중복된 계좌 생성 요청입니다."),
+    NOT_ENOUGH_POINT(BAD_REQUEST, "400-04", "현재 보유한 포인트가 충분하지 않습니다."),
 
     // 401
     UNAUTHORIZED_REQUEST(UNAUTHORIZED, "401-01", "로그인이 필요한 요청입니다."),
@@ -27,7 +28,7 @@ public enum ErrorInfo {
     USER_SOCIALS_NOT_FOUND(NOT_FOUND, "404-02", "해당 유저의 소셜 로그인 정보를 찾을 수 없습니다."),
     BANK_NOT_FOUND(NOT_FOUND, "404-03", "해당 은행 정보를 찾을 수 없습니다."),
     FLIGHT_INSURANCE_NOT_FOUND(NOT_FOUND, "404-04", "해당 보험 상품를 찾을 수 없습니다."),
-    COUNTRY_NOT_FOUND(NOT_FOUND, "404-05", "해당 국가 정보를 찾을 수 없습니다."),
+    CURRENCY_NOT_FOUND(NOT_FOUND, "404-05", "해당 통화 정보를 찾을 수 없습니다."),
 
     // 500
     UNHANDLED_ERROR(INTERNAL_SERVER_ERROR, "500-01", "알 수 없는 오류가 발생했습니다. 관리자에게 연락해주세요."),

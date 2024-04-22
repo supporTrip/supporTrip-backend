@@ -51,15 +51,15 @@ class FlightInsuranceServiceTest {
         );
 
         List<SpecialContract> mockSpecialContracts1 = Arrays.asList(
-                SpecialContract.of(mockFlightInsurances.get(0), "해외의료보험", 1000, 2000, 3000),
-                SpecialContract.of(mockFlightInsurances.get(0), "항공기지연", 1000, 2000, 3000),
-                SpecialContract.of(mockFlightInsurances.get(0), "휴대폰분실", 1000, 2000, 3000)
+                SpecialContract.of(mockFlightInsurances.get(0), "해외의료보험", 1000, 2000),
+                SpecialContract.of(mockFlightInsurances.get(0), "항공기지연", 1000, 2000),
+                SpecialContract.of(mockFlightInsurances.get(0), "휴대폰분실", 1000, 2000)
         );
 
         List<SpecialContract> mockSpecialContracts2 = Arrays.asList(
-                SpecialContract.of(mockFlightInsurances.get(1), "해외의료보험", 2000, 3000, 4000),
-                SpecialContract.of(mockFlightInsurances.get(1), "항공기지연", 2000, 3000, 4000),
-                SpecialContract.of(mockFlightInsurances.get(1), "휴대폰분실", 2000, 3000, 4000)
+                SpecialContract.of(mockFlightInsurances.get(1), "해외의료보험", 2000, 3000),
+                SpecialContract.of(mockFlightInsurances.get(1), "항공기지연", 2000, 3000),
+                SpecialContract.of(mockFlightInsurances.get(1), "휴대폰분실", 2000, 3000)
         );
 
         List<FlightInsurance> mockCalPremium = Arrays.asList(

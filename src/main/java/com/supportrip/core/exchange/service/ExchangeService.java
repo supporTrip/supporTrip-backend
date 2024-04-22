@@ -1,6 +1,7 @@
 package com.supportrip.core.exchange.service;
 
 import com.supportrip.core.account.repository.ForeignAccountRepository;
+import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
 import com.supportrip.core.exchange.exception.ExchangeAccessDeniedException;
 import com.supportrip.core.exchange.repository.CurrencyRepository;
@@ -31,4 +32,7 @@ public class ExchangeService {
         return exchangeTradingRepository.findByUserAndCompletedAtIsNull(user);
     }
 
+    public List<Currency> getExchangeableCurrency() {
+        return currencyRepository.findAll();
+    }
 }
