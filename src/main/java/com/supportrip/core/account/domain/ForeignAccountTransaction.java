@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Table(name = "foreign_account_transaction")
@@ -21,13 +19,13 @@ public class ForeignAccountTransaction extends BaseEntity {
     private Long id;
 
     @Column(name = "amount")
-    private Double amount;
+    private Long amount;
 
     @Column(name = "target_exchange_rate")
     private Double targetExchangeRate;
 
     @Column(name = "target_currency_total_amount")
-    private Double targetCurrencyTotalAmount;
+    private Long targetCurrencyTotalAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "foreign_currency_wallet_id")
@@ -37,10 +35,8 @@ public class ForeignAccountTransaction extends BaseEntity {
     @JoinColumn(name = "exchange_trading_id")
     private ExchangeTrading exchangeTrading;
 
-
-
     @Builder(access = AccessLevel.PRIVATE)
-    private ForeignAccountTransaction(Long id, Double amount, Double targetExchangeRate, Double targetCurrencyTotalAmount, ForeignCurrencyWallet foreignCurrencyWallet, ExchangeTrading exchangeTrading) {
+    private ForeignAccountTransaction(Long id, Long amount, Double targetExchangeRate, Long targetCurrencyTotalAmount, ForeignCurrencyWallet foreignCurrencyWallet, ExchangeTrading exchangeTrading) {
         this.id = id;
         this.amount = amount;
         this.targetExchangeRate = targetExchangeRate;
@@ -49,8 +45,11 @@ public class ForeignAccountTransaction extends BaseEntity {
         this.exchangeTrading = exchangeTrading;
     }
 
-    public static ForeignAccountTransaction of(Double amount, Double targetExchangeRate, Double targetCurrencyTotalAmount,
-                                               ForeignCurrencyWallet foreignCurrencyWallet, ExchangeTrading exchangeTrading){
+    public static ForeignAccountTransaction of(Long amount,
+                                               Double targetExchangeRate,
+                                               Long targetCurrencyTotalAmount,
+                                               ForeignCurrencyWallet foreignCurrencyWallet,
+                                               ExchangeTrading exchangeTrading) {
         return ForeignAccountTransaction.builder()
                 .amount(amount)
                 .targetExchangeRate(targetExchangeRate)

@@ -24,26 +24,21 @@ public class ForeignCurrencyWallet {
     @JoinColumn(name = "currency_id")
     private Currency currency;
 
-    @Column(name = "country_name")
-    private String countryName;
-
     @Column(name = "total_amount")
-    private Double totalAmount;
+    private Long totalAmount;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ForeignCurrencyWallet(Long id, ForeignAccount foreignAccount, Currency currency, String countryName, Double totalAmount) {
+    private ForeignCurrencyWallet(Long id, ForeignAccount foreignAccount, Currency currency, Long totalAmount) {
         this.id = id;
         this.foreignAccount = foreignAccount;
         this.currency = currency;
-        this.countryName = countryName;
         this.totalAmount = totalAmount;
     }
 
-    public static ForeignCurrencyWallet of(ForeignAccount foreignAccount, Currency currency, Double totalAmount){
+    public static ForeignCurrencyWallet of(ForeignAccount foreignAccount, Currency currency, Long totalAmount) {
         return ForeignCurrencyWallet.builder()
                 .foreignAccount(foreignAccount)
                 .currency(currency)
-                .countryName(currency.getCountry().getName())
                 .totalAmount(totalAmount)
                 .build();
     }

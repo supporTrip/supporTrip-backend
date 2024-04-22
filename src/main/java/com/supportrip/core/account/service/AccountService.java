@@ -49,7 +49,7 @@ public class AccountService {
         List<Currency> currencyList = currencyRepository.findAll();
 
         for(Currency currency : currencyList){
-            ForeignCurrencyWallet wallet = ForeignCurrencyWallet.of(foreignAccount, currency, 0.0);
+            ForeignCurrencyWallet wallet = ForeignCurrencyWallet.of(foreignAccount, currency, 0L);
             foreignCurrencyWalletRepository.save(wallet);
         }
 
