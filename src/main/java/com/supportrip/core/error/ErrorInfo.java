@@ -31,7 +31,8 @@ public enum ErrorInfo {
 
     // 500
     UNHANDLED_ERROR(INTERNAL_SERVER_ERROR, "500-01", "알 수 없는 오류가 발생했습니다. 관리자에게 연락해주세요."),
-    KAKAO_SERVER_ERROR(INTERNAL_SERVER_ERROR, "500-02", "카카오 서버로부터 인증 정보를 가져오지 못했습니다.");
+    KAKAO_SERVER_ERROR(INTERNAL_SERVER_ERROR, "500-02", "카카오 서버로부터 인증 정보를 가져오지 못했습니다."),
+    OUTDATED_EXCHANGE_RATE(INTERNAL_SERVER_ERROR, "500-03", "이전 환율 정보로 인해 거래를 진행할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String errorCode;
