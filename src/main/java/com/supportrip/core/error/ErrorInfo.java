@@ -11,6 +11,7 @@ public enum ErrorInfo {
     INVALID_INPUT(BAD_REQUEST, "400-01", "잘못된 입력입니다."),
     ALREADY_SIGNED_UP_USER(BAD_REQUEST, "400-02", "이미 회원 가입이 완료된 계정입니다."),
     DUPLICATE_FOREIGN_ACCOUNT(BAD_REQUEST, "400-03", "중복된 계좌 생성 요청입니다."),
+    NOT_ENOUGH_POINT(BAD_REQUEST, "400-04", "현재 보유한 포인트가 충분하지 않습니다."),
 
     // 401
     UNAUTHORIZED_REQUEST(UNAUTHORIZED, "401-01", "로그인이 필요한 요청입니다."),
