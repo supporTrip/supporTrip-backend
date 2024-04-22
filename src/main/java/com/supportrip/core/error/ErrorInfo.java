@@ -12,6 +12,8 @@ public enum ErrorInfo {
     ALREADY_SIGNED_UP_USER(BAD_REQUEST, "400-02", "이미 회원 가입이 완료된 계정입니다."),
     DUPLICATE_FOREIGN_ACCOUNT(BAD_REQUEST, "400-03", "중복된 계좌 생성 요청입니다."),
     NOT_ENOUGH_POINT(BAD_REQUEST, "400-04", "현재 보유한 포인트가 충분하지 않습니다."),
+    NOT_ENOUGH_TRADING_AMOUNT(BAD_REQUEST, "400-05", "현재 남은 금액보다 더 많은 금액을 환전할 수 없습니다."),
+    ALREADY_COMPLETED_TRADING(BAD_REQUEST, "400-06", "이미 완료된 환전 거래입니다."),
 
     // 401
     UNAUTHORIZED_REQUEST(UNAUTHORIZED, "401-01", "로그인이 필요한 요청입니다."),

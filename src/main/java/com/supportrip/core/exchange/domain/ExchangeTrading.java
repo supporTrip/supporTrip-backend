@@ -77,4 +77,18 @@ public class ExchangeTrading extends BaseEntity {
                 .completedAt(completedAt)
                 .build();
     }
+
+    public void changeToComplete() {
+        if (COMPLETED.equals(this.status)) {
+            throw new AlreadyCompletedTradingException();
+        }
+        this.status = COMPLETED;
+    }
+
+    public void reduceAmount(Long amount) {
+        if (this.currentAmount < amount) {
+            throw new NotEnoughTradingAmountException();
+        }
+        this.currentAmount -= amount;
+    }
 }
