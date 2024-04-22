@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "ponit_transaction")
+@Table(name = "point_transaction")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverride(name = "createdAt", column = @Column(name = "transacted_at"))
 public class PointTransaction extends BaseEntity {
