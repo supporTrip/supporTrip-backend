@@ -13,11 +13,11 @@ public class ForeignAccountTransactionDetailResponse {
     private final String date;
     private final String time;
     private final Double exchangeRate;
-    private final Double transactionMoney;
-    private final Double totalMoney;
+    private final Long transactionMoney;
+    private final Long totalMoney;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ForeignAccountTransactionDetailResponse(String date, String time, Double exchangeRate, Double transactionMoney, Double totalMoney) {
+    private ForeignAccountTransactionDetailResponse(String date, String time, Double exchangeRate, Long transactionMoney, Long totalMoney) {
         this.date = date;
         this.time = time;
         this.exchangeRate = exchangeRate;
@@ -25,7 +25,7 @@ public class ForeignAccountTransactionDetailResponse {
         this.totalMoney = totalMoney;
     }
 
-    public static ForeignAccountTransactionDetailResponse of(ForeignAccountTransaction foreignAccountTransaction){
+    public static ForeignAccountTransactionDetailResponse of(ForeignAccountTransaction foreignAccountTransaction) {
         LocalDateTime createdAt = foreignAccountTransaction.getCreatedAt();
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yy.MM.dd");
