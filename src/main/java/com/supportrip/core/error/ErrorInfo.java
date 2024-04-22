@@ -30,6 +30,9 @@ public enum ErrorInfo {
     BANK_NOT_FOUND(NOT_FOUND, "404-03", "해당 은행 정보를 찾을 수 없습니다."),
     FLIGHT_INSURANCE_NOT_FOUND(NOT_FOUND, "404-04", "해당 보험 상품를 찾을 수 없습니다."),
     CURRENCY_NOT_FOUND(NOT_FOUND, "404-05", "해당 통화 정보를 찾을 수 없습니다."),
+    EXCHANGE_RATE_NOT_FOUND(NOT_FOUND, "404-06", "해당 환율 정보를 찾을 수 없습니다."),
+    POINT_WALLET_NOT_FOUND(NOT_FOUND, "404-07", "해당 포인트 지갑을 찾을 수 없습니다."),
+    FOREIGN_ACCOUNT_NOT_FOUND(NOT_FOUND, "404-08", "해당 외화 계좌를 찾을 수 없습니다."),
 
     // 500
     UNHANDLED_ERROR(INTERNAL_SERVER_ERROR, "500-01", "알 수 없는 오류가 발생했습니다. 관리자에게 연락해주세요."),
