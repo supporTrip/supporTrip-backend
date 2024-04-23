@@ -37,7 +37,7 @@ public class ForeignAccountInfoResponse {
                 .flag(country.getFlagUrl())
                 .name(country.getCurrency_name())
                 .sign(currency.getSign())
-                .unitName(currency.getUnit())
+                .unitName(currency.getCode())
                 .totalAmount(foreignCurrencyWallet.getTotalAmount().toString())
                 .averageRate(averageRate.toString())
                 .details(details)

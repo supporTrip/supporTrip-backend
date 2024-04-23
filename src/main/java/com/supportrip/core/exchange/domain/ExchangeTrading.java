@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.supportrip.core.exchange.domain.TradingStatus.COMPLETED;
@@ -29,11 +30,28 @@ public class ExchangeTrading extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @JoinColumn(name = "base_currency_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Currency baseCurrency;
+
+    @JoinColumn(name = "target_currency_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Currency targetCurrency;
+
+    @JoinColumn(name = "starting_exchange_rate_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ExchangeRate startingExchangeRate;
+
+    // TODO: 비행기 인증 추가
+
     @Column(name = "display_name")
     private String displayName;
 
     @Column(name = "trading_amount")
     private Long tradingAmount;
+
+    @Column(name = "current_amount")
+    private Long currentAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -43,36 +61,39 @@ public class ExchangeTrading extends BaseEntity {
     @Column(name = "strategy")
     private TradingStrategy strategy;
 
-    @Column(name = "current_amount")
-    private Long currentAmount;
-
-    @Column(name = "target_price")
-    private Double targetPrice;
+    @Column(name = "target_exchange_rate")
+    private Double targetExchangeRate;
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public ExchangeTrading(Long id, User user, String displayName, Long tradingAmount, TradingStatus status, TradingStrategy strategy, Long currentAmount, Double targetPrice, LocalDateTime completedAt) {
+    public ExchangeTrading(Long id, User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, String displayName, Long tradingAmount, Long currentAmount, TradingStatus status, TradingStrategy strategy, Double targetExchangeRate, LocalDateTime completedAt) {
         this.id = id;
         this.user = user;
+        this.baseCurrency = baseCurrency;
+        this.targetCurrency = targetCurrency;
+        this.startingExchangeRate = startingExchangeRate;
         this.displayName = displayName;
         this.tradingAmount = tradingAmount;
+        this.currentAmount = currentAmount;
         this.status = status;
         this.strategy = strategy;
-        this.currentAmount = currentAmount;
-        this.targetPrice = targetPrice;
+        this.targetExchangeRate = targetExchangeRate;
         this.completedAt = completedAt;
     }
 
-    public static ExchangeTrading of(User user, String displayName, Long tradingAmount, TradingStrategy tradingStrategy, Double targetPrice, LocalDateTime completedAt) {
+    public static ExchangeTrading of(User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, String displayName, Long tradingAmount, TradingStrategy tradingStrategy, Double targetExchangeRate, LocalDateTime completedAt) {
         return ExchangeTrading.builder()
                 .user(user)
+                .baseCurrency(baseCurrency)
+                .targetCurrency(targetCurrency)
+                .startingExchangeRate(startingExchangeRate)
                 .displayName(displayName)
                 .strategy(tradingStrategy)
                 .tradingAmount(tradingAmount)
                 .currentAmount(tradingAmount)
-                .targetPrice(targetPrice)
+                .targetExchangeRate(targetExchangeRate)
                 .status(IN_PROGRESS)
                 .completedAt(completedAt)
                 .build();
@@ -91,4 +112,13 @@ public class ExchangeTrading extends BaseEntity {
         }
         this.currentAmount -= amount;
     }
+
+    public boolean isLastDate(LocalDate date) {
+        // TODO: 당일 몇시에 완료되도록 할 건지 정해야 함, 즉 마지막 거래시점이 언제인지 설정
+        return completedAt.toLocalDate().isEqual(date);
+    }
+
+//    public Long getMaxExchangableAmount() {
+//
+//    }
 }

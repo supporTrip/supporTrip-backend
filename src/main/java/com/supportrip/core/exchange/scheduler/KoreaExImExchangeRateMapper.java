@@ -16,11 +16,11 @@ public class KoreaExImExchangeRateMapper {
     private final CurrencyRepository currencyRepository;
 
     public ExchangeRate convertEntityFrom(KoreaExImExchangeRateResponse response) {
-        Currency baseCurrency = currencyRepository.findByUnit(KOREA_WON_CURRENCY_UNIT)
+        Currency baseCurrency = currencyRepository.findByCode(KOREA_WON_CURRENCY_UNIT)
                 .orElseThrow(CurrencyNotFoundException::new);
 
         String currencyUnit = getCurrencyUnit(response.getCurUnit());
-        Currency targetCurrency = currencyRepository.findByUnit(currencyUnit)
+        Currency targetCurrency = currencyRepository.findByCode(currencyUnit)
                 .orElseThrow(CurrencyNotFoundException::new);
 
         Long targetCurrencyUnit = getTargetCurrencyUnit(response.getCurUnit());

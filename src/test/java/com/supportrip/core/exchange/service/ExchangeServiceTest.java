@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
@@ -56,8 +57,10 @@ class ExchangeServiceTest {
         final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
 
         User user = User.userOf(NAME, EMAIL, GENDER, PHONE_NUMBER, BIRTH_DAY, PROFILE_IMAGE_URL);
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(user, EXCHANGE_TRADING_NAME, TRADING_AMOUNT, TRADING_STRATEGY, null, null);
         ExchangeRate exchangeRate = ExchangeRate.of(JAPAN_CURRENCY, 100L, KOREA_CURRENCY, 1.0);
+        final LocalDateTime oneMonthLater = LocalDateTime.now().plusMonths(1);
+        ExchangeTrading exchangeTrading =
+                ExchangeTrading.of(user, KOREA_CURRENCY, JAPAN_CURRENCY, exchangeRate, EXCHANGE_TRADING_NAME, TRADING_AMOUNT, TRADING_STRATEGY, null, oneMonthLater);
 
         ForeignCurrencyWallet foreignCurrencyWallet = ForeignCurrencyWallet.of(null, JAPAN_CURRENCY, 0L);
 

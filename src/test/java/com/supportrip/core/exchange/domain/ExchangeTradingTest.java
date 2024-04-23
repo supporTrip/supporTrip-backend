@@ -14,7 +14,7 @@ class ExchangeTradingTest {
     @DisplayName("환전 거래를 종료한다.")
     void changeToCompleteSuccess() {
         // given
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null);
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null);
 
         // when
         exchangeTrading.changeToComplete();
@@ -27,7 +27,7 @@ class ExchangeTradingTest {
     @DisplayName("이미 종료된 환전 거래를 다시 종료하는 경우 예외가 발생한다.")
     void alreadyChangeToCompleteFail() {
         // given
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null);
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null);
         exchangeTrading.changeToComplete();
 
         // expected
@@ -41,7 +41,8 @@ class ExchangeTradingTest {
         // given
         final long ENOUGH_AMOUNT = 100_000L;
         final long REDUCE_AMOUNT = 100L;
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, ENOUGH_AMOUNT, null, null, null);
+        ExchangeTrading exchangeTrading =
+                ExchangeTrading.of(null, null, null, null, null, ENOUGH_AMOUNT, null, null, null);
 
         // when
         exchangeTrading.reduceAmount(REDUCE_AMOUNT);
@@ -56,7 +57,8 @@ class ExchangeTradingTest {
         // given
         final long NOT_ENOUGH_AMOUNT = 10L;
         final long REDUCE_AMOUNT = 100L;
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, NOT_ENOUGH_AMOUNT, null, null, null);
+        ExchangeTrading exchangeTrading =
+                ExchangeTrading.of(null, null, null, null, null, NOT_ENOUGH_AMOUNT, null, null, null);
 
         // expected
         assertThatThrownBy(() -> exchangeTrading.reduceAmount(REDUCE_AMOUNT))
