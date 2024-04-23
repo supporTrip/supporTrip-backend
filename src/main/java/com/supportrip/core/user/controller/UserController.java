@@ -27,7 +27,7 @@ public class UserController {
         return SimpleIdResponse.from(user.getId());
     }
 
-    @GetMapping("/api/v1/flight-insurance/users")
+    @GetMapping("/api/v1/users")
     public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
         return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender() , user.getBirthDay()));
