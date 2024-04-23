@@ -7,6 +7,7 @@ import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequest;
 import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponse;
 import com.supportrip.core.insurance.repository.FlightInsuranceRepository;
 import com.supportrip.core.insurance.repository.SpecialContractRepository;
+import com.supportrip.core.user.domain.Gender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,15 +52,15 @@ class FlightInsuranceServiceTest {
         );
 
         List<SpecialContract> mockSpecialContracts1 = Arrays.asList(
-                SpecialContract.of(mockFlightInsurances.get(0), "해외의료보험", 1000, 2000, 3000),
-                SpecialContract.of(mockFlightInsurances.get(0), "항공기지연", 1000, 2000, 3000),
-                SpecialContract.of(mockFlightInsurances.get(0), "휴대폰분실", 1000, 2000, 3000)
+                SpecialContract.of(mockFlightInsurances.get(0), "해외의료보험", 1000, 2000),
+                SpecialContract.of(mockFlightInsurances.get(0), "항공기지연", 1000, 2000),
+                SpecialContract.of(mockFlightInsurances.get(0), "휴대폰분실", 1000, 2000)
         );
 
         List<SpecialContract> mockSpecialContracts2 = Arrays.asList(
-                SpecialContract.of(mockFlightInsurances.get(1), "해외의료보험", 2000, 3000, 4000),
-                SpecialContract.of(mockFlightInsurances.get(1), "항공기지연", 2000, 3000, 4000),
-                SpecialContract.of(mockFlightInsurances.get(1), "휴대폰분실", 2000, 3000, 4000)
+                SpecialContract.of(mockFlightInsurances.get(1), "해외의료보험", 2000, 3000),
+                SpecialContract.of(mockFlightInsurances.get(1), "항공기지연", 2000, 3000),
+                SpecialContract.of(mockFlightInsurances.get(1), "휴대폰분실", 2000, 3000)
         );
 
         List<FlightInsurance> mockCalPremium = Arrays.asList(
@@ -71,14 +72,14 @@ class FlightInsuranceServiceTest {
 
         when(flightInsuranceRepository.findByAge(eq(25)))
                 .thenReturn(mockFlightInsurances);
-        when(calculatePremiumService.calculatePremium(eq(25), eq(4), eq("standard"), eq("male"), eq(mockCalPremium)))
+        when(calculatePremiumService.calculatePremium(eq(25), eq(4), eq("standard"), eq(Gender.MALE), eq(mockCalPremium)))
                 .thenReturn(mockCalExpected);
 
         SearchFlightInsuranceRequest request = SearchFlightInsuranceRequest.of(
                 LocalDateTime.of(2024, 4, 8, 10, 0),
                 LocalDateTime.of(2024, 4, 12, 18, 0),
                 LocalDate.of(1998, 5, 10),
-                "male",
+                Gender.MALE,
                 "standard",
                 true,
                 true,
