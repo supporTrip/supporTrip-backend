@@ -9,9 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,5 +37,13 @@ public class FlightInsuranceApiController {
     public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
         return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender() , user.getBirthDay()));
+    }
+
+    @PostMapping("/api/v1/flight-insurance-subscription/create")
+    public ResponseEntity<SubscriptionResponse> insuranceSubscription(@AuthenticationPrincipal OidcUser oidcUser,
+                                                                 @Valid @RequestBody SubscriptionRequest request) {
+        SubscriptionResponse subscriptionResponse = flightInsuranceService.insuranceSubscription(oidcUser.getUserId(), request);
+
+        return ResponseEntity.ok(subscriptionResponse);
     }
 }
