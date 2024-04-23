@@ -8,6 +8,8 @@ import com.supportrip.core.exchange.scheduler.dto.KoreaExImExchangeRateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 @RequiredArgsConstructor
 public class KoreaExImExchangeRateMapper {
@@ -15,7 +17,7 @@ public class KoreaExImExchangeRateMapper {
 
     private final CurrencyRepository currencyRepository;
 
-    public ExchangeRate convertEntityFrom(KoreaExImExchangeRateResponse response) {
+    public ExchangeRate convertEntityFrom(KoreaExImExchangeRateResponse response, LocalDate date) {
         Currency baseCurrency = currencyRepository.findByCode(KOREA_WON_CURRENCY_UNIT)
                 .orElseThrow(CurrencyNotFoundException::new);
 
@@ -26,12 +28,12 @@ public class KoreaExImExchangeRateMapper {
         Long targetCurrencyUnit = getTargetCurrencyUnit(response.getCurUnit());
         double dealBasR = getDealBasR(response);
 
-        return ExchangeRate.of(targetCurrency, targetCurrencyUnit, baseCurrency, dealBasR);
+        return ExchangeRate.of(date, targetCurrency, targetCurrencyUnit, baseCurrency, dealBasR);
     }
 
     private static double getDealBasR(KoreaExImExchangeRateResponse response) {
         String dealBasR = response.getDealBasR().replace(",", "");
-        return Double.valueOf(dealBasR);
+        return Double.parseDouble(dealBasR);
     }
 
     private static String getCurrencyUnit(String curUnit) {

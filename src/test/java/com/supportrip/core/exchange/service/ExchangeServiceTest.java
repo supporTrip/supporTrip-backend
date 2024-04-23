@@ -68,7 +68,7 @@ class ExchangeServiceTest {
         given(foreignAccountService.getForeignCurrencyWallet(any(User.class), any(Currency.class))).willReturn(foreignCurrencyWallet);
 
         // when
-        exchangeService.exchange(exchangeTrading, JAPAN_CURRENCY, 200L);
+        exchangeService.exchange(exchangeTrading, 200L);
 
         // then
         assertThat(exchangeTrading.getCurrentAmount()).isEqualTo(TRADING_AMOUNT - 2);

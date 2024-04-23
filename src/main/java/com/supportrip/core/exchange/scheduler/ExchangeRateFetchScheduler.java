@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -22,18 +21,18 @@ public class ExchangeRateFetchScheduler {
     private final ExchangeRateRepository exchangeRateRepository;
 
     // 수출입은행 Open API로부터 매일 정오에 1번 환율 정보를 가져와 DB에 저장
+    @Transactional
     @Scheduled(cron = "0 0 12 ? * MON-FRI")
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void fetchAndStoreExchangeRate() {
         LocalDate searchDate = LocalDate.now();
-        List<KoreaExImExchangeRateResponse> response = exchangeRateClient.fetchExchangeRate(searchDate);
+        List<KoreaExImExchangeRateResponse> responses = exchangeRateClient.fetchExchangeRate(searchDate);
 
-        if (response.isEmpty()) {
+        if (responses.isEmpty()) {
             return;
         }
 
-        List<ExchangeRate> exchangeRates = response.stream()
-                .map(exchangeRateMapper::convertEntityFrom)
+        List<ExchangeRate> exchangeRates = responses.stream()
+                .map(response -> exchangeRateMapper.convertEntityFrom(response, searchDate))
                 .toList();
 
         exchangeRateRepository.saveAll(exchangeRates);

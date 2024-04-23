@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static com.supportrip.core.exchange.domain.TradingStatus.COMPLETED;
 import static com.supportrip.core.exchange.domain.TradingStatus.IN_PROGRESS;
@@ -64,11 +63,11 @@ public class ExchangeTrading extends BaseEntity {
     @Column(name = "target_exchange_rate")
     private Double targetExchangeRate;
 
-    @Column(name = "completed_at")
-    private LocalDateTime completedAt;
+    @Column(name = "complete_date")
+    private LocalDate completeDate;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public ExchangeTrading(Long id, User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, String displayName, Long tradingAmount, Long currentAmount, TradingStatus status, TradingStrategy strategy, Double targetExchangeRate, LocalDateTime completedAt) {
+    public ExchangeTrading(Long id, User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, String displayName, Long tradingAmount, Long currentAmount, TradingStatus status, TradingStrategy strategy, Double targetExchangeRate, LocalDate completeDate) {
         this.id = id;
         this.user = user;
         this.baseCurrency = baseCurrency;
@@ -80,10 +79,10 @@ public class ExchangeTrading extends BaseEntity {
         this.status = status;
         this.strategy = strategy;
         this.targetExchangeRate = targetExchangeRate;
-        this.completedAt = completedAt;
+        this.completeDate = completeDate;
     }
 
-    public static ExchangeTrading of(User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, String displayName, Long tradingAmount, TradingStrategy tradingStrategy, Double targetExchangeRate, LocalDateTime completedAt) {
+    public static ExchangeTrading of(User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, String displayName, Long tradingAmount, TradingStrategy tradingStrategy, Double targetExchangeRate, LocalDate completeDate) {
         return ExchangeTrading.builder()
                 .user(user)
                 .baseCurrency(baseCurrency)
@@ -95,7 +94,7 @@ public class ExchangeTrading extends BaseEntity {
                 .currentAmount(tradingAmount)
                 .targetExchangeRate(targetExchangeRate)
                 .status(IN_PROGRESS)
-                .completedAt(completedAt)
+                .completeDate(completeDate)
                 .build();
     }
 
@@ -114,8 +113,7 @@ public class ExchangeTrading extends BaseEntity {
     }
 
     public boolean isLastDate(LocalDate date) {
-        // TODO: 당일 몇시에 완료되도록 할 건지 정해야 함, 즉 마지막 거래시점이 언제인지 설정
-        return completedAt.toLocalDate().isEqual(date);
+        return completeDate.isEqual(date);
     }
 
 //    public Long getMaxExchangableAmount() {

@@ -20,19 +20,20 @@ public class ExchangeService {
     private final ForeignAccountTransactionRepository foreignAccountTransactionRepository;
 
     @Transactional
-    public void exchange(ExchangeTrading exchangeTrading, Currency toCurrency, Long toAmount) {
+    public void exchange(ExchangeTrading exchangeTrading, Long amount) {
+        Currency targetCurrency = exchangeTrading.getTargetCurrency();
         User user = exchangeTrading.getUser();
 
-        ExchangeRate latestExchangeRate = exchangeRateService.getLatestExchangeRate(toCurrency);
-        long fromAmount = calculateAmountForExchange(toAmount, latestExchangeRate);
+        ExchangeRate latestExchangeRate = exchangeRateService.getLatestExchangeRate(targetCurrency);
+        long fromAmount = calculateAmountForExchange(amount, latestExchangeRate);
 
         exchangeTrading.reduceAmount(fromAmount);
 
-        ForeignCurrencyWallet foreignCurrencyWallet = foreignAccountService.getForeignCurrencyWallet(user, toCurrency);
-        foreignCurrencyWallet.deposit(toAmount);
+        ForeignCurrencyWallet foreignCurrencyWallet = foreignAccountService.getForeignCurrencyWallet(user, targetCurrency);
+        foreignCurrencyWallet.deposit(amount);
 
         ForeignAccountTransaction foreignAccountTransaction = ForeignAccountTransaction.of(
-                toAmount,
+                amount,
                 latestExchangeRate.getDealBaseRate(),
                 foreignCurrencyWallet.getTotalAmount(),
                 foreignCurrencyWallet,
