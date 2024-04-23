@@ -177,7 +177,7 @@ public class FlightInsuranceService {
      * 보험 신청이력 저장
      */
     @Transactional
-    public SubscriptionResponse insuranceSubscription(Long userId, SubscriptionRequest request) {
+    public InsuranceSubscription insuranceSubscription(Long userId, SubscriptionRequest request) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         FlightInsurance flightInsurance = flightInsuranceRepository.findById(request.getFlightInsuranceId())
@@ -189,6 +189,6 @@ public class FlightInsuranceService {
 
         subscriptionRepository.save(insuranceSubscription);
 
-        return SubscriptionResponse.from(insuranceSubscription.getId());
+        return insuranceSubscription;
     }
 }

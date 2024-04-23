@@ -1,6 +1,7 @@
 package com.supportrip.core.insurance.controller;
 
 import com.supportrip.core.auth.domain.OidcUser;
+import com.supportrip.core.insurance.domain.InsuranceSubscription;
 import com.supportrip.core.insurance.dto.*;
 import com.supportrip.core.insurance.service.FlightInsuranceService;
 import com.supportrip.core.user.domain.User;
@@ -42,8 +43,8 @@ public class FlightInsuranceApiController {
     @PostMapping("/api/v1/flight-insurance-subscription/create")
     public ResponseEntity<SubscriptionResponse> insuranceSubscription(@AuthenticationPrincipal OidcUser oidcUser,
                                                                  @Valid @RequestBody SubscriptionRequest request) {
-        SubscriptionResponse subscriptionResponse = flightInsuranceService.insuranceSubscription(oidcUser.getUserId(), request);
-
-        return ResponseEntity.ok(subscriptionResponse);
+        InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(oidcUser.getUserId(), request);
+        SubscriptionResponse response = SubscriptionResponse.from(insuranceSubscription.getId());
+        return ResponseEntity.ok(response);
     }
 }
