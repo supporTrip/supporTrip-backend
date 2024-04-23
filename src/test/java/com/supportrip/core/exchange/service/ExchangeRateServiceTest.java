@@ -10,9 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,11 +34,9 @@ class ExchangeRateServiceTest {
         // given
         final Currency KOREA_CURRENCY = Currency.of(null, "원", "KRW", "₩");
         final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final LocalDate TODAY = LocalDate.now();
 
-        ExchangeRate exchangeRate = ExchangeRate.of(JAPAN_CURRENCY, 100L, KOREA_CURRENCY, 1.0);
-
-        LocalDateTime today = LocalDateTime.now();
-        ReflectionTestUtils.setField(exchangeRate, "createdAt", today);
+        ExchangeRate exchangeRate = ExchangeRate.of(TODAY, JAPAN_CURRENCY, 100L, KOREA_CURRENCY, 1.0);
 
         given(exchangeRateRepository.findLatestExchangeByTargetCurrency(any(Currency.class)))
                 .willReturn(Optional.of(exchangeRate));
@@ -60,11 +57,9 @@ class ExchangeRateServiceTest {
         // given
         final Currency KOREA_CURRENCY = Currency.of(null, "원", "KRW", "₩");
         final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final LocalDate YESTERDAY = LocalDate.now().minusDays(1);
 
-        ExchangeRate exchangeRate = ExchangeRate.of(KOREA_CURRENCY, 100L, JAPAN_CURRENCY, 1.0);
-
-        LocalDateTime twoDaysAgo = LocalDateTime.now().minusDays(2);
-        ReflectionTestUtils.setField(exchangeRate, "createdAt", twoDaysAgo);
+        ExchangeRate exchangeRate = ExchangeRate.of(YESTERDAY, KOREA_CURRENCY, 100L, JAPAN_CURRENCY, 1.0);
 
         given(exchangeRateRepository.findLatestExchangeByTargetCurrency(any(Currency.class)))
                 .willReturn(Optional.of(exchangeRate));

@@ -55,4 +55,8 @@ public class ExchangeRate extends BaseEntity {
                 .dealBaseRate(dealBaseRate)
                 .build();
     }
+
+    public boolean isValid(LocalDate today) {
+        return this.date.isEqual(today);
+    }
 }

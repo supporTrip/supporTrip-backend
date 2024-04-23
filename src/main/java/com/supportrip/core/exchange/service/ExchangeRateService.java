@@ -8,7 +8,7 @@ import com.supportrip.core.exchange.repository.ExchangeRateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +19,8 @@ public class ExchangeRateService {
         ExchangeRate exchangeRate = exchangeRateRepository.findLatestExchangeByTargetCurrency(targetCurrency)
                 .orElseThrow(ExchangeRateNotFoundException::new);
 
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expiredDate = exchangeRate.getCreatedAt().plusDays(1);
-        if (now.isAfter(expiredDate)) {
+        LocalDate today = LocalDate.now();
+        if (!exchangeRate.isValid(today)) {
             throw new OutdatedExchangeRateException();
         }
 
