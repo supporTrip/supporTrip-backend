@@ -1,7 +1,10 @@
 package com.supportrip.core.insurance.domain;
 
+import com.supportrip.core.common.BaseEntity;
+import com.supportrip.core.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,5 +44,27 @@ public class InsuranceSubscription extends BaseEntity {
     @Column(name = "consent_personal_info", nullable = false)
     private boolean consentPersonalInfo;
 
-    private LocalDateTime updatedAt;
+    @Builder(access = AccessLevel.PRIVATE)
+    private InsuranceSubscription(Long id, int totalPremium, FlightInsurance flightInsurance, User user, LocalDateTime coverageStartAt, LocalDateTime coverageEndAt, boolean coverageDetailsTermsContent, boolean consentPersonalInfo) {
+        this.id = id;
+        this.totalPremium = totalPremium;
+        this.flightInsurance = flightInsurance;
+        this.user = user;
+        this.coverageStartAt = coverageStartAt;
+        this.coverageEndAt = coverageEndAt;
+        this.coverageDetailsTermsContent = coverageDetailsTermsContent;
+        this.consentPersonalInfo = consentPersonalInfo;
+    }
+
+    public static InsuranceSubscription createInsuranceSubscription(User user, FlightInsurance flightInsurance, int totalPremium, LocalDateTime coverageStartAt, LocalDateTime coverageEndAt, boolean coverageDetailsTermsContent, boolean consentPersonalInfo) {
+        return InsuranceSubscription.builder()
+                .user(user)
+                .flightInsurance(flightInsurance)
+                .totalPremium(totalPremium)
+                .coverageStartAt(coverageStartAt)
+                .coverageEndAt(coverageEndAt)
+                .coverageDetailsTermsContent(coverageDetailsTermsContent)
+                .consentPersonalInfo(consentPersonalInfo)
+                .build();
+    }
 }
