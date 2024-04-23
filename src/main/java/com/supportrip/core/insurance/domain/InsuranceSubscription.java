@@ -22,7 +22,9 @@ public class InsuranceSubscription {
     @JoinColumn(name = "flight_insurance_id")
     private FlightInsurance flightInsurance;
 
-//    private Users users;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "coverage_start_at", nullable = false)
     private LocalDateTime coverageStartAt;
