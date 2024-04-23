@@ -1,10 +1,10 @@
 package com.supportrip.core.insurance.controller;
 
 import com.supportrip.core.auth.domain.OidcUser;
+import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.insurance.domain.InsuranceSubscription;
 import com.supportrip.core.insurance.dto.*;
 import com.supportrip.core.insurance.service.FlightInsuranceService;
-import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,17 +34,11 @@ public class FlightInsuranceApiController {
         return ResponseEntity.ok(flightInsuranceDetail);
     }
 
-    @GetMapping("/api/v1/flight-insurance/user")
-    public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
-        User user = userService.getUser(oidcUser.getUserId());
-        return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender() , user.getBirthDay()));
-    }
-
-    @PostMapping("/api/v1/flight-insurance-subscription/create")
-    public ResponseEntity<SubscriptionResponse> insuranceSubscription(@AuthenticationPrincipal OidcUser oidcUser,
-                                                                 @Valid @RequestBody SubscriptionRequest request) {
+    @PostMapping("/api/v1/flight-insurance-subscription")
+    public ResponseEntity<SimpleIdResponse> insuranceSubscription(@AuthenticationPrincipal OidcUser oidcUser,
+                                                                  @Valid @RequestBody SubscriptionRequest request) {
         InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(oidcUser.getUserId(), request);
-        SubscriptionResponse response = SubscriptionResponse.from(insuranceSubscription.getId());
+        SimpleIdResponse response = SimpleIdResponse.from(insuranceSubscription.getId());
         return ResponseEntity.ok(response);
     }
 }
