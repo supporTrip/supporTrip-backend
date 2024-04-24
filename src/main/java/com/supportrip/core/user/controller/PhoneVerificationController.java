@@ -4,10 +4,12 @@ import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SmsService;
 import com.supportrip.core.user.domain.PhoneVerification;
 import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
+import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
 import com.supportrip.core.user.service.PhoneVerificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +29,12 @@ public class PhoneVerificationController {
         PhoneVerification phoneVerification =
                 phoneVerificationService.createOrRenewPhoneVerification(oidcUser.getUserId(), now);
         smsService.sendOne(makePhoneVerificationMessage(phoneVerification.getCode()), request.getSmsPhoneNumber());
+    }
+
+    @PatchMapping("/api/v1/users/phone-verification")
+    public void verifyPhoneVerificationCode(@AuthenticationPrincipal OidcUser oidcUser,
+                                            @RequestBody @Valid VerifyPhoneVerificationCodeRequest request) {
+        phoneVerificationService.verifyCode(oidcUser.getUserId(), request.getCode());
     }
 
     private String makePhoneVerificationMessage(String code) {

@@ -2,6 +2,8 @@ package com.supportrip.core.user.service;
 
 import com.supportrip.core.user.domain.PhoneVerification;
 import com.supportrip.core.user.domain.User;
+import com.supportrip.core.user.exception.AlreadyVerifiedException;
+import com.supportrip.core.user.exception.PhoneVerificationNotFoundException;
 import com.supportrip.core.user.repository.PhoneVerificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,20 @@ public class PhoneVerificationService {
         }
 
         return createPhoneVerification(user, now);
+    }
+
+    @Transactional
+    public void verifyCode(Long userId, String code) {
+        User user = userService.getUser(userId);
+
+        PhoneVerification phoneVerification = phoneVerificationRepository.findByUser(user)
+                .orElseThrow(PhoneVerificationNotFoundException::new);
+
+        if (phoneVerification.isVerified()) {
+            throw new AlreadyVerifiedException();
+        }
+
+        phoneVerification.verify(code);
     }
 
     private PhoneVerification createPhoneVerification(User user, LocalDateTime now) {
