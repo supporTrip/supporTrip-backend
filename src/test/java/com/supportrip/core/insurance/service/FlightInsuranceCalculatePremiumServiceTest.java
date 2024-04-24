@@ -2,6 +2,7 @@ package com.supportrip.core.insurance.service;
 
 import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.insurance.domain.InsuranceCompany;
+import com.supportrip.core.user.domain.Gender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ class FlightInsuranceCalculatePremiumServiceTest {
         //given
         int period = 4;
         int age = 20;
-        String gender = "female";
+        Gender gender = Gender.FEMALE;
         String planName = "standard";
 
         InsuranceCompany insuranceCompany = InsuranceCompany.from("한화생명");
