@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FlightInsuranceApiController {
     private final FlightInsuranceService flightInsuranceService;
-    private final UserService userService;
 
     @GetMapping("/api/v1/flight-insurances/search")
     public ResponseEntity<List<SearchFlightInsuranceResponse>> searchFlightInsurance(@Valid SearchFlightInsuranceRequest request) {
