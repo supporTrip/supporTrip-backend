@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 @Getter
 @NoArgsConstructor
@@ -24,7 +25,7 @@ public class SignUpRequest {
     private String phoneNumber;
 
     @NotNull(message = "생년월일을 입력해주세요.")
-    private LocalDate birthDay;
+    private String birthDay;
 
     @NotNull(message = "성별을 선택해주세요.")
     private Gender gender;
@@ -44,7 +45,7 @@ public class SignUpRequest {
     private Boolean adInfoConsent;
 
     private Boolean myDataConsentPersonalInfo;
-    
+
     @NotBlank(message = "은행을 선택해주세요.")
     private String bank;
 
@@ -68,7 +69,7 @@ public class SignUpRequest {
     private Boolean personalInfoThirdPartyConsentForESigniture;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private SignUpRequest(String name, String email, String phoneNumber, LocalDate birthDay, Gender gender, String pinNumber, Boolean consentAbove14, Boolean serviceTermsConsent, Boolean consentPersonalInfo, Boolean adInfoConsent, Boolean myDataConsentPersonalInfo, String bank, String bankAccountNumber, Boolean openBankingAutoTransferConsent, Boolean openBankingFinancialInfoInquiryConsent, Boolean financialInfoThirdPartyProvisionConsent, Boolean openBankingPersonalInfoThirdPartyProvisionConsent, Boolean personalInfoThirdPartyConsentForESigniture) {
+    private SignUpRequest(String name, String email, String phoneNumber, String birthDay, Gender gender, String pinNumber, Boolean consentAbove14, Boolean serviceTermsConsent, Boolean consentPersonalInfo, Boolean adInfoConsent, Boolean myDataConsentPersonalInfo, String bank, String bankAccountNumber, Boolean openBankingAutoTransferConsent, Boolean openBankingFinancialInfoInquiryConsent, Boolean financialInfoThirdPartyProvisionConsent, Boolean openBankingPersonalInfoThirdPartyProvisionConsent, Boolean personalInfoThirdPartyConsentForESigniture) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -89,7 +90,7 @@ public class SignUpRequest {
         this.personalInfoThirdPartyConsentForESigniture = personalInfoThirdPartyConsentForESigniture;
     }
 
-    public static SignUpRequest of(String name, String email, String phoneNumber, LocalDate birthDay, Gender gender, String pinNumber, String bank, String bankAccountNumber, Boolean consentAbove14, Boolean serviceTermsConsent, Boolean consentPersonalInfo, Boolean adInfoConsent, Boolean myDataConsentPersonalInfo, Boolean openBankingAutoTransferConsent, Boolean openBankingFinancialInfoInquiryConsent, Boolean financialInfoThirdPartyProvisionConsent, Boolean openBankingPersonalInfoThirdPartyProvisionConsent, Boolean personalInfoThirdPartyConsentForESigniture) {
+    public static SignUpRequest of(String name, String email, String phoneNumber, String birthDay, Gender gender, String pinNumber, String bank, String bankAccountNumber, Boolean consentAbove14, Boolean serviceTermsConsent, Boolean consentPersonalInfo, Boolean adInfoConsent, Boolean myDataConsentPersonalInfo, Boolean openBankingAutoTransferConsent, Boolean openBankingFinancialInfoInquiryConsent, Boolean financialInfoThirdPartyProvisionConsent, Boolean openBankingPersonalInfoThirdPartyProvisionConsent, Boolean personalInfoThirdPartyConsentForESigniture) {
         return SignUpRequest.builder()
                 .name(name)
                 .email(email)
@@ -110,6 +111,32 @@ public class SignUpRequest {
                 .openBankingPersonalInfoThirdPartyProvisionConsent(openBankingPersonalInfoThirdPartyProvisionConsent)
                 .personalInfoThirdPartyConsentForESigniture(personalInfoThirdPartyConsentForESigniture)
                 .build();
+    }
+
+    public LocalDate getBirthDay() {
+        int year = Integer.parseInt(birthDay.substring(0, 2));
+        int month = Integer.parseInt(birthDay.substring(2, 4));
+        int day = Integer.parseInt(birthDay.substring(4, 6));
+
+        LocalDate over2000 = LocalDate.of(2000 + year, month, day);
+        LocalDate over1900 = LocalDate.of(1900 + year, month, day);
+
+        LocalDate now = LocalDate.now();
+        Period between2000AndNow = Period.between(over2000, now);
+        Period between1900AndNow = Period.between(over1900, now);
+
+        if (Math.abs(between2000AndNow.getYears()) < Math.abs(between1900AndNow.getYears())) {
+            return over2000;
+        }
+        return over1900;
+    }
+
+    public Boolean getAdInfoConsent() {
+        return resolveSelectableConsent(adInfoConsent);
+    }
+
+    public Boolean getMyDataConsentPersonalInfo() {
+        return resolveSelectableConsent(myDataConsentPersonalInfo);
     }
 
     private static Boolean resolveSelectableConsent(Boolean consent) {
