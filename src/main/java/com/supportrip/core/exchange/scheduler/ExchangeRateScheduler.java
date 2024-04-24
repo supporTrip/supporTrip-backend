@@ -24,10 +24,8 @@ public class ExchangeRateScheduler {
     private final KoreaExImExchangeRateClient exchangeRateClient;
     private final KoreaExImExchangeRateMapper exchangeRateMapper;
     private final ExchangeRateRepository exchangeRateRepository;
-
-    private final ExchangeStrategyManager exchangeStrategyManager;
-
     private final ExchangeTradingRepository exchangeTradingRepository;
+    private final ExchangeStrategyManager exchangeStrategyManager;
 
     // 매일 12/18시 2번 자동 환전을 진행
     @Transactional

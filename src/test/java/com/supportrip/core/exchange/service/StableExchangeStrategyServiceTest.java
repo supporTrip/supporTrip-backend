@@ -63,7 +63,7 @@ class StableExchangeStrategyServiceTest {
         long JAPAN_CURRENCY_UNIT = 100L;
         final LocalDate TODAY = LocalDate.now();
         final LocalDate TOMORROW = TODAY.plusDays(1);
-        final Long TRADING_AMOUNT = 100_000L;
+        final long TRADING_AMOUNT = 100_000L;
         final double STARTING_DEAL_BASE_RATE = 1100.0;
         final double DEAL_BASE_RATE = 1200.0;
         final double DEAL_BASE_RATE_AVERAGE = 1150.0;
@@ -97,7 +97,7 @@ class StableExchangeStrategyServiceTest {
         final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
         long JAPAN_CURRENCY_UNIT = 100L;
         final LocalDate TODAY = LocalDate.now();
-        final Long TRADING_AMOUNT = 1300L;
+        final long TRADING_AMOUNT = 1300L;
         final double STARTING_DEAL_BASE_RATE = 1100.0;
         final double DEAL_BASE_RATE = 1200.0;
 
