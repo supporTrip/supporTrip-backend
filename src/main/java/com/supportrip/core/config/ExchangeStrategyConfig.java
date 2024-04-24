@@ -30,6 +30,11 @@ public class ExchangeStrategyConfig {
                         exchangeRateService,
                         pointWalletService,
                         foreignAccountService
+                ),
+                new TargetExchangeStrategyService(
+                        exchangeService,
+                        pointWalletService,
+                        exchangeRateService
                 )
         );
 
