@@ -1,14 +1,20 @@
 package com.supportrip.core.insurance.service;
 
 import com.supportrip.core.insurance.domain.FlightInsurance;
+import com.supportrip.core.insurance.domain.InsuranceSubscription;
 import com.supportrip.core.insurance.domain.SpecialContract;
 import com.supportrip.core.insurance.dto.*;
 import com.supportrip.core.insurance.exception.NotFoundFlightInsuranceException;
 import com.supportrip.core.insurance.repository.FlightInsuranceRepository;
+import com.supportrip.core.insurance.repository.InsuranceSubscriptionRepository;
 import com.supportrip.core.insurance.repository.SpecialContractRepository;
+import com.supportrip.core.user.domain.User;
+import com.supportrip.core.user.exception.UserNotFoundException;
+import com.supportrip.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,10 +24,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FlightInsuranceService {
     private final FlightInsuranceRepository flightInsuranceRepository;
     private final FlightInsuranceCalculatePremiumService calculatePremiumService;
     private final SpecialContractRepository specialContractRepository;
+    private final UserRepository userRepository;
+    private final InsuranceSubscriptionRepository subscriptionRepository;
 
     /**
      * 필터링 검색
@@ -162,5 +171,24 @@ public class FlightInsuranceService {
 
         return FlightInsuranceDetailResponse.toDTO(flightInsurance, request.getCoverageStartAt(),
                 request.getCoverageEndAt(), request.getPremium(), request.getPlanName(), specialContractResponses);
+    }
+
+    /**
+     * 보험 신청이력 저장
+     */
+    @Transactional
+    public InsuranceSubscription insuranceSubscription(Long userId, SubscriptionRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        FlightInsurance flightInsurance = flightInsuranceRepository.findById(request.getFlightInsuranceId())
+                .orElseThrow(NotFoundFlightInsuranceException::new);
+
+        InsuranceSubscription insuranceSubscription = InsuranceSubscription.createInsuranceSubscription(user, flightInsurance,
+                request.getTotalPremium(), request.getCoverageStartAt(), request.getCoverageEndAt(),
+                request.getCoverageDetailsTermsContent(), request.getConsentPersonalInfo());
+
+        subscriptionRepository.save(insuranceSubscription);
+
+        return insuranceSubscription;
     }
 }

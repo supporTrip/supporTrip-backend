@@ -1,6 +1,6 @@
 package com.supportrip.core.insurance.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.supportrip.core.user.domain.Gender;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,8 +20,8 @@ public class SearchFlightInsuranceRequest {
     @NotNull(message = "생년월일 8자리를 입력해주세요.")
     private LocalDate birthDay;
 
-    @NotBlank(message = "성별을 입력해주세요.")
-    private String gender;
+    @NotNull(message = "성별을 입력해주세요.")
+    private Gender gender;
 
     private String planName;
     private Boolean flightDelay;
@@ -29,7 +29,7 @@ public class SearchFlightInsuranceRequest {
     private Boolean foodPoisoning;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public SearchFlightInsuranceRequest(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
+    public SearchFlightInsuranceRequest(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, Gender gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         this.departAt = departAt;
         this.arrivalAt = arrivalAt;
         this.birthDay = birthDay;
@@ -40,7 +40,7 @@ public class SearchFlightInsuranceRequest {
         this.foodPoisoning = foodPoisoning == null ? Boolean.FALSE : foodPoisoning;
     }
 
-    public static SearchFlightInsuranceRequest of(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, String gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
+    public static SearchFlightInsuranceRequest of(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, Gender gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         return builder()
                 .departAt(departAt)
                 .arrivalAt(arrivalAt)

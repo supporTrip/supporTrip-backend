@@ -1,16 +1,16 @@
 package com.supportrip.core.insurance.controller;
 
-import com.supportrip.core.insurance.dto.FlightInsuranceDetailRequest;
-import com.supportrip.core.insurance.dto.FlightInsuranceDetailResponse;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequest;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponse;
+import com.supportrip.core.auth.domain.OidcUser;
+import com.supportrip.core.common.SimpleIdResponse;
+import com.supportrip.core.insurance.domain.InsuranceSubscription;
+import com.supportrip.core.insurance.dto.*;
 import com.supportrip.core.insurance.service.FlightInsuranceService;
+import com.supportrip.core.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +31,13 @@ public class FlightInsuranceApiController {
         FlightInsuranceDetailResponse flightInsuranceDetail = flightInsuranceService.findFlightInsuranceDetail(flightInsuranceId, request);
 
         return ResponseEntity.ok(flightInsuranceDetail);
+    }
+
+    @PostMapping("/api/v1/flight-insurance-subscriptions")
+    public ResponseEntity<SimpleIdResponse> insuranceSubscription(@AuthenticationPrincipal OidcUser oidcUser,
+                                                                  @Valid @RequestBody SubscriptionRequest request) {
+        InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(oidcUser.getUserId(), request);
+        SimpleIdResponse response = SimpleIdResponse.from(insuranceSubscription.getId());
+        return ResponseEntity.ok(response);
     }
 }
