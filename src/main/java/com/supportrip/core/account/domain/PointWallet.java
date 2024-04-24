@@ -49,4 +49,8 @@ public class PointWallet {
 
         this.totalAmount -= amount;
     }
+
+    public void increase(long amount) {
+        this.totalAmount += amount;
+    }
 }

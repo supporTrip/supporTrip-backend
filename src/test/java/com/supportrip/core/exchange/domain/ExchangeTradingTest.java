@@ -64,4 +64,71 @@ class ExchangeTradingTest {
         assertThatThrownBy(() -> exchangeTrading.reduceAmount(REDUCE_AMOUNT))
                 .isInstanceOf(NotEnoughTradingAmountException.class);
     }
+
+    @Test
+    @DisplayName("현재 남은 일수 기준으로 남은 환전 금액을 균등하게 분할한 후 소수점을 버린 금액을 반환한다.")
+    void getExchangeAmountSuccess() {
+        // given
+        final long TRADING_AMOUNT = 1000L;
+        final int REMAIN_DAYS = 3;
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, TRADING_AMOUNT, null, null, null);
+
+        // when
+        long exchangeAmount = exchangeTrading.getExchangeAmount(REMAIN_DAYS);
+
+        // then
+        assertThat(exchangeAmount).isEqualTo(333L);
+    }
+
+    @Test
+    @DisplayName("현재 남은 일수가 0보다 작은 경우 예외가 발생한다.")
+    void getExchangeAmountFail() {
+        // given
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null);
+
+        // expected
+        assertThatThrownBy(() -> exchangeTrading.getExchangeAmount(-1))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("입력한 환율 기준으로 최대 환전 가능 금액을 소수점을 버린 후 정수로 반환한다.")
+    void getMaxExchangeableAmountSuccess() {
+        // given
+        final long TRADING_AMOUNT = 1000L;
+        final double EXCHANGE_RATE = 904.04;
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, TRADING_AMOUNT, null, null, null);
+
+        // when
+        long maxExchangeableAmount = exchangeTrading.getMaxExchangeableAmount(EXCHANGE_RATE);
+
+        // then
+        assertThat(maxExchangeableAmount).isEqualTo(904);
+    }
+
+    @Test
+    @DisplayName("입력한 환율이 0보다 작은 경우 예외가 발생한다.")
+    void getMaxExchangeableAmountFail() {
+        // given
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null);
+
+        // expected
+        assertThatThrownBy(() -> exchangeTrading.getMaxExchangeableAmount(-1.0))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("현재 환율 금액을 전부 반환하고, 0으로 설정한다.")
+    void flushCurrentAmount() {
+        // given
+        final long TRADING_AMOUNT = 1000L;
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, TRADING_AMOUNT, null, null, null);
+
+        // when
+        long amount = exchangeTrading.flushCurrentAmount();
+
+        // then
+        assertThat(amount).isEqualTo(TRADING_AMOUNT);
+        assertThat(exchangeTrading.getCurrentAmount()).isZero();
+    }
 }

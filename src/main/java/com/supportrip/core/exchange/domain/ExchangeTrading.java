@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import static com.supportrip.core.exchange.domain.TradingStatus.COMPLETED;
 import static com.supportrip.core.exchange.domain.TradingStatus.IN_PROGRESS;
@@ -113,10 +114,31 @@ public class ExchangeTrading extends BaseEntity {
     }
 
     public boolean isLastDate(LocalDate date) {
-        return completeDate.isEqual(date);
+        return this.completeDate.isEqual(date);
     }
 
-//    public Long getMaxExchangableAmount() {
-//
-//    }
+    public long getExchangeAmount(int remainDays) {
+        if (remainDays < 1) {
+            throw new IllegalArgumentException("잘못된 환전 거래 남은 일수 입니다.");
+        }
+        return this.currentAmount / remainDays;
+    }
+
+    public long getMaxExchangeableAmount(double dealBaseRate) {
+        if (dealBaseRate <= 0.0) {
+            throw new IllegalArgumentException("잘못된 환율 정보입니다.");
+        }
+        long quotient = (long) (this.currentAmount / dealBaseRate);
+        return (long) (quotient * dealBaseRate);
+    }
+
+    public long flushCurrentAmount() {
+        long amount = this.currentAmount;
+        this.currentAmount = 0L;
+        return amount;
+    }
+
+    public int getRemainDays(LocalDate today) {
+        return (int) ChronoUnit.DAYS.between(today, this.completeDate) + 1;
+    }
 }
