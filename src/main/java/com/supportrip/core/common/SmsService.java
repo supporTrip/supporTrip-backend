@@ -6,7 +6,6 @@ import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,8 +33,7 @@ public class SmsService {
     public void sendOne(String text, String receiverPhoneNumber) {
         Message message = createMessage(text, receiverPhoneNumber);
         SingleMessageSendingRequest request = new SingleMessageSendingRequest(message);
-        SingleMessageSentResponse response = defaultMessageService.sendOne(request);
-        log.info("sms response = {}", response);
+        defaultMessageService.sendOne(request);
     }
 
     public void send(String text, List<String> receiverPhoneNumbers) {
