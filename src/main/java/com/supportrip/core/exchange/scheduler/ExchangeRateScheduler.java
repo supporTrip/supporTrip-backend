@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ExchangeRateFetchScheduler {
+public class ExchangeRateScheduler {
     private final KoreaExImExchangeRateClient exchangeRateClient;
     private final KoreaExImExchangeRateMapper exchangeRateMapper;
     private final ExchangeRateRepository exchangeRateRepository;
