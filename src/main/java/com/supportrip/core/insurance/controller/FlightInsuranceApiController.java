@@ -34,7 +34,7 @@ public class FlightInsuranceApiController {
         return ResponseEntity.ok(flightInsuranceDetail);
     }
 
-    @PostMapping("/api/v1/flight-insurance-subscription")
+    @PostMapping("/api/v1/flight-insurance-subscriptions")
     public ResponseEntity<SimpleIdResponse> insuranceSubscription(@AuthenticationPrincipal OidcUser oidcUser,
                                                                   @Valid @RequestBody SubscriptionRequest request) {
         InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(oidcUser.getUserId(), request);
