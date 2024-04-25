@@ -8,7 +8,9 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class AdminCreateFlightInsuranceRequest {
+public class AdminFlightInsuranceRequest {
+    private Long id;
+
     @NotNull(message = "보험상품 이름을 입력해주세요.")
     private String name;
 
@@ -31,10 +33,10 @@ public class AdminCreateFlightInsuranceRequest {
     private Boolean foodPoisoning;
 
     @NotNull(message = "보험사 정보를 입력해주세요.")
-    private AdminCreateInsuranceCompanyRequest insuranceCompany;
+    private AdminInsuranceCompanyRequest insuranceCompany;
 
     @NotNull(message = "특약 정보를 입력해 주세요.")
-    private List<AdminCreateSpecialContractsRequest> specialContracts;
+    private List<AdminSpecialContractsRequest> specialContracts;
 
     @Builder(access = AccessLevel.PRIVATE)
     private AdminCreateFlightInsuranceRequest(String name, int premium, int minAge, int maxAge, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning, AdminCreateInsuranceCompanyRequest insuranceCompany, List<AdminCreateSpecialContractsRequest> specialContracts) {
