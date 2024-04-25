@@ -198,11 +198,11 @@ public class FlightInsuranceService {
     /**
      * 관리자 보험 전체조회
      */
-    public List<AdminFlightInsuranceSearchResponse> findFlightInsurances(Long userId) {
+    public List<AdminFlightInsuranceResponse> findFlightInsurances(Long userId) {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         List<FlightInsurance> flightInsurances = flightInsuranceRepository.findAll();
-        List<AdminFlightInsuranceSearchResponse> responses = new ArrayList<>();
+        List<AdminFlightInsuranceResponse> responses = new ArrayList<>();
         for (FlightInsurance flightInsurance : flightInsurances) {
             List<SpecialContractResponse> specialContractResponses = new ArrayList<>();
             List<SpecialContract> specialContracts = specialContractRepository.findByFlightInsuranceId(flightInsurance.getId());
@@ -210,7 +210,7 @@ public class FlightInsuranceService {
                 SpecialContractResponse specialContractResponse = SpecialContractResponse.toDTO(specialContract);
                 specialContractResponses.add(specialContractResponse);
             }
-            AdminFlightInsuranceSearchResponse response = AdminFlightInsuranceSearchResponse.of(flightInsurance, specialContractResponses);
+            AdminFlightInsuranceResponse response = AdminFlightInsuranceResponse.of(flightInsurance, specialContractResponses);
             responses.add(response);
         }
         return responses;
@@ -220,7 +220,7 @@ public class FlightInsuranceService {
      * 관리자 보험사, 보험상품, 특약 생성
      */
     @Transactional
-    public FlightInsurance create(Long userId, AdminCreateFlightInsuranceRequest request) {
+    public FlightInsurance create(Long userId, AdminFlightInsuranceRequest request) {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         InsuranceCompany company = InsuranceCompany.create(request.getInsuranceCompany().getName(), request.getInsuranceCompany().getLogoImageUrl(), request.getInsuranceCompany().getInsuranceCompanyUrl());
@@ -231,8 +231,8 @@ public class FlightInsuranceService {
 
         FlightInsurance insurance = flightInsuranceRepository.save(flightInsurance);
 
-        List<AdminCreateSpecialContractsRequest> specialContracts = request.getSpecialContracts();
-        for (AdminCreateSpecialContractsRequest specialContract : specialContracts) {
+        List<AdminSpecialContractsRequest> specialContracts = request.getSpecialContracts();
+        for (AdminSpecialContractsRequest specialContract : specialContracts) {
             SpecialContract contract = SpecialContract.create(insurance, specialContract.getName(), specialContract.getDescription(), specialContract.getStandardPrice(), specialContract.getAdvancedPrice());
             specialContractRepository.save(contract);
         }

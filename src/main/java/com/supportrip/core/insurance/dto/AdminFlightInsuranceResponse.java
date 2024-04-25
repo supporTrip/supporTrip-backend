@@ -10,7 +10,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class AdminFlightInsuranceSearchResponse {
+public class AdminFlightInsuranceResponse {
     private Long id;
     private String name;
     private int premium;
@@ -20,7 +20,7 @@ public class AdminFlightInsuranceSearchResponse {
     private List<SpecialContractResponse> specialContractResponses;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private AdminFlightInsuranceSearchResponse(Long id, String name, int premium, int minAge, int maxAge, InsuranceCompany insuranceCompany, List<SpecialContractResponse> specialContractResponses) {
+    private AdminFlightInsuranceResponse(Long id, String name, int premium, int minAge, int maxAge, InsuranceCompany insuranceCompany, List<SpecialContractResponse> specialContractResponses) {
         this.id = id;
         this.name = name;
         this.premium = premium;
@@ -30,8 +30,8 @@ public class AdminFlightInsuranceSearchResponse {
         this.specialContractResponses = specialContractResponses;
     }
 
-    public static AdminFlightInsuranceSearchResponse of (FlightInsurance flightInsurance, List<SpecialContractResponse> specialContractResponses) {
-        return AdminFlightInsuranceSearchResponse.builder()
+    public static AdminFlightInsuranceResponse of (FlightInsurance flightInsurance, List<SpecialContractResponse> specialContractResponses) {
+        return AdminFlightInsuranceResponse.builder()
                 .id(flightInsurance.getId())
                 .name(flightInsurance.getName())
                 .premium(flightInsurance.getPremium())
