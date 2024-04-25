@@ -1,11 +1,13 @@
 package com.supportrip.core.insurance.service;
 
 import com.supportrip.core.insurance.domain.FlightInsurance;
+import com.supportrip.core.insurance.domain.InsuranceCompany;
 import com.supportrip.core.insurance.domain.InsuranceSubscription;
 import com.supportrip.core.insurance.domain.SpecialContract;
 import com.supportrip.core.insurance.dto.*;
 import com.supportrip.core.insurance.exception.NotFoundFlightInsuranceException;
 import com.supportrip.core.insurance.repository.FlightInsuranceRepository;
+import com.supportrip.core.insurance.repository.InsuranceCompanyRepository;
 import com.supportrip.core.insurance.repository.InsuranceSubscriptionRepository;
 import com.supportrip.core.insurance.repository.SpecialContractRepository;
 import com.supportrip.core.user.domain.User;
@@ -31,6 +33,7 @@ public class FlightInsuranceService {
     private final SpecialContractRepository specialContractRepository;
     private final UserRepository userRepository;
     private final InsuranceSubscriptionRepository subscriptionRepository;
+    private final InsuranceCompanyRepository insuranceCompanyRepository;
 
     /**
      * 필터링 검색
@@ -190,5 +193,49 @@ public class FlightInsuranceService {
         subscriptionRepository.save(insuranceSubscription);
 
         return insuranceSubscription;
+    }
+
+    /**
+     * 관리자 보험 전체조회
+     */
+    public List<AdminFlightInsuranceSearchResponse> findFlightInsurances(Long userId) {
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        List<FlightInsurance> flightInsurances = flightInsuranceRepository.findAll();
+        List<AdminFlightInsuranceSearchResponse> responses = new ArrayList<>();
+        for (FlightInsurance flightInsurance : flightInsurances) {
+            List<SpecialContractResponse> specialContractResponses = new ArrayList<>();
+            List<SpecialContract> specialContracts = specialContractRepository.findByFlightInsuranceId(flightInsurance.getId());
+            for (SpecialContract specialContract : specialContracts) {
+                SpecialContractResponse specialContractResponse = SpecialContractResponse.toDTO(specialContract);
+                specialContractResponses.add(specialContractResponse);
+            }
+            AdminFlightInsuranceSearchResponse response = AdminFlightInsuranceSearchResponse.of(flightInsurance, specialContractResponses);
+            responses.add(response);
+        }
+        return responses;
+    }
+
+    /**
+     * 관리자 보험사, 보험상품, 특약 생성
+     */
+    @Transactional
+    public FlightInsurance create(Long userId, AdminCreateFlightInsuranceRequest request) {
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        InsuranceCompany company = InsuranceCompany.create(request.getInsuranceCompany().getName(), request.getInsuranceCompany().getLogoImageUrl(), request.getInsuranceCompany().getInsuranceCompanyUrl());
+        InsuranceCompany insuranceCompany = insuranceCompanyRepository.save(company);
+
+        FlightInsurance flightInsurance = FlightInsurance.create(request.getName(), request.getPremium(), request.getMinAge(), request.getMaxAge(),
+                request.getFlightDelay(), request.getPassportLoss(), request.getFoodPoisoning(), insuranceCompany);
+
+        FlightInsurance insurance = flightInsuranceRepository.save(flightInsurance);
+
+        List<AdminCreateSpecialContractsRequest> specialContracts = request.getSpecialContracts();
+        for (AdminCreateSpecialContractsRequest specialContract : specialContracts) {
+            SpecialContract contract = SpecialContract.create(insurance, specialContract.getName(), specialContract.getDescription(), specialContract.getStandardPrice(), specialContract.getAdvancedPrice());
+            specialContractRepository.save(contract);
+        }
+        return insurance;
     }
 }
