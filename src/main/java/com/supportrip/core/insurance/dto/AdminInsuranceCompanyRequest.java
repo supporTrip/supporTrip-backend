@@ -4,7 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class AdminCreateInsuranceCompanyRequest {
+public class AdminInsuranceCompanyRequest {
+    private Long id;
+
     @NotNull(message = "보험사 이름을 입력해주세요.")
     private String name;
 
