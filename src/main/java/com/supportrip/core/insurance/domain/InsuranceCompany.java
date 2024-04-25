@@ -23,14 +23,14 @@ public class InsuranceCompany {
     private String logoImageUrl;
 
     @Column(name = "insurance_company_url", nullable = false)
-    private String InsuranceCompanyUrl;
+    private String insuranceCompanyUrl;
 
     @Builder(access = AccessLevel.PRIVATE)
     private InsuranceCompany(Long id, String name, String logoImageUrl, String insuranceCompanyUrl) {
         this.id = id;
         this.name = name;
         this.logoImageUrl = logoImageUrl;
-        InsuranceCompanyUrl = insuranceCompanyUrl;
+        this.insuranceCompanyUrl = insuranceCompanyUrl;
     }
 
     public static InsuranceCompany from(String name) {
