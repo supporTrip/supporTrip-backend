@@ -71,5 +71,18 @@ public class FlightInsurance {
                 .build();
     }
 
+    public static FlightInsurance create(String name, int premium, int minAge, int maxAge, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning, InsuranceCompany insuranceCompany) {
+        return FlightInsurance.builder()
+                .name(name)
+                .premium(premium)
+                .minJoinAge(minAge)
+                .maxJoinAge(maxAge)
+                .flightDelay(flightDelay)
+                .passportLoss(passportLoss)
+                .foodPoisoning(foodPoisoning)
+                .insuranceCompany(insuranceCompany)
+                .build();
+    }
+
 }
 

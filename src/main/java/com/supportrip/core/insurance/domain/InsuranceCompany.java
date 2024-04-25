@@ -38,4 +38,12 @@ public class InsuranceCompany {
                 .name(name)
                 .build();
     }
+
+    public static InsuranceCompany create(String name, String logoImageUrl, String insuranceCompanyUrl) {
+        return InsuranceCompany.builder()
+                .name(name)
+                .logoImageUrl(logoImageUrl)
+                .insuranceCompanyUrl(insuranceCompanyUrl)
+                .build();
+    }
 }
