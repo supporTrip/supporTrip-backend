@@ -54,4 +54,14 @@ public class SpecialContract {
                 .advancedPrice(advancedPrice)
                 .build();
     }
+
+    public static SpecialContract create(FlightInsurance insurance, String name, String description, int standardPrice, int advancedPrice) {
+        return SpecialContract.builder()
+                .flightInsurance(insurance)
+                .name(name)
+                .description(description)
+                .standardPrice(standardPrice)
+                .advancedPrice(advancedPrice)
+                .build();
+    }
 }
