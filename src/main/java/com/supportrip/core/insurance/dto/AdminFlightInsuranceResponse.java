@@ -2,7 +2,6 @@ package com.supportrip.core.insurance.dto;
 
 import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.insurance.domain.InsuranceCompany;
-import com.supportrip.core.insurance.domain.SpecialContract;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

@@ -4,7 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class AdminCreateSpecialContractsRequest {
+public class AdminSpecialContractsRequest {
+    private Long id;
+
     @NotNull(message = "특약 이름을 입력해주세요.")
     private String name;
 
@@ -16,4 +18,6 @@ public class AdminCreateSpecialContractsRequest {
 
     @NotNull(message = "플랜 고급 가격을 입력해주세요.")
     private int advancedPrice;
+
+    private Long flightInsuranceId;
 }

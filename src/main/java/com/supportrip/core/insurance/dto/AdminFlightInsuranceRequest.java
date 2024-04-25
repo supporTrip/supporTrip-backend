@@ -39,7 +39,8 @@ public class AdminFlightInsuranceRequest {
     private List<AdminSpecialContractsRequest> specialContracts;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private AdminCreateFlightInsuranceRequest(String name, int premium, int minAge, int maxAge, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning, AdminCreateInsuranceCompanyRequest insuranceCompany, List<AdminCreateSpecialContractsRequest> specialContracts) {
+    private AdminFlightInsuranceRequest(Long id, String name, int premium, int minAge, int maxAge, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning, AdminInsuranceCompanyRequest insuranceCompany, List<AdminSpecialContractsRequest> specialContracts) {
+        this.id = id;
         this.name = name;
         this.premium = premium;
         this.minAge = minAge;
