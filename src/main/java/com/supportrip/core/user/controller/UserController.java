@@ -40,12 +40,6 @@ public class UserController {
         User user = userService.getUser(oidcUser.getUserId());
         return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender() , user.getBirthDay()));
     }
-  
-    @GetMapping("/api/v1/mypages")
-    public MyPageProfileResponse getUserProfile(@AuthenticationPrincipal OidcUser oidcUser) {
-        User user = userService.getUser(oidcUser.getUserId());
-        return userService.getUserProfile(user);
-    }
 
     @PutMapping("/api/v1/users/phone-verification")
     public void initiatePhoneVerification(@AuthenticationPrincipal OidcUser oidcUser,
@@ -60,12 +54,6 @@ public class UserController {
     public void verifyPhoneVerificationCode(@AuthenticationPrincipal OidcUser oidcUser,
                                             @RequestBody @Valid VerifyPhoneVerificationCodeRequest request) {
         phoneVerificationService.verifyCode(oidcUser.getUserId(), request.getCode());
-    }
-
-    @PatchMapping("api/v1/mypages")
-    public SimpleIdResponse modifiyUserProfile(@AuthenticationPrincipal OidcUser oidcUser, @RequestBody UserModifiyRequest request){
-        User user = userService.getUser(oidcUser.getUserId());
-        return userService.modifiyUserProfile(user, request);
     }
 
     private String makePhoneVerificationMessage(String code) {
