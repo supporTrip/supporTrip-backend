@@ -42,4 +42,8 @@ public class ForeignCurrencyWallet {
                 .totalAmount(totalAmount)
                 .build();
     }
+
+    public void deposit(long amount) {
+        this.totalAmount += amount;
+    }
 }

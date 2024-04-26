@@ -15,7 +15,7 @@ public class Country {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "country_name")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "country_flag_url")

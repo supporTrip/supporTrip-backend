@@ -20,29 +20,29 @@ public class Currency {
     @JoinColumn(name = "country_id")
     private Country country;
 
-    @Column(name = "currency_name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "currency_unit")
-    private String unit;
+    @Column(name = "code")
+    private String code;
 
-    @Column(name = "currency_sign")
+    @Column(name = "sign")
     private String sign;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Currency(Long id, Country country, String name, String unit, String sign) {
+    private Currency(Long id, Country country, String name, String code, String sign) {
         this.id = id;
         this.country = country;
         this.name = name;
-        this.unit = unit;
+        this.code = code;
         this.sign = sign;
     }
 
-    public static Currency of(Country country, String name, String unit, String sign){
+    public static Currency of(Country country, String name, String code, String sign) {
         return Currency.builder()
                 .country(country)
                 .name(name)
-                .unit(unit)
+                .code(code)
                 .sign(sign)
                 .build();
     }

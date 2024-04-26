@@ -28,20 +28,22 @@ public class LinkedAccount {
     private String accountNumber;
 
     @Column(name = "total_amount")
-    private Double totalAmount;
+    private Long totalAmount;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private LinkedAccount(Long id, User user, Bank bank, String accountNumber) {
+    private LinkedAccount(Long id, User user, Bank bank, String accountNumber, Long totalAmount) {
         this.id = id;
         this.user = user;
         this.bank = bank;
         this.accountNumber = accountNumber;
+        this.totalAmount = totalAmount;
     }
 
-    public static LinkedAccount of(User user, Bank bank, String accountNumber){
+    public static LinkedAccount of(User user, Bank bank, String accountNumber) {
         return LinkedAccount.builder()
                 .user(user)
                 .bank(bank)
+                .totalAmount(1_000_000L) // 계좌에 100만원이 들어있다고 가정
                 .accountNumber(accountNumber)
                 .build();
     }
