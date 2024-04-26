@@ -10,6 +10,7 @@ import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
 import com.supportrip.core.user.dto.SignUpRequest;
 import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
 import com.supportrip.core.user.service.PhoneVerificationService;
+import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,12 @@ public class UserController {
     public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
         return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender() , user.getBirthDay()));
+    }
+  
+    @GetMapping("/api/v1/mypages")
+    public MyPageProfileResponse getUserProfile(@AuthenticationPrincipal OidcUser oidcUser) {
+        User user = userService.getUser(oidcUser.getUserId());
+        return userService.getUserProfile(user);
     }
 
     @PutMapping("/api/v1/users/phone-verification")

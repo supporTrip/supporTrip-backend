@@ -3,9 +3,10 @@ package com.supportrip.core.user.service;
 import com.supportrip.core.account.domain.Bank;
 import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
+import com.supportrip.core.account.repository.PointWalletRepository;
 import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
-import com.supportrip.core.user.dto.SignUpRequest;
+import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
 import com.supportrip.core.user.repository.UserConsentStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
@@ -63,6 +64,9 @@ class UserServiceTest {
 
     @Mock
     private LinkedAccountRepository linkedAccountRepository;
+
+    @Mock
+    private PointWalletRepository pointWalletRepository;
 
     @Test
     @DisplayName("initialUser가 회원 가입하는 경우 회원 가입에 성공한다.")
