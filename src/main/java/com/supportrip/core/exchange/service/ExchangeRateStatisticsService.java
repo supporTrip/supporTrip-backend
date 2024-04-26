@@ -2,7 +2,7 @@ package com.supportrip.core.exchange.service;
 
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
-import com.supportrip.core.exchange.domain.ExchangeRateRangeAverage;
+import com.supportrip.core.exchange.domain.ExchangeRateRangeStatistics;
 import com.supportrip.core.exchange.repository.ExchangeRateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,18 +16,18 @@ import java.util.List;
 public class ExchangeRateStatisticsService {
     private final ExchangeRateRepository exchangeRateRepository;
 
-    public ExchangeRateRangeAverage getLast3MonthExchangeRateAverage(Currency currency) {
+    public ExchangeRateRangeStatistics getLast3MonthExchangeRateAverage(Currency currency) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime before3Month = LocalDateTime.of(now.minusMonths(3).toLocalDate(), LocalTime.MIN);
 
         return getExchangeRateRangeAverage(currency, before3Month, now);
     }
 
-    private ExchangeRateRangeAverage getExchangeRateRangeAverage(Currency currency, LocalDateTime startedAt, LocalDateTime endedAt) {
+    private ExchangeRateRangeStatistics getExchangeRateRangeAverage(Currency currency, LocalDateTime startedAt, LocalDateTime endedAt) {
         List<ExchangeRate> last3MonthExchangeRates =
                 exchangeRateRepository.findByTargetCurrencyAndCreatedAtBetween(currency, startedAt, endedAt);
 
-        return ExchangeRateRangeAverage.of(
+        return ExchangeRateRangeStatistics.of(
                 startedAt.toLocalDate(),
                 endedAt.toLocalDate(),
                 currency,

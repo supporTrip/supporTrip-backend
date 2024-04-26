@@ -2,7 +2,7 @@ package com.supportrip.core.exchange.service;
 
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
-import com.supportrip.core.exchange.domain.ExchangeRateRangeAverage;
+import com.supportrip.core.exchange.domain.ExchangeRateRangeStatistics;
 import com.supportrip.core.exchange.repository.ExchangeRateRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class ExchangeRateStatisticsServiceTest {
                 .willReturn(exchangeRates);
 
         // when
-        ExchangeRateRangeAverage last3MonthAverage = exchangeRateStatisticsService.getLast3MonthExchangeRateAverage(JAPAN_CURRENCY);
+        ExchangeRateRangeStatistics last3MonthAverage = exchangeRateStatisticsService.getLast3MonthExchangeRateAverage(JAPAN_CURRENCY);
 
         // then
         assertThat(last3MonthAverage.getAverageRate()).isEqualTo(10.0);
