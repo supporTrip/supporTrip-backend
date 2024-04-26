@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final SmsService smsService;
+//    private final SmsService smsService;
     private final PhoneVerificationService phoneVerificationService;
 
     @PutMapping("/api/v1/users/signup")
@@ -52,7 +52,8 @@ public class UserController {
         LocalDateTime now = LocalDateTime.now();
         PhoneVerification phoneVerification =
                 phoneVerificationService.createOrRenewPhoneVerification(oidcUser.getUserId(), now);
-        smsService.sendOne(makePhoneVerificationMessage(phoneVerification.getCode()), request.getSmsPhoneNumber());
+        // TODO: 배포를 위한 주석으로 프로젝트 완료시 주석 해제 필요
+//        smsService.sendOne(makePhoneVerificationMessage(phoneVerification.getCode()), request.getSmsPhoneNumber());
     }
 
     @PatchMapping("/api/v1/users/phone-verification")
