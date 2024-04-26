@@ -10,8 +10,8 @@ import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
 import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.common.SimpleIdResponse;
-import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.account.repository.PointWalletRepository;
+import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserConsentStatus;
 import com.supportrip.core.user.domain.UserNotificationStatus;
@@ -42,6 +42,7 @@ public class UserService {
     private final PointWalletRepository pointWalletRepository;
     private final UserNotificationStatusRepository userNotificationStatusRepository;
     private final PointWalletService pointWalletService;
+  
     @Transactional
     public User signUp(Long userId, SignUpRequest request) {
         User user = getUser(userId);
@@ -98,7 +99,7 @@ public class UserService {
         String email = user.getEmail();
         String birthDate = user.getBirthDay().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         String gender = "";
-        if(user.getGender() == Gender.MALE) gender = "남자";
+        if (user.getGender() == Gender.MALE) gender = "남자";
         else gender = "여자";
         String registrationDate = user.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         String phoneNubmber = user.getPhoneNumber();
@@ -165,5 +166,10 @@ public class UserService {
         }
 
         return PointTransactionListResponse.of(userTotalPoint, pointTransactionRespons);
+    }
+
+    public boolean verifyPinNumber(Long userId, String pinNumber) {
+        User user = getUser(userId);
+        return user.matchPinNumber(pinNumber);
     }
 }

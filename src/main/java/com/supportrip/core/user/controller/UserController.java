@@ -9,11 +9,12 @@ import com.supportrip.core.user.domain.PhoneVerification;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
 import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
+import com.supportrip.core.user.dto.request.PinNumberVerificationRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
+import com.supportrip.core.user.dto.response.PinNumberVerificationResponse;
 import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.service.PhoneVerificationService;
 import com.supportrip.core.user.dto.response.CurrentUserPointResponse;
-
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.service.PhoneVerificationService;
 import com.supportrip.core.user.service.UserService;
@@ -69,6 +70,13 @@ public class UserController {
         phoneVerificationService.verifyCode(oidcUser.getUserId(), request.getCode());
     }
 
+    @PostMapping("/api/v1/users/pin-number/verification")
+    public PinNumberVerificationResponse verifyPinNumber(@AuthenticationPrincipal OidcUser oidcUser,
+                                                         @RequestBody @Valid PinNumberVerificationRequest request) {
+        boolean success = userService.verifyPinNumber(oidcUser.getUserId(), request.getPinNumber());
+        return PinNumberVerificationResponse.from(success);
+    }
+  
     @GetMapping("/api/v1/users/point")
     public CurrentUserPointResponse getCurrentUserPoint(@AuthenticationPrincipal OidcUser oidcUser) {
         PointWallet pointWallet = pointWalletService.getPointWallet(oidcUser.getUserId());
