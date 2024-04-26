@@ -36,7 +36,8 @@ public enum ErrorInfo {
     POINT_WALLET_NOT_FOUND(NOT_FOUND, "404-07", "해당 포인트 지갑을 찾을 수 없습니다."),
     FOREIGN_ACCOUNT_NOT_FOUND(NOT_FOUND, "404-08", "해당 외화 계좌를 찾을 수 없습니다."),
     LINKED_ACCOUNT_NOT_FOUND(NOT_FOUND, "404-09", "해당 연결계좌 정보를 찾을 수 없습니다."),
-    PHONE_VERIFICATION_NOT_FOUND(NOT_FOUND, "404-10", "해당 휴대폰 인증 정보를 찾을 수 없습니다."),
+    INSURANCE_COMPANY_NOT_FOUND(NOT_FOUND, "404-10", "해당 보험사를 찾을 수 없습니다."),
+    PHONE_VERIFICATION_NOT_FOUND(NOT_FOUND, "404-11", "해당 휴대폰 인증 정보를 찾을 수 없습니다."),
 
     // 500
     UNHANDLED_ERROR(INTERNAL_SERVER_ERROR, "500-01", "알 수 없는 오류가 발생했습니다. 관리자에게 연락해주세요."),
