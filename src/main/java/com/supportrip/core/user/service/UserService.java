@@ -2,11 +2,13 @@ package com.supportrip.core.user.service;
 
 import com.supportrip.core.account.domain.Bank;
 import com.supportrip.core.account.domain.LinkedAccount;
+import com.supportrip.core.account.domain.PointWallet;
 import com.supportrip.core.account.exception.BankNotFoundException;
 import com.supportrip.core.account.exception.LinkedAccountNotFoundException;
 import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
 import com.supportrip.core.user.domain.Gender;
+import com.supportrip.core.account.repository.PointWalletRepository;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserConsentStatus;
 import com.supportrip.core.user.dto.request.SignUpRequest;
@@ -29,6 +31,7 @@ public class UserService {
     private final UserConsentStatusRepository userConsentStatusRepository;
     private final BankRepository bankRepository;
     private final LinkedAccountRepository linkedAccountRepository;
+    private final PointWalletRepository pointWalletRepository;
 
     @Transactional
     public User signUp(Long userId, SignUpRequest request) {
@@ -65,6 +68,9 @@ public class UserService {
                 request.getPersonalInfoThirdPartyConsentForESigniture()
         );
         userConsentStatusRepository.save(userConsentStatus);
+
+        PointWallet pointWallet = PointWallet.of(user, 0L);
+        pointWalletRepository.save(pointWallet);
 
         return user;
     }
