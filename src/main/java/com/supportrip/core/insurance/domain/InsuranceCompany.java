@@ -1,5 +1,6 @@
 package com.supportrip.core.insurance.domain;
 
+import com.supportrip.core.insurance.dto.AdminInsuranceCompanyRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -45,5 +46,11 @@ public class InsuranceCompany {
                 .logoImageUrl(logoImageUrl)
                 .insuranceCompanyUrl(insuranceCompanyUrl)
                 .build();
+    }
+
+    public void update(AdminInsuranceCompanyRequest insuranceCompany) {
+        this.name = insuranceCompany.getName();
+        this.logoImageUrl = insuranceCompany.getLogoImageUrl();
+        this.insuranceCompanyUrl = insuranceCompany.getInsuranceCompanyUrl();
     }
 }
