@@ -2,15 +2,16 @@ package com.supportrip.core.user.controller;
 
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SimpleIdResponse;
-import com.supportrip.core.common.SmsService;
 import com.supportrip.core.insurance.dto.UserInfoResponse;
 import com.supportrip.core.user.domain.PhoneVerification;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
 import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
+import com.supportrip.core.user.dto.request.PinNumberVerificationRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
-import com.supportrip.core.user.service.PhoneVerificationService;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
+import com.supportrip.core.user.dto.response.PinNumberVerificationResponse;
+import com.supportrip.core.user.service.PhoneVerificationService;
 import com.supportrip.core.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +38,9 @@ public class UserController {
     @GetMapping("/api/v1/users")
     public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
-        return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender() , user.getBirthDay()));
+        return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender(), user.getBirthDay()));
     }
-  
+
     @GetMapping("/api/v1/mypages")
     public MyPageProfileResponse getUserProfile(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
@@ -60,6 +61,13 @@ public class UserController {
     public void verifyPhoneVerificationCode(@AuthenticationPrincipal OidcUser oidcUser,
                                             @RequestBody @Valid VerifyPhoneVerificationCodeRequest request) {
         phoneVerificationService.verifyCode(oidcUser.getUserId(), request.getCode());
+    }
+
+    @PostMapping("/api/v1/users/pin-number/verification")
+    public PinNumberVerificationResponse verifyPinNumber(@AuthenticationPrincipal OidcUser oidcUser,
+                                                         @RequestBody @Valid PinNumberVerificationRequest request) {
+        boolean success = userService.verifyPinNumber(oidcUser.getUserId(), request.getPinNumber());
+        return PinNumberVerificationResponse.from(success);
     }
 
     private String makePhoneVerificationMessage(String code) {

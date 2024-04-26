@@ -7,8 +7,8 @@ import com.supportrip.core.account.exception.BankNotFoundException;
 import com.supportrip.core.account.exception.LinkedAccountNotFoundException;
 import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
-import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.account.repository.PointWalletRepository;
+import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserConsentStatus;
 import com.supportrip.core.user.dto.request.SignUpRequest;
@@ -86,7 +86,7 @@ public class UserService {
         String email = user.getEmail();
         String birthDate = user.getBirthDay().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         String gender = "";
-        if(user.getGender() == Gender.MALE) gender = "남자";
+        if (user.getGender() == Gender.MALE) gender = "남자";
         else gender = "여자";
         String registrationDate = user.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         String phoneNubmber = user.getPhoneNumber();
@@ -94,5 +94,10 @@ public class UserService {
         String bankAccount = linkedAccount.getBank().getName() + " " + linkedAccount.getAccountNumber();
 
         return MyPageProfileResponse.of(profilePic, name, email, birthDate, gender, registrationDate, phoneNubmber, bankAccount);
+    }
+
+    public boolean verifyPinNumber(Long userId, String pinNumber) {
+        User user = getUser(userId);
+        return user.matchPinNumber(pinNumber);
     }
 }

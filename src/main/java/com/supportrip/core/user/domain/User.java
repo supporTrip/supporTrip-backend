@@ -115,4 +115,8 @@ public class User extends BaseEntity {
     public boolean isInitialUser() {
         return name == null;
     }
+
+    public boolean matchPinNumber(String pinNumber) {
+        return this.pinNumber.equals(pinNumber);
+    }
 }
