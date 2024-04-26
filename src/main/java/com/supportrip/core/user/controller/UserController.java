@@ -4,7 +4,8 @@ import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.insurance.dto.UserInfoResponse;
 import com.supportrip.core.user.domain.User;
-import com.supportrip.core.user.dto.SignUpRequest;
+import com.supportrip.core.user.dto.request.SignUpRequest;
+import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,11 @@ public class UserController {
     public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
         return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender() , user.getBirthDay()));
+    }
+
+    @GetMapping("/api/v1/mypages")
+    public MyPageProfileResponse getUserProfile(@AuthenticationPrincipal OidcUser oidcUser) {
+        User user = userService.getUser(oidcUser.getUserId());
+        return userService.getUserProfile(user);
     }
 }

@@ -5,7 +5,7 @@ import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
 import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
-import com.supportrip.core.user.dto.SignUpRequest;
+import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
 import com.supportrip.core.user.repository.UserConsentStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
