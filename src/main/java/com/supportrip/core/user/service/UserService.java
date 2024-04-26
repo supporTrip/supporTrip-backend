@@ -1,13 +1,14 @@
 package com.supportrip.core.user.service;
 
-import com.supportrip.core.account.domain.Bank;
-import com.supportrip.core.account.domain.LinkedAccount;
-import com.supportrip.core.account.domain.PointWallet;
+import com.supportrip.core.account.domain.*;
 import com.supportrip.core.account.dto.request.BankRequest;
+import com.supportrip.core.account.dto.response.PointTransactionListResponse;
+import com.supportrip.core.account.dto.response.PointTransactionResponse;
 import com.supportrip.core.account.exception.BankNotFoundException;
 import com.supportrip.core.account.exception.LinkedAccountNotFoundException;
 import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
+import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.account.repository.PointWalletRepository;
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,7 +41,7 @@ public class UserService {
     private final LinkedAccountRepository linkedAccountRepository;
     private final PointWalletRepository pointWalletRepository;
     private final UserNotificationStatusRepository userNotificationStatusRepository;
-
+    private final PointWalletService pointWalletService;
     @Transactional
     public User signUp(Long userId, SignUpRequest request) {
         User user = getUser(userId);
@@ -144,4 +147,29 @@ public class UserService {
         return SimpleIdResponse.from(user.getId());
     }
 
+    public PointTransactionListResponse getPointList(User user) {
+        Long userTotalPoint = pointWalletService.getPointWallet(user).getTotalAmount();
+        List<PointTransaction> pointTransactions = pointWalletService.getPointTransactions(user);
+
+        List<PointTransactionResponse> pointTransactionRespons = new ArrayList<>();
+
+        for(PointTransaction pointTransaction : pointTransactions){
+            String transactionDate = pointTransaction.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+            String detail = "";
+            String type = "";
+            if(pointTransaction.getType() == PointTransactionType.DEPOSIT){
+                detail = "포인트 입금";
+                type = "+";
+            }
+            if(pointTransaction.getType() == PointTransactionType.WITHDRAWAL){
+                detail = "포인트 출금";
+                type = "-";
+            }
+            Long point = pointTransaction.getAmount();
+            Long totalPoint = pointTransaction.getTotalAmount();
+            pointTransactionRespons.add(PointTransactionResponse.of(transactionDate, detail, type, point, totalPoint));
+        }
+
+        return PointTransactionListResponse.of(userTotalPoint, pointTransactionRespons);
+    }
 }
