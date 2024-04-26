@@ -115,4 +115,12 @@ public class User extends BaseEntity {
     public boolean isInitialUser() {
         return name == null;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }

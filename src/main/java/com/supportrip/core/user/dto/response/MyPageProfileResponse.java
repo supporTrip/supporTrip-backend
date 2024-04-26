@@ -15,10 +15,11 @@ public class MyPageProfileResponse {
     private final String registrationDate;
     private final String phoneNumber;
     private final String bankAccount;
+    private final boolean receiveStatus;
 
     @Builder(access = AccessLevel.PRIVATE)
 
-    public MyPageProfileResponse(String profilePic, String name, String email, String birthDate, String gender, String registrationDate, String phoneNumber, String bankAccount) {
+    public MyPageProfileResponse(String profilePic, String name, String email, String birthDate, String gender, String registrationDate, String phoneNumber, String bankAccount, boolean receiveStatus) {
         this.profilePic = profilePic;
         this.name = name;
         this.email = email;
@@ -27,9 +28,10 @@ public class MyPageProfileResponse {
         this.registrationDate = registrationDate;
         this.phoneNumber = phoneNumber;
         this.bankAccount = bankAccount;
+        this.receiveStatus = receiveStatus;
     }
 
-    public static MyPageProfileResponse of(String profilePic, String name, String email, String birthDate, String gender, String registrationDate, String phoneNumber, String bankAccount){
+    public static MyPageProfileResponse of(String profilePic, String name, String email, String birthDate, String gender, String registrationDate, String phoneNumber, String bankAccount, boolean receiveStatus){
         return MyPageProfileResponse.builder()
                 .profilePic(profilePic)
                 .name(name)
@@ -39,6 +41,7 @@ public class MyPageProfileResponse {
                 .registrationDate(registrationDate)
                 .phoneNumber(phoneNumber)
                 .bankAccount(bankAccount)
+                .receiveStatus(receiveStatus)
                 .build();
 
     }

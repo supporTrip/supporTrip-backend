@@ -9,6 +9,7 @@ import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
 import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
+import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.service.PhoneVerificationService;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.service.UserService;
@@ -59,6 +60,12 @@ public class UserController {
     public void verifyPhoneVerificationCode(@AuthenticationPrincipal OidcUser oidcUser,
                                             @RequestBody @Valid VerifyPhoneVerificationCodeRequest request) {
         phoneVerificationService.verifyCode(oidcUser.getUserId(), request.getCode());
+    }
+
+    @PatchMapping("api/v1/mypages")
+    public SimpleIdResponse modifiyUserProfile(@AuthenticationPrincipal OidcUser oidcUser, @RequestBody UserModifiyRequest request){
+        User user = userService.getUser(oidcUser.getUserId());
+        return userService.modifiyUserProfile(user, request);
     }
 
     private String makePhoneVerificationMessage(String code) {

@@ -47,4 +47,16 @@ public class LinkedAccount {
                 .accountNumber(accountNumber)
                 .build();
     }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public void setTotalAmount(Long totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 }
