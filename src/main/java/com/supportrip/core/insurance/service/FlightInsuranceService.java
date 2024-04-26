@@ -255,15 +255,15 @@ public class FlightInsuranceService {
                 request.getFoodPoisoning(), insuranceCompany);
 
         List<SpecialContract> specialContracts = specialContractRepository.findByFlightInsuranceId(request.getId());
-        List<SpecialContractResponse> specialContractResponses = new ArrayList<>(); //DTO
+        List<SpecialContractResponse> specialContractResponses = new ArrayList<>();
 
-        for (SpecialContract specialContract : specialContracts) { //DB에 기존에 있던 특약들
-            //기존특약의 아이디와 변경될 특약의 아이디가 일치하는지 확인
+        for (SpecialContract specialContract : specialContracts) {
+
             List<AdminSpecialContractsRequest> requestSpecialContracts = request.getSpecialContracts();
-            for (AdminSpecialContractsRequest requestSpecialContract : requestSpecialContracts) { //변경될 특약들
-                if(specialContract.getId().equals(requestSpecialContract.getId())) { //기존특약이랑 변경될 특약의 아이디가 일치할 경우
+            for (AdminSpecialContractsRequest requestSpecialContract : requestSpecialContracts) {
+                if(specialContract.getId().equals(requestSpecialContract.getId())) {
                     specialContract.update(requestSpecialContract.getName(), requestSpecialContract.getDescription(), requestSpecialContract.getStandardPrice(), requestSpecialContract.getAdvancedPrice(), flightInsurance);
-                    //변경한 특약 DTO 변환
+
                     SpecialContractResponse response = SpecialContractResponse.toDTO(specialContract);
                     specialContractResponses.add(response);
                 }
