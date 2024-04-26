@@ -117,7 +117,6 @@ public class UserService {
 
         if (request.getPhoneNumber() != null) {
             user.setPhoneNumber(request.getPhoneNumber());
-            System.out.println("user = " + user.getPhoneNumber());
         }
 
         if (request.getBankAccounts() != null) {
@@ -138,11 +137,6 @@ public class UserService {
             else
                 userNotificationStatus.setStatus(false);
         }
-
-        // 모든 변경 사항을 저장
-        userRepository.save(user);
-        linkedAccountRepository.save(linkedAccount);
-        userNotificationStatusRepository.save(userNotificationStatus);
 
         return SimpleIdResponse.from(user.getId());
     }
