@@ -26,7 +26,7 @@ public class FlightInsuranceApiController {
         return ResponseEntity.ok(flightInsurances);
     }
 
-    @GetMapping("/api/v1/flight-insurance/{id}")
+    @GetMapping("/api/v1/flight-insurances/{id}")
     public ResponseEntity<FlightInsuranceDetailResponse> detail(@PathVariable("id") Long flightInsuranceId, @Valid FlightInsuranceDetailRequest request) {
         FlightInsuranceDetailResponse flightInsuranceDetail = flightInsuranceService.findFlightInsuranceDetail(flightInsuranceId, request);
 
@@ -46,20 +46,20 @@ public class FlightInsuranceApiController {
         return flightInsuranceService.findFlightInsurances(oidcUser.getUserId());
     }
 
-    @PostMapping("/admin/v1/flight-insurance")
+    @PostMapping("/admin/v1/flight-insurances")
     public SimpleIdResponse createFlightInsurance(@AuthenticationPrincipal OidcUser oidcUser,
                                       @Valid @RequestBody AdminFlightInsuranceRequest request) {
         FlightInsurance flightInsurance = flightInsuranceService.create(oidcUser.getUserId(), request);
         return SimpleIdResponse.from(flightInsurance.getId());
     }
 
-    @PutMapping("/admin/v1/flight-insurance")
+    @PutMapping("/admin/v1/flight-insurances")
     public AdminFlightInsuranceResponse update (@AuthenticationPrincipal OidcUser oidcUser,
                                                 @Valid @RequestBody AdminFlightInsuranceRequest request) {
         return flightInsuranceService.update(oidcUser.getUserId(), request);
     }
 
-    @DeleteMapping("/admin/v1/flight-insurance/{id}")
+    @DeleteMapping("/admin/v1/flight-insurances/{id}")
     public void delete (@PathVariable("id") Long flightInsuranceId, @AuthenticationPrincipal OidcUser oidcUser) {
         flightInsuranceService.delete(oidcUser.getUserId(), flightInsuranceId);
     }
