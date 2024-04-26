@@ -17,9 +17,9 @@ public class CurrentExchangeRateResponse {
     }
 
     public static CurrentExchangeRateResponse from(ExchangeRate exchangeRate) {
-        return new CurrentExchangeRateResponse(
-                exchangeRate.getTargetCurrency().getCode(),
-                exchangeRate.getDealBaseRate()
-        );
+        return CurrentExchangeRateResponse.builder()
+                .currencyCode(exchangeRate.getTargetCurrency().getCode())
+                .exchangeRate(exchangeRate.getDealBaseRate())
+                .build();
     }
 }
