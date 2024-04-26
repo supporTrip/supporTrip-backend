@@ -10,6 +10,7 @@ import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
 import com.supportrip.core.auth.kakao.OidcKakaoAuthClient;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserSocials;
+import com.supportrip.core.user.exception.UserSocialsNotFoundException;
 import com.supportrip.core.user.repository.UserRepository;
 import com.supportrip.core.user.repository.UserSocialsRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,14 @@ public class AuthService {
         userSocials.replaceRefreshToken(refreshToken);
 
         return LoginResponse.of(accessToken, refreshToken, user.isInitialUser(), user);
+    }
+
+    @Transactional
+    public void logout(Long userId) {
+        UserSocials userSocials = userSocialsRepository.findByVenderAndUserId(KAKAO, userId)
+                .orElseThrow(UserSocialsNotFoundException::new);
+
+        userSocials.clearRefreshToken();
     }
 
     public String regenerateAccessToken(String authorization) {

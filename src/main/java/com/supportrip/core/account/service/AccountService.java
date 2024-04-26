@@ -12,6 +12,7 @@ import com.supportrip.core.account.dto.response.GenerateForeignAccountResponse;
 import com.supportrip.core.account.exception.ForeignAccountDuplicateException;
 import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.ForeignAccountRepository;
+import com.supportrip.core.account.repository.ForeignAccountTransactionRepository;
 import com.supportrip.core.account.repository.ForeignCurrencyWalletRepository;
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.repository.CurrencyRepository;
@@ -20,7 +21,6 @@ import com.supportrip.core.user.exception.UserNotFoundException;
 import com.supportrip.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.supportrip.core.account.repository.ForeignAccountTransactionRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +35,12 @@ public class AccountService {
     private final ForeignCurrencyWalletRepository foreignCurrencyWalletRepository;
     private final ForeignAccountTransactionRepository foreignAccountTransactionRepository;
     private final CurrencyRepository currencyRepository;
+
     public GenerateForeignAccountResponse generateForeignAccount(Long userId, GenerateForeignAccountRequest generateForeignAccountRequest) {
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if(foreignAccountRepository.findByUser(user).isPresent())
+        if (foreignAccountRepository.findByUser(user).isPresent())
             throw new ForeignAccountDuplicateException();
 
         Bank bank = bankRepository.findByName(generateForeignAccountRequest.getBankName());
@@ -48,8 +49,8 @@ public class AccountService {
 
         List<Currency> currencyList = currencyRepository.findAll();
 
-        for(Currency currency : currencyList){
-            ForeignCurrencyWallet wallet = ForeignCurrencyWallet.of(foreignAccount, currency, 0.0);
+        for (Currency currency : currencyList) {
+            ForeignCurrencyWallet wallet = ForeignCurrencyWallet.of(foreignAccount, currency, 0L);
             foreignCurrencyWalletRepository.save(wallet);
         }
 
@@ -67,21 +68,21 @@ public class AccountService {
 
         ForeignAccount foreignAccount = optionalForeignAccount.get();
 
-        List<ForeignCurrencyWallet> foreignCurrencyWallets = foreignCurrencyWalletRepository.findByForeignAccountAndTotalAmountGreaterThan(foreignAccount,0.0);
+        List<ForeignCurrencyWallet> foreignCurrencyWallets = foreignCurrencyWalletRepository.findByForeignAccountAndTotalAmountGreaterThan(foreignAccount, 0.0);
 
-        if(foreignCurrencyWallets.isEmpty())
+        if (foreignCurrencyWallets.isEmpty())
             return ForeignAccountInfoListResponse.of(true, null);
 
         List<ForeignAccountInfoResponse> accountInfoResponses = new ArrayList<>();
 
-        for(ForeignCurrencyWallet wallet : foreignCurrencyWallets){
+        for (ForeignCurrencyWallet wallet : foreignCurrencyWallets) {
             List<ForeignAccountTransactionDetailResponse> details = new ArrayList<>();
             List<ForeignAccountTransaction> transactions = foreignAccountTransactionRepository.findByForeignCurrencyWalletOrderByCreatedAtDesc(wallet);
 
             double originTotalAmount = 0.0;
             double targetTotalAmount = wallet.getTotalAmount();
 
-            for(ForeignAccountTransaction transaction : transactions){
+            for (ForeignAccountTransaction transaction : transactions) {
                 details.add(ForeignAccountTransactionDetailResponse.of(transaction));
                 originTotalAmount += transaction.getAmount() * transaction.getTargetExchangeRate();
             }

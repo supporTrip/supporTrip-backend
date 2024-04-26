@@ -3,11 +3,13 @@ package com.supportrip.core.user.service;
 import com.supportrip.core.account.domain.Bank;
 import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
+import com.supportrip.core.account.repository.PointWalletRepository;
 import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
-import com.supportrip.core.user.dto.SignUpRequest;
+import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
 import com.supportrip.core.user.repository.UserConsentStatusRepository;
+import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +33,8 @@ class UserServiceTest {
     private static final String NAME = "가나다";
     private static final String EMAIL = "aaaaa@gmail.com";
     private static final String PHONE_NUMBER = "010-0000-0000";
-    private static final LocalDate BIRTH_DAY = LocalDate.now();
+    private static final String RAW_BIRTH_DAY = "010101";
+    private static final LocalDate BIRTH_DAY = LocalDate.of(2001, 1, 1);
     private static final Gender GENDER = Gender.MALE;
     private static final String PIN_NUMBER = "123456";
     private static final String PROFILE_IMAGE_URL = "profile_url";
@@ -64,11 +67,17 @@ class UserServiceTest {
     @Mock
     private LinkedAccountRepository linkedAccountRepository;
 
+    @Mock
+    private PointWalletRepository pointWalletRepository;
+
+    @Mock
+    private UserNotificationStatusRepository userNotificationStatusRepository;
+
     @Test
     @DisplayName("initialUser가 회원 가입하는 경우 회원 가입에 성공한다.")
     void signUpSuccess() {
         // given
-        SignUpRequest request = SignUpRequest.of(NAME, EMAIL, PHONE_NUMBER, BIRTH_DAY, GENDER, PIN_NUMBER,
+        SignUpRequest request = SignUpRequest.of(NAME, EMAIL, PHONE_NUMBER, RAW_BIRTH_DAY, GENDER, PIN_NUMBER,
                 BANK_CODE, BANK_ACCOUNT_NUMBER, CONSENT_ABOVE_14, SERVICE_TERMS_CONSENT, CONSENT_PERSONAL_INFO,
                 null, null, OPEN_BANKING_AUTO_TRANSFER_CONSENT,
                 OPEN_BANKING_FINANCIAL_INFO_INQUIRY_CONSENT, FINANCIAL_INFO_THIRD_PARTY_PROVISION_CONSENT,
