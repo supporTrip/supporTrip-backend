@@ -23,14 +23,14 @@ public class MyPageController {
     private final UserService userService;
     private final ExchangeTradingService exchangeTradingService;
 
-    @GetMapping("")
+    @GetMapping
     public MyPageProfileResponse getUserProfile(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
         return userService.getUserProfile(user);
     }
 
 
-    @PatchMapping("")
+    @PatchMapping
     public SimpleIdResponse modifiyUserProfile(@AuthenticationPrincipal OidcUser oidcUser, @RequestBody UserModifiyRequest request){
         User user = userService.getUser(oidcUser.getUserId());
         return userService.modifiyUserProfile(user, request);

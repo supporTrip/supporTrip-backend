@@ -139,11 +139,6 @@ public class UserService {
                 userNotificationStatus.setStatus(false);
         }
 
-        // 모든 변경 사항을 저장
-        userRepository.save(user);
-        linkedAccountRepository.save(linkedAccount);
-        userNotificationStatusRepository.save(userNotificationStatus);
-
         return SimpleIdResponse.from(user.getId());
     }
 
