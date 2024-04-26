@@ -38,7 +38,7 @@ class ExchangeRateServiceTest {
 
         ExchangeRate exchangeRate = ExchangeRate.of(TODAY, JAPAN_CURRENCY, 100L, KOREA_CURRENCY, 1.0);
 
-        given(exchangeRateRepository.findLatestExchangeByTargetCurrency(any(Currency.class)))
+        given(exchangeRateRepository.findLatestExchange(any(Currency.class)))
                 .willReturn(Optional.of(exchangeRate));
 
         // when
@@ -61,7 +61,7 @@ class ExchangeRateServiceTest {
 
         ExchangeRate exchangeRate = ExchangeRate.of(YESTERDAY, KOREA_CURRENCY, 100L, JAPAN_CURRENCY, 1.0);
 
-        given(exchangeRateRepository.findLatestExchangeByTargetCurrency(any(Currency.class)))
+        given(exchangeRateRepository.findLatestExchange(any(Currency.class)))
                 .willReturn(Optional.of(exchangeRate));
 
         // expected
