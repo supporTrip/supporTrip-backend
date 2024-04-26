@@ -1,5 +1,6 @@
 package com.supportrip.core.user.domain;
 
+import com.supportrip.core.user.exception.PhoneVerificationFailException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -50,5 +51,18 @@ public class PhoneVerification {
     public void renew(String code, LocalDateTime expiresIn) {
         this.code = code;
         this.expiresIn = expiresIn;
+    }
+
+    public boolean isVerified() {
+        return this.verifiedAt != null;
+    }
+
+    public void verify(String code) {
+        LocalDateTime now = LocalDateTime.now();
+        if (expiresIn.isBefore(now) || !this.code.equals(code)) {
+            throw new PhoneVerificationFailException();
+        }
+
+        this.verifiedAt = LocalDateTime.now();
     }
 }
