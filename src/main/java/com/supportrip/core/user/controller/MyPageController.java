@@ -1,6 +1,6 @@
 package com.supportrip.core.user.controller;
 
-import com.supportrip.core.account.dto.response.PointListResponse;
+import com.supportrip.core.account.dto.response.PointTransactionListResponse;
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.user.domain.User;
@@ -32,7 +32,7 @@ public class MyPageController {
     }
 
     @GetMapping("/points")
-    public PointListResponse getPointList(@AuthenticationPrincipal OidcUser oidcUser){
+    public PointTransactionListResponse getPointList(@AuthenticationPrincipal OidcUser oidcUser){
         User user = userService.getUser(oidcUser.getUserId());
         return userService.getPointList(user);
     }

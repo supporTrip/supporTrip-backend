@@ -2,8 +2,8 @@ package com.supportrip.core.user.service;
 
 import com.supportrip.core.account.domain.*;
 import com.supportrip.core.account.dto.request.BankRequest;
-import com.supportrip.core.account.dto.response.PointListResponse;
-import com.supportrip.core.account.dto.response.PointResponse;
+import com.supportrip.core.account.dto.response.PointTransactionListResponse;
+import com.supportrip.core.account.dto.response.PointTransactionResponse;
 import com.supportrip.core.account.exception.BankNotFoundException;
 import com.supportrip.core.account.exception.LinkedAccountNotFoundException;
 import com.supportrip.core.account.repository.BankRepository;
@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,11 +147,11 @@ public class UserService {
         return SimpleIdResponse.from(user.getId());
     }
 
-    public PointListResponse getPointList(User user) {
+    public PointTransactionListResponse getPointList(User user) {
         Long userTotalPoint = pointWalletService.getPointWallet(user).getTotalAmount();
         List<PointTransaction> pointTransactions = pointWalletService.getPointTransactions(user);
 
-        List<PointResponse> pointResponses = new ArrayList<>();
+        List<PointTransactionResponse> pointTransactionRespons = new ArrayList<>();
 
         for(PointTransaction pointTransaction : pointTransactions){
             String transactionDate = pointTransaction.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
@@ -168,9 +167,9 @@ public class UserService {
             }
             Long point = pointTransaction.getAmount();
             Long totalPoint = pointTransaction.getTotalAmount();
-            pointResponses.add(PointResponse.of(transactionDate, detail, type, point, totalPoint));
+            pointTransactionRespons.add(PointTransactionResponse.of(transactionDate, detail, type, point, totalPoint));
         }
 
-        return PointListResponse.of(userTotalPoint, pointResponses);
+        return PointTransactionListResponse.of(userTotalPoint, pointTransactionRespons);
     }
 }
