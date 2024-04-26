@@ -10,7 +10,10 @@ import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
 import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
+import com.supportrip.core.user.dto.request.UserModifiyRequest;
+import com.supportrip.core.user.service.PhoneVerificationService;
 import com.supportrip.core.user.dto.response.CurrentUserPointResponse;
+
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.service.PhoneVerificationService;
 import com.supportrip.core.user.service.UserService;
@@ -48,6 +51,7 @@ public class UserController {
         User user = userService.getUser(oidcUser.getUserId());
         return userService.getUserProfile(user);
     }
+
 
     @PutMapping("/api/v1/users/phone-verification")
     public void initiatePhoneVerification(@AuthenticationPrincipal OidcUser oidcUser,
