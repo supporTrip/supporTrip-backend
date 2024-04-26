@@ -1,5 +1,7 @@
 package com.supportrip.core.user.controller;
 
+import com.supportrip.core.account.domain.PointWallet;
+import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.insurance.dto.UserInfoResponse;
@@ -9,8 +11,11 @@ import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
 import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
 import com.supportrip.core.user.dto.request.PinNumberVerificationRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
-import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.dto.response.PinNumberVerificationResponse;
+import com.supportrip.core.user.dto.request.UserModifiyRequest;
+import com.supportrip.core.user.service.PhoneVerificationService;
+import com.supportrip.core.user.dto.response.CurrentUserPointResponse;
+import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.service.PhoneVerificationService;
 import com.supportrip.core.user.service.UserService;
 import jakarta.validation.Valid;
@@ -27,6 +32,7 @@ public class UserController {
     private final UserService userService;
 //    private final SmsService smsService;
     private final PhoneVerificationService phoneVerificationService;
+    private final PointWalletService pointWalletService;
 
     @PutMapping("/api/v1/users/signup")
     public SimpleIdResponse signUp(@Valid @RequestBody SignUpRequest request,
@@ -46,6 +52,7 @@ public class UserController {
         User user = userService.getUser(oidcUser.getUserId());
         return userService.getUserProfile(user);
     }
+
 
     @PutMapping("/api/v1/users/phone-verification")
     public void initiatePhoneVerification(@AuthenticationPrincipal OidcUser oidcUser,
@@ -68,6 +75,12 @@ public class UserController {
                                                          @RequestBody @Valid PinNumberVerificationRequest request) {
         boolean success = userService.verifyPinNumber(oidcUser.getUserId(), request.getPinNumber());
         return PinNumberVerificationResponse.from(success);
+    }
+  
+    @GetMapping("/api/v1/users/point")
+    public CurrentUserPointResponse getCurrentUserPoint(@AuthenticationPrincipal OidcUser oidcUser) {
+        PointWallet pointWallet = pointWalletService.getPointWallet(oidcUser.getUserId());
+        return CurrentUserPointResponse.from(pointWallet);
     }
 
     private String makePhoneVerificationMessage(String code) {

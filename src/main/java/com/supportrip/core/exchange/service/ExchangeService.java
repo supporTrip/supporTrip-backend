@@ -7,6 +7,7 @@ import com.supportrip.core.account.service.ForeignAccountService;
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
+import com.supportrip.core.exchange.dto.response.ExchangeTransactionListResponse;
 import com.supportrip.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
