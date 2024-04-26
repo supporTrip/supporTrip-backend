@@ -10,7 +10,6 @@ import com.supportrip.core.account.repository.ForeignAccountTransactionRepositor
 import com.supportrip.core.account.repository.ForeignCurrencyWalletRepository;
 import com.supportrip.core.exchange.domain.Country;
 import com.supportrip.core.exchange.domain.Currency;
-import com.supportrip.core.exchange.repository.CurrencyRepository;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +53,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("외화 계좌가 없을때 hasAccount가 false, accountInfo가 null로 반환된다.")
-    void foreignAccountNotExist(){
+    void foreignAccountNotExist() {
         // Given
         Long userId = 1L;
         when(userRepository.findById(userId)).thenReturn(Optional.of(User.initialUserOf("profile_img")));
@@ -70,20 +69,20 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("외화 계좌가 있을 때, 계좌 존재여부, 각 거래내역을 반환해야 한다")
-    void getforeignAccountInfo(){
+    void getforeignAccountInfo() {
         Long userId = 1L;
         User user = User.initialUserOf("profile_img");
-        Bank bank = Bank.of("우리은행", "bank_img");
+        Bank bank = Bank.of("우리은행", "WOORI", "bank_img");
         ForeignAccount foreignAccount = ForeignAccount.of(user, bank, "1111");
         List<ForeignCurrencyWallet> walletList = new ArrayList<>();
         Country country = Country.of("미국", "미국국기", "미국달러");
 
         Currency currency = Currency.of(country, "미국달러", "USD", "$");
-        ForeignCurrencyWallet wallet = ForeignCurrencyWallet.of(foreignAccount, currency, 10.0);
+        ForeignCurrencyWallet wallet = ForeignCurrencyWallet.of(foreignAccount, currency, 10L);
         walletList.add(wallet);
 
         List<ForeignAccountTransaction> transactions = new ArrayList<>();
-        ForeignAccountTransaction transaction = ForeignAccountTransaction.of(10.0, 1200.0, 10.0,wallet,null);
+        ForeignAccountTransaction transaction = ForeignAccountTransaction.of(10L, 1200.0, 10L, wallet, null);
         transactions.add(transaction);
 
         ReflectionTestUtils.setField(transaction, "createdAt", LocalDateTime.now());
@@ -106,6 +105,6 @@ class AccountServiceTest {
         assertEquals(1, response.getAccountInfo().size());
         assertNotNull(response.getAccountInfo().get(0).getDetails());
         assertEquals(1, response.getAccountInfo().get(0).getDetails().size());
-        assertEquals(10.0, response.getAccountInfo().get(0).getDetails().get(0).getTotalMoney());
+        assertEquals(10L, response.getAccountInfo().get(0).getDetails().get(0).getTotalMoney());
     }
 }
