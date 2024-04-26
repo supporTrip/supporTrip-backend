@@ -27,9 +27,9 @@ public class ExchangeRateScheduler {
     private final ExchangeTradingRepository exchangeTradingRepository;
     private final ExchangeStrategyManager exchangeStrategyManager;
 
-    // 매일 12/18시 2번 자동 환전을 진행
+    // 매 평일 오후 1시에 자동 환전을 진행
     @Transactional
-    @Scheduled(cron = "0 0 12/18 ? * MON-FRI")
+    @Scheduled(cron = "0 0 13 ? * MON-FRI")
     public void dailyExchange() {
         LocalDate today = LocalDate.now();
         fetchAndStoreExchangeRate(today);
