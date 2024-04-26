@@ -6,6 +6,7 @@ import com.supportrip.core.insurance.domain.InsuranceSubscription;
 import com.supportrip.core.insurance.domain.SpecialContract;
 import com.supportrip.core.insurance.dto.*;
 import com.supportrip.core.insurance.exception.NotFoundFlightInsuranceException;
+import com.supportrip.core.insurance.exception.NotFoundInsuranceCompanyException;
 import com.supportrip.core.insurance.repository.FlightInsuranceRepository;
 import com.supportrip.core.insurance.repository.InsuranceCompanyRepository;
 import com.supportrip.core.insurance.repository.InsuranceSubscriptionRepository;
@@ -237,5 +238,55 @@ public class FlightInsuranceService {
             specialContractRepository.save(contract);
         }
         return insurance;
+    }
+
+    /**
+     * 관리자 보험사, 보험상품, 특약 수정
+     */
+    @Transactional
+    public AdminFlightInsuranceResponse update(Long userId, AdminFlightInsuranceRequest request) {
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        InsuranceCompany insuranceCompany = insuranceCompanyRepository.findById(request.getInsuranceCompany().getId()).orElseThrow(NotFoundInsuranceCompanyException::new);
+        FlightInsurance flightInsurance = flightInsuranceRepository.findById(request.getId()).orElseThrow(NotFoundFlightInsuranceException::new);
+
+        insuranceCompany.update(request.getInsuranceCompany());
+        flightInsurance.update(request.getName(), request.getPremium(), request.getMinAge(),
+                request.getMaxAge(), request.getFlightDelay(), request.getPassportLoss(),
+                request.getFoodPoisoning(), insuranceCompany);
+
+        List<SpecialContract> specialContracts = specialContractRepository.findByFlightInsuranceId(request.getId());
+        List<SpecialContractResponse> specialContractResponses = new ArrayList<>(); //DTO
+
+        for (SpecialContract specialContract : specialContracts) { //DB에 기존에 있던 특약들
+            //기존특약의 아이디와 변경될 특약의 아이디가 일치하는지 확인
+            List<AdminSpecialContractsRequest> requestSpecialContracts = request.getSpecialContracts();
+            for (AdminSpecialContractsRequest requestSpecialContract : requestSpecialContracts) { //변경될 특약들
+                if(specialContract.getId().equals(requestSpecialContract.getId())) { //기존특약이랑 변경될 특약의 아이디가 일치할 경우
+                    specialContract.update(requestSpecialContract.getName(), requestSpecialContract.getDescription(), requestSpecialContract.getStandardPrice(), requestSpecialContract.getAdvancedPrice(), flightInsurance);
+                    //변경한 특약 DTO 변환
+                    SpecialContractResponse response = SpecialContractResponse.toDTO(specialContract);
+                    specialContractResponses.add(response);
+                }
+            }
+        }
+
+        return AdminFlightInsuranceResponse.of(flightInsurance, specialContractResponses);
+    }
+
+    /**
+     * 보험상품 삭제(연관된 특약도 전부 제거)
+     */
+    @Transactional
+    public void delete(Long userId, Long flightInsuranceId) {
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        FlightInsurance flightInsurance = flightInsuranceRepository.findById(flightInsuranceId).orElseThrow(NotFoundFlightInsuranceException::new);
+        List<SpecialContract> specialContracts = specialContractRepository.findByFlightInsuranceId(flightInsuranceId);
+        for (SpecialContract specialContract : specialContracts) {
+            specialContractRepository.delete(specialContract);
+        }
+
+        insuranceCompanyRepository.delete(flightInsurance.getInsuranceCompany());
+        flightInsuranceRepository.delete(flightInsurance);
     }
 }

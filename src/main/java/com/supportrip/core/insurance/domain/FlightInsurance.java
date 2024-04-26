@@ -84,5 +84,16 @@ public class FlightInsurance {
                 .build();
     }
 
+    public void update(String name, int premium, int minAge, int maxAge, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning, InsuranceCompany insuranceCompany) {
+        this.name = name;
+        this.premium = premium;
+        this.minJoinAge = minAge;
+        this.maxJoinAge = maxAge;
+        this.flightDelay = flightDelay;
+        this.passportLoss = passportLoss;
+        this.foodPoisoning = foodPoisoning;
+        this.insuranceCompany = insuranceCompany;
+    }
+
 }
 

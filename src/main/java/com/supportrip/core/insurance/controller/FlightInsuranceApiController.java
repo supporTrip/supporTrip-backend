@@ -52,4 +52,15 @@ public class FlightInsuranceApiController {
         FlightInsurance flightInsurance = flightInsuranceService.create(oidcUser.getUserId(), request);
         return SimpleIdResponse.from(flightInsurance.getId());
     }
+
+    @PutMapping("/admin/v1/flight-insurance")
+    public AdminFlightInsuranceResponse update (@AuthenticationPrincipal OidcUser oidcUser,
+                                                @Valid @RequestBody AdminFlightInsuranceRequest request) {
+        return flightInsuranceService.update(oidcUser.getUserId(), request);
+    }
+
+    @DeleteMapping("/admin/v1/flight-insurance/{id}")
+    public void delete (@PathVariable("id") Long flightInsuranceId, @AuthenticationPrincipal OidcUser oidcUser) {
+        flightInsuranceService.delete(oidcUser.getUserId(), flightInsuranceId);
+    }
 }
