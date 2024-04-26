@@ -1,4 +1,4 @@
-package com.supportrip.core.user.dto;
+package com.supportrip.core.user.dto.request;
 
 import com.supportrip.core.user.domain.Gender;
 import jakarta.validation.constraints.NotBlank;
