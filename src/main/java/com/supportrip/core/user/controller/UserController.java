@@ -1,16 +1,18 @@
 package com.supportrip.core.user.controller;
 
+import com.supportrip.core.account.domain.PointWallet;
+import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SimpleIdResponse;
-import com.supportrip.core.common.SmsService;
 import com.supportrip.core.insurance.dto.UserInfoResponse;
 import com.supportrip.core.user.domain.PhoneVerification;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
 import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
-import com.supportrip.core.user.service.PhoneVerificationService;
+import com.supportrip.core.user.dto.response.CurrentUserPointResponse;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
+import com.supportrip.core.user.service.PhoneVerificationService;
 import com.supportrip.core.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class UserController {
     private final UserService userService;
 //    private final SmsService smsService;
     private final PhoneVerificationService phoneVerificationService;
+    private final PointWalletService pointWalletService;
 
     @PutMapping("/api/v1/users/signup")
     public SimpleIdResponse signUp(@Valid @RequestBody SignUpRequest request,
@@ -37,9 +40,9 @@ public class UserController {
     @GetMapping("/api/v1/users")
     public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
-        return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender() , user.getBirthDay()));
+        return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender(), user.getBirthDay()));
     }
-  
+
     @GetMapping("/api/v1/mypages")
     public MyPageProfileResponse getUserProfile(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
@@ -60,6 +63,12 @@ public class UserController {
     public void verifyPhoneVerificationCode(@AuthenticationPrincipal OidcUser oidcUser,
                                             @RequestBody @Valid VerifyPhoneVerificationCodeRequest request) {
         phoneVerificationService.verifyCode(oidcUser.getUserId(), request.getCode());
+    }
+
+    @GetMapping("/api/v1/users/point")
+    public CurrentUserPointResponse getCurrentUserPoint(@AuthenticationPrincipal OidcUser oidcUser) {
+        PointWallet pointWallet = pointWalletService.getPointWallet(oidcUser.getUserId());
+        return CurrentUserPointResponse.from(pointWallet);
     }
 
     private String makePhoneVerificationMessage(String code) {
