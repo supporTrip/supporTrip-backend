@@ -39,6 +39,7 @@ public enum ErrorInfo {
     INSURANCE_COMPANY_NOT_FOUND(NOT_FOUND, "404-10", "해당 보험사를 찾을 수 없습니다."),
     PHONE_VERIFICATION_NOT_FOUND(NOT_FOUND, "404-11", "해당 휴대폰 인증 정보를 찾을 수 없습니다."),
 
+
     // 500
     UNHANDLED_ERROR(INTERNAL_SERVER_ERROR, "500-01", "알 수 없는 오류가 발생했습니다. 관리자에게 연락해주세요."),
     KAKAO_SERVER_ERROR(INTERNAL_SERVER_ERROR, "500-02", "카카오 서버로부터 인증 정보를 가져오지 못했습니다."),
