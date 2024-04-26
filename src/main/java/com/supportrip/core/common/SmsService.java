@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
-@Service
+//@Service
 public class SmsService {
     private final DefaultMessageService defaultMessageService;
     private final String senderPhoneNumber;
