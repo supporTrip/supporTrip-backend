@@ -3,6 +3,10 @@ package com.supportrip.core.user.controller;
 import com.supportrip.core.account.dto.response.PointListResponse;
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SimpleIdResponse;
+import com.supportrip.core.exchange.dto.response.ExchangeTransactionListResponse;
+import com.supportrip.core.exchange.dto.response.ExchangeTransactionResponse;
+import com.supportrip.core.exchange.service.ExchangeService;
+import com.supportrip.core.exchange.service.ExchangeTradingService;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class MyPageController {
 
     private final UserService userService;
+    private final ExchangeTradingService exchangeTradingService;
 
     @GetMapping("")
     public MyPageProfileResponse getUserProfile(@AuthenticationPrincipal OidcUser oidcUser) {
@@ -35,5 +40,11 @@ public class MyPageController {
     public PointListResponse getPointList(@AuthenticationPrincipal OidcUser oidcUser){
         User user = userService.getUser(oidcUser.getUserId());
         return userService.getPointList(user);
+    }
+
+    @GetMapping("/exchanges")
+    public ExchangeTransactionListResponse getExchangeList(@AuthenticationPrincipal OidcUser oidcUser){
+        User user = userService.getUser(oidcUser.getUserId());
+        return exchangeTradingService.getExchangeList(user);
     }
 }

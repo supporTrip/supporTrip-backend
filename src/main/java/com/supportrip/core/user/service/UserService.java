@@ -118,7 +118,6 @@ public class UserService {
 
         if (request.getPhoneNumber() != null) {
             user.setPhoneNumber(request.getPhoneNumber());
-            System.out.println("user = " + user.getPhoneNumber());
         }
 
         if (request.getBankAccounts() != null) {
