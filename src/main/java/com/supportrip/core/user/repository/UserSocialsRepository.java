@@ -10,4 +10,6 @@ public interface UserSocialsRepository extends JpaRepository<UserSocials, Long> 
     Optional<UserSocials> findByVenderAndSubject(SocialLoginVender vender, String subject);
 
     Optional<UserSocials> findByVenderAndUserIdAndRefreshToken(SocialLoginVender vender, Long userId, String refreshToken);
+
+    Optional<UserSocials> findByVenderAndUserId(SocialLoginVender vender, Long userId);
 }

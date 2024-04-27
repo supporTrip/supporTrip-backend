@@ -53,4 +53,8 @@ public class UserSocials {
     public void replaceRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    public void clearRefreshToken() {
+        this.refreshToken = null;
+    }
 }
