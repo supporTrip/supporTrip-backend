@@ -5,10 +5,7 @@ import com.supportrip.core.account.domain.ForeignCurrencyWallet;
 import com.supportrip.core.account.domain.PointWallet;
 import com.supportrip.core.account.service.ForeignAccountService;
 import com.supportrip.core.account.service.PointWalletService;
-import com.supportrip.core.exchange.domain.Currency;
-import com.supportrip.core.exchange.domain.ExchangeRate;
-import com.supportrip.core.exchange.domain.ExchangeRateRangeStatistics;
-import com.supportrip.core.exchange.domain.ExchangeTrading;
+import com.supportrip.core.exchange.domain.*;
 import com.supportrip.core.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,7 +74,7 @@ class StableExchangeStrategyServiceTest {
                 ExchangeRateRangeStatistics.of(null, null, null, DEAL_BASE_RATE_AVERAGE);
 
         given(exchangeRateService.getLatestExchangeRate(any(Currency.class))).willReturn(exchangeRate);
-        given(exchangeRateStatisticsService.getLast3MonthExchangeRateAverage(any(Currency.class)))
+        given(exchangeRateStatisticsService.getExchangeRateAverage(any(Currency.class), any(PeriodUnit.class)))
                 .willReturn(exchangeRateRangeStatistics);
 
         // when

@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.supportrip.core.exchange.domain.PeriodUnit.THREE_MONTH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -47,10 +48,10 @@ class ExchangeRateStatisticsServiceTest {
                 .willReturn(exchangeRates);
 
         // when
-        ExchangeRateRangeStatistics last3MonthAverage = exchangeRateStatisticsService.getLast3MonthExchangeRateAverage(JAPAN_CURRENCY);
+        ExchangeRateRangeStatistics last3MonthAverage = exchangeRateStatisticsService.getExchangeRateAverage(JAPAN_CURRENCY, THREE_MONTH);
 
         // then
-        assertThat(last3MonthAverage.getAverageRate()).isEqualTo(10.0);
+        assertThat(last3MonthAverage.getExchangeRate()).isEqualTo(10.0);
         assertThat(last3MonthAverage.getTargetCurrency()).isEqualTo(JAPAN_CURRENCY);
     }
 }
