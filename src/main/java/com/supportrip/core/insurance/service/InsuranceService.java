@@ -38,7 +38,7 @@ public class InsuranceService {
         Collections.sort(insuranceResponses, new Comparator<InsuranceResponse>() {
             @Override
             public int compare(InsuranceResponse o1, InsuranceResponse o2) {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
                 try {
                     Date date1 = format.parse(o1.getIssueDate());
                     Date date2 = format.parse(o2.getIssueDate());
