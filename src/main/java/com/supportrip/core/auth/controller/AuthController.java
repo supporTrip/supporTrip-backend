@@ -1,12 +1,12 @@
 package com.supportrip.core.auth.controller;
 
-import com.supportrip.core.auth.dto.LoginRequest;
+import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.auth.dto.LoginResponse;
 import com.supportrip.core.auth.dto.RegenerateAccessTokenResponse;
 import com.supportrip.core.auth.service.AuthService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +15,7 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/api/v1/auth/login")
-    public LoginResponse login(@RequestParam(required = true, name = "code") String code) {
+    public LoginResponse login(@RequestParam(name = "code") String code) {
         return authService.login(code);
     }
 
@@ -23,5 +23,10 @@ public class AuthController {
     public RegenerateAccessTokenResponse regenerateAccessToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
         String accessToken = authService.regenerateAccessToken(authorization);
         return RegenerateAccessTokenResponse.from(accessToken);
+    }
+
+    @GetMapping("/api/v1/auth/logout")
+    public void logout(@AuthenticationPrincipal OidcUser oidcUser) {
+        authService.logout(oidcUser.getUserId());
     }
 }

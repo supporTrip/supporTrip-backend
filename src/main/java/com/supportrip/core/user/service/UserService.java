@@ -2,8 +2,8 @@ package com.supportrip.core.user.service;
 
 import com.supportrip.core.account.domain.*;
 import com.supportrip.core.account.dto.request.BankRequest;
-import com.supportrip.core.account.dto.response.PointListResponse;
-import com.supportrip.core.account.dto.response.PointResponse;
+import com.supportrip.core.account.dto.response.PointTransactionListResponse;
+import com.supportrip.core.account.dto.response.PointTransactionResponse;
 import com.supportrip.core.account.exception.BankNotFoundException;
 import com.supportrip.core.account.exception.LinkedAccountNotFoundException;
 import com.supportrip.core.account.repository.BankRepository;
@@ -12,7 +12,10 @@ import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.common.EncryptService;
 import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.user.domain.*;
-import com.supportrip.core.account.repository.PointWalletRepository;
+import com.supportrip.core.user.domain.Gender;
+import com.supportrip.core.user.domain.User;
+import com.supportrip.core.user.domain.UserConsentStatus;
+import com.supportrip.core.user.domain.UserNotificationStatus;
 import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
@@ -26,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ public class UserService {
     private final UserNotificationStatusRepository userNotificationStatusRepository;
     private final PointWalletService pointWalletService;
     private final EncryptService encryptService;
+
     @Transactional
     public User signUp(Long userId, SignUpRequest request) {
         User user = getUser(userId);
@@ -102,7 +105,7 @@ public class UserService {
         String email = user.getEmail();
         String birthDate = user.getBirthDay().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         String gender = "";
-        if(user.getGender() == Gender.MALE) gender = "남자";
+        if (user.getGender() == Gender.MALE) gender = "남자";
         else gender = "여자";
         String registrationDate = user.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         String phoneNubmber = user.getPhoneNumber();
@@ -145,11 +148,11 @@ public class UserService {
         return SimpleIdResponse.from(user.getId());
     }
 
-    public PointListResponse getPointList(User user) {
+    public PointTransactionListResponse getPointList(User user) {
         Long userTotalPoint = pointWalletService.getPointWallet(user).getTotalAmount();
         List<PointTransaction> pointTransactions = pointWalletService.getPointTransactions(user);
 
-        List<PointResponse> pointResponses = new ArrayList<>();
+        List<PointTransactionResponse> pointTransactionRespons = new ArrayList<>();
 
         for(PointTransaction pointTransaction : pointTransactions){
             String transactionDate = pointTransaction.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
@@ -165,9 +168,14 @@ public class UserService {
             }
             Long point = pointTransaction.getAmount();
             Long totalPoint = pointTransaction.getTotalAmount();
-            pointResponses.add(PointResponse.of(transactionDate, detail, type, point, totalPoint));
+            pointTransactionRespons.add(PointTransactionResponse.of(transactionDate, detail, type, point, totalPoint));
         }
 
-        return PointListResponse.of(userTotalPoint, pointResponses);
+        return PointTransactionListResponse.of(userTotalPoint, pointTransactionRespons);
+    }
+
+    public boolean verifyPinNumber(Long userId, String pinNumber) {
+        User user = getUser(userId);
+        return user.matchPinNumber(pinNumber);
     }
 }

@@ -9,6 +9,7 @@ import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
 import com.supportrip.core.user.repository.UserConsentStatusRepository;
+import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,6 +69,9 @@ class UserServiceTest {
 
     @Mock
     private PointWalletRepository pointWalletRepository;
+
+    @Mock
+    private UserNotificationStatusRepository userNotificationStatusRepository;
 
     @Test
     @DisplayName("initialUser가 회원 가입하는 경우 회원 가입에 성공한다.")

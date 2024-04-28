@@ -1,14 +1,11 @@
 package com.supportrip.core.account.dto.response;
 
-import com.supportrip.core.account.domain.PointTransaction;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.format.DateTimeFormatter;
-
 @Getter
-public class PointResponse {
+public class PointTransactionResponse {
     private final String transactionDate;
     private final String detail;
     private final String type;
@@ -17,7 +14,7 @@ public class PointResponse {
 
     @Builder(access = AccessLevel.PRIVATE)
 
-    public PointResponse(String transactionDate, String detail, String type, Long point, Long totalPoint) {
+    public PointTransactionResponse(String transactionDate, String detail, String type, Long point, Long totalPoint) {
         this.transactionDate = transactionDate;
         this.detail = detail;
         this.type = type;
@@ -25,8 +22,8 @@ public class PointResponse {
         this.totalPoint = totalPoint;
     }
 
-    public static PointResponse of(String transactionDate, String detail, String type, Long point, Long totalPoint){
-        return PointResponse.builder()
+    public static PointTransactionResponse of(String transactionDate, String detail, String type, Long point, Long totalPoint){
+        return PointTransactionResponse.builder()
                 .transactionDate(transactionDate)
                 .detail(detail)
                 .type(type)
