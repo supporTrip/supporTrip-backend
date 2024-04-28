@@ -9,17 +9,16 @@ import com.supportrip.core.account.exception.LinkedAccountNotFoundException;
 import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
 import com.supportrip.core.account.service.PointWalletService;
+import com.supportrip.core.common.EncryptService;
 import com.supportrip.core.common.SimpleIdResponse;
-import com.supportrip.core.user.domain.Gender;
+import com.supportrip.core.user.domain.*;
 import com.supportrip.core.account.repository.PointWalletRepository;
-import com.supportrip.core.user.domain.User;
-import com.supportrip.core.user.domain.UserConsentStatus;
-import com.supportrip.core.user.domain.UserNotificationStatus;
 import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
 import com.supportrip.core.user.exception.UserNotFoundException;
+import com.supportrip.core.user.repository.UserCIRepository;
 import com.supportrip.core.user.repository.UserConsentStatusRepository;
 import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
@@ -43,6 +42,7 @@ public class UserService {
     private final PointWalletRepository pointWalletRepository;
     private final UserNotificationStatusRepository userNotificationStatusRepository;
     private final PointWalletService pointWalletService;
+    private final EncryptService encryptService;
     @Transactional
     public User signUp(Long userId, SignUpRequest request) {
         User user = getUser(userId);
@@ -84,6 +84,9 @@ public class UserService {
 
         UserNotificationStatus userNotificationStatus = UserNotificationStatus.of(user, true);
         userNotificationStatusRepository.save(userNotificationStatus);
+
+        String token = encryptService.encryptPhoneNum(request.getPhoneNumber());
+        UserCI userCI = UserCI.of(user, token);
 
         return user;
     }
