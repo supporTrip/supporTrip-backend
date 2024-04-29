@@ -16,6 +16,7 @@ public enum ErrorInfo {
     ALREADY_COMPLETED_TRADING(BAD_REQUEST, "400-06", "이미 완료된 환전 거래입니다."),
     PHONE_VERIFICATION_FAIL(BAD_REQUEST, "400-07", "인증 기간이 지났거나, 올바르지 않은 인증 코드입니다."),
     ALREADY_VERIFIED(BAD_REQUEST, "400-08", "이미 휴대폰 인증이 완료되었습니다."),
+    NOT_ENOUGH_BALANCE(BAD_REQUEST, "400-09", "연결 계좌에 잔액이 부족합니다."),
 
     // 401
     UNAUTHORIZED_REQUEST(UNAUTHORIZED, "401-01", "로그인이 필요한 요청입니다."),
@@ -39,6 +40,7 @@ public enum ErrorInfo {
     LINKED_ACCOUNT_NOT_FOUND(NOT_FOUND, "404-09", "해당 연결계좌 정보를 찾을 수 없습니다."),
     INSURANCE_COMPANY_NOT_FOUND(NOT_FOUND, "404-10", "해당 보험사를 찾을 수 없습니다."),
     PHONE_VERIFICATION_NOT_FOUND(NOT_FOUND, "404-11", "해당 휴대폰 인증 정보를 찾을 수 없습니다."),
+    COUNTRY_NOT_FOUND(NOT_FOUND, "404-12", "해당 국가 정보를 찾을 수 없습니다."),
 
     // 500
     UNHANDLED_ERROR(INTERNAL_SERVER_ERROR, "500-01", "알 수 없는 오류가 발생했습니다. 관리자에게 연락해주세요."),
