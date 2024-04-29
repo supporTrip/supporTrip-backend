@@ -1,6 +1,8 @@
 package com.supportrip.core.exchange.controller;
 
 import com.supportrip.core.auth.domain.OidcUser;
+import com.supportrip.core.common.SimpleIdResponse;
+import com.supportrip.core.exchange.dto.response.CreateExchangeTradingRequest;
 import com.supportrip.core.exchange.dto.response.CurrencyResponse;
 import com.supportrip.core.exchange.dto.response.InProgressExchangeTradingsResponse;
 import com.supportrip.core.exchange.service.ExchangeService;
@@ -17,6 +19,11 @@ public class ExchangeController {
     @GetMapping("/in-progress")
     public InProgressExchangeTradingsResponse getInProgressExchangeTradings(@AuthenticationPrincipal OidcUser oidcUser) {
         return InProgressExchangeTradingsResponse.of(exchangeService.getInProgressExchangeTradings(oidcUser.getUserId()));
+    }
+
+    @PostMapping("/create")
+    public SimpleIdResponse createExchangeTrading(@AuthenticationPrincipal OidcUser oidcUser, @RequestBody CreateExchangeTradingRequest request) {
+        return SimpleIdResponse.from(exchangeService.createExchangeTrading(oidcUser.getUserId(), request));
     }
 
     @GetMapping("/currency")

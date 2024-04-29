@@ -1,5 +1,6 @@
 package com.supportrip.core.exchange.dto.response;
 
+import com.supportrip.core.exchange.domain.Country;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,20 +8,6 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 
-/*
-    title: '첫 휴가 기념 LA 여행',
-    ticket: '006 594269C1',
-    originCash: '500000',
-    originCurrency: '원',
-    remainCash: '250000',
-    originCentury: '대한민국',
-    exchangeCash: '371.47',
-    exchangeCurrency: '달러',
-    exchangeCentury: '미국',
-    createdAt: '2024.03.25',
-    endDate: '2024.12.24',
-    type: '적극투자형',
-*/
 @Getter
 public class ExchangeTradingResponse {
     private final String displayName;
@@ -29,6 +16,7 @@ public class ExchangeTradingResponse {
     private final String baseCurrency;
     private final String baseCountry;
     private final String targetCurrency;
+    private final String targetCurrencyCode;
     private final String targetCountry;
     private final String strategy;
     private final Double targetExchangeRate;
@@ -43,6 +31,7 @@ public class ExchangeTradingResponse {
                                     String baseCurrency,
                                     String baseCountry,
                                     String targetCurrency,
+                                    String targetCurrencyCode,
                                     String targetCountry,
                                     String strategy,
                                     Double targetExchangeRate,
@@ -55,6 +44,7 @@ public class ExchangeTradingResponse {
         this.baseCurrency = baseCurrency;
         this.baseCountry = baseCountry;
         this.targetCurrency = targetCurrency;
+        this.targetCurrencyCode = targetCurrencyCode;
         this.targetCountry = targetCountry;
         this.strategy = strategy;
         this.targetExchangeRate = targetExchangeRate;
@@ -62,15 +52,16 @@ public class ExchangeTradingResponse {
         this.completeDate = completeDate;
     }
 
-    public static ExchangeTradingResponse of(ExchangeTrading exchangeTrading) {
+    public static ExchangeTradingResponse of(ExchangeTrading exchangeTrading, Country baseCountry, Country targetcountry) {
         return ExchangeTradingResponse.builder()
                 .displayName(exchangeTrading.getDisplayName())
-                .airplainPnrNumber(exchangeTrading.getAirplainCertification().getPnrNumber())
+                .airplainPnrNumber(exchangeTrading.getAirplaneCertification().getPnrNumber())
                 .tradingAmount(exchangeTrading.getTradingAmount())
-                .baseCurrency(exchangeTrading.getBaseCurrency().getCountry().getCurrency_name())
-                .baseCountry(exchangeTrading.getBaseCurrency().getCountry().getName())
-                .targetCurrency(exchangeTrading.getTargetCurrency().getCountry().getCurrency_name())
-                .targetCountry(exchangeTrading.getTargetCurrency().getCountry().getName())
+                .baseCurrency(baseCountry.getCurrency_name())
+                .baseCountry(baseCountry.getName())
+                .targetCurrency(targetcountry.getCurrency_name())
+                .targetCurrencyCode(exchangeTrading.getTargetCurrency().getCode())
+                .targetCountry(targetcountry.getName())
                 .strategy(exchangeTrading.getStrategy().getName())
                 .targetExchangeRate(exchangeTrading.getTargetExchangeRate())
                 .beganDate(LocalDate.from(exchangeTrading.getCreatedAt()))

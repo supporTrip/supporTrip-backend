@@ -2,7 +2,7 @@ package com.supportrip.core.exchange.service;
 
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
-import com.supportrip.core.exchange.dto.CurrentExchangeRateResponse;
+import com.supportrip.core.exchange.dto.response.CurrentExchangeRateResponse;
 import com.supportrip.core.exchange.exception.CurrencyNotFoundException;
 import com.supportrip.core.exchange.exception.ExchangeRateNotFoundException;
 import com.supportrip.core.exchange.exception.OutdatedExchangeRateException;

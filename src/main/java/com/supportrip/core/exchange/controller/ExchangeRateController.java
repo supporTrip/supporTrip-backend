@@ -1,8 +1,8 @@
 package com.supportrip.core.exchange.controller;
 
 import com.supportrip.core.exchange.domain.ExchangeRateRangeStatistics;
-import com.supportrip.core.exchange.dto.CurrentExchangeRateResponse;
 import com.supportrip.core.exchange.dto.response.MinimumExchangeRateResponse;
+import com.supportrip.core.exchange.dto.response.CurrentExchangeRateResponse;
 import com.supportrip.core.exchange.service.ExchangeRateService;
 import com.supportrip.core.exchange.service.ExchangeRateStatisticsService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class ExchangeRateController {
     private final ExchangeRateStatisticsService exchangeRateStatisticsService;
 
     @GetMapping("/api/v1/exchange-rates/{currencyId}")
-    public CurrentExchangeRateResponse getCurrentExchangeRate(@PathVariable Long currencyId) {
+    public CurrentExchangeRateResponse getCurrentExchangeRate(@PathVariable(name = "currencyId") Long currencyId) {
         return exchangeRateService.getCurrentExchangeRate(currencyId);
     }
 
