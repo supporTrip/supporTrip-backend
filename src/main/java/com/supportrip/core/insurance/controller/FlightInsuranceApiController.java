@@ -46,6 +46,11 @@ public class FlightInsuranceApiController {
         return flightInsuranceService.findFlightInsurances(oidcUser.getUserId());
     }
 
+    @GetMapping("/api/v1/admin/flight-insurances/{id}")
+    public AdminFlightInsuranceResponse details(@AuthenticationPrincipal OidcUser oidcUser, @PathVariable("id") Long flightInsuranceId) {
+        return flightInsuranceService.findInsurance(oidcUser.getUserId(), flightInsuranceId);
+    }
+
     @PostMapping("/api/v1/admin/flight-insurances")
     public SimpleIdResponse createFlightInsurance(@AuthenticationPrincipal OidcUser oidcUser,
                                       @Valid @RequestBody AdminFlightInsuranceRequest request) {
