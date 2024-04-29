@@ -24,6 +24,11 @@ public class UserLogService {
         userLogRepository.save(userLog);
     }
 
+    @Transactional
+    public void appendAnonymousUserLog(String message) {
+        appendUserLog(null, message);
+    }
+
     public List<UserLog> getUserLogs(Long userId) {
         User user = userService.getUser(userId);
         return userLogRepository.findByUserOrderByCreatedAt(user);
