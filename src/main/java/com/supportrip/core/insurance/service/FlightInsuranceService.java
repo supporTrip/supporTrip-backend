@@ -289,4 +289,21 @@ public class FlightInsuranceService {
         insuranceCompanyRepository.delete(flightInsurance.getInsuranceCompany());
         flightInsuranceRepository.delete(flightInsurance);
     }
+
+    /**
+     * 관리자 특정 보험 조회
+     */
+    public AdminFlightInsuranceResponse findInsurance(Long userId, Long flightInsuranceId) {
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        FlightInsurance flightInsurance = flightInsuranceRepository.findById(flightInsuranceId).orElseThrow(NotFoundFlightInsuranceException::new);
+        List<SpecialContract> specialContracts = specialContractRepository.findByFlightInsuranceId(flightInsuranceId);
+
+        List<SpecialContractResponse> specialContractResponses = new ArrayList<>();
+        for (SpecialContract specialContract : specialContracts) {
+            SpecialContractResponse specialContractResponse = SpecialContractResponse.toDTO(specialContract);
+            specialContractResponses.add(specialContractResponse);
+        }
+        return AdminFlightInsuranceResponse.of(flightInsurance, specialContractResponses);
+    }
 }
