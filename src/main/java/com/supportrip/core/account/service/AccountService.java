@@ -14,7 +14,9 @@ import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.ForeignAccountRepository;
 import com.supportrip.core.account.repository.ForeignAccountTransactionRepository;
 import com.supportrip.core.account.repository.ForeignCurrencyWalletRepository;
+import com.supportrip.core.exchange.domain.Country;
 import com.supportrip.core.exchange.domain.Currency;
+import com.supportrip.core.exchange.repository.CountryRepository;
 import com.supportrip.core.exchange.repository.CurrencyRepository;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.exception.UserNotFoundException;
@@ -35,6 +37,7 @@ public class AccountService {
     private final ForeignCurrencyWalletRepository foreignCurrencyWalletRepository;
     private final ForeignAccountTransactionRepository foreignAccountTransactionRepository;
     private final CurrencyRepository currencyRepository;
+    private final CountryRepository countryRepository;
 
     public GenerateForeignAccountResponse generateForeignAccount(Long userId, GenerateForeignAccountRequest generateForeignAccountRequest) {
 
@@ -89,7 +92,9 @@ public class AccountService {
 
             double averageRate = originTotalAmount / targetTotalAmount;
 
-            accountInfoResponses.add(ForeignAccountInfoResponse.of(wallet, averageRate, details));
+            Country country = countryRepository.findByCurrency(wallet.getCurrency());
+
+            accountInfoResponses.add(ForeignAccountInfoResponse.of(wallet, country, averageRate, details));
         }
 
         return ForeignAccountInfoListResponse.of(true, accountInfoResponses);
