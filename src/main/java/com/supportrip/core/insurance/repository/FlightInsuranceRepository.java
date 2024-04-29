@@ -1,6 +1,7 @@
 package com.supportrip.core.insurance.repository;
 
 import com.supportrip.core.insurance.domain.FlightInsurance;
+import com.supportrip.core.insurance.domain.InsuranceCompany;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +16,12 @@ public interface FlightInsuranceRepository extends JpaRepository<FlightInsurance
     @Query("SELECT f FROM FlightInsurance f JOIN fetch f.insuranceCompany WHERE " +
             ":age BETWEEN f.minJoinAge AND f.maxJoinAge")
     List<FlightInsurance> findByAge (@Param("age") int age);
+
+    @Query("SELECT f FROM FlightInsurance f " +
+            "ORDER BY f.premium ASC " +
+            "LIMIT 3")
+    List<FlightInsurance> findTop3ByOrderByPremiumAsc();
+
+    FlightInsurance findByInsuranceCompany(InsuranceCompany insuranceCompany);
+
 }
