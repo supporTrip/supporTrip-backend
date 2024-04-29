@@ -5,10 +5,7 @@ import com.supportrip.core.account.domain.ForeignCurrencyWallet;
 import com.supportrip.core.account.domain.PointWallet;
 import com.supportrip.core.account.service.ForeignAccountService;
 import com.supportrip.core.account.service.PointWalletService;
-import com.supportrip.core.exchange.domain.Currency;
-import com.supportrip.core.exchange.domain.ExchangeRate;
-import com.supportrip.core.exchange.domain.ExchangeRateRangeAverage;
-import com.supportrip.core.exchange.domain.ExchangeTrading;
+import com.supportrip.core.exchange.domain.*;
 import com.supportrip.core.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,12 +70,12 @@ class StableExchangeStrategyServiceTest {
         ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, JAPAN_CURRENCY, startingExchangeRate,
                 null, TRADING_AMOUNT, null, null, TOMORROW);
 
-        ExchangeRateRangeAverage exchangeRateRangeAverage =
-                ExchangeRateRangeAverage.of(null, null, null, DEAL_BASE_RATE_AVERAGE);
+        ExchangeRateRangeStatistics exchangeRateRangeStatistics =
+                ExchangeRateRangeStatistics.of(null, null, null, DEAL_BASE_RATE_AVERAGE);
 
         given(exchangeRateService.getLatestExchangeRate(any(Currency.class))).willReturn(exchangeRate);
-        given(exchangeRateStatisticsService.getLast3MonthExchangeRateAverage(any(Currency.class)))
-                .willReturn(exchangeRateRangeAverage);
+        given(exchangeRateStatisticsService.getExchangeRateAverage(any(Currency.class), any(PeriodUnit.class)))
+                .willReturn(exchangeRateRangeStatistics);
 
         // when
         stableExchangeStrategyService.execute(exchangeTrading, TODAY);
