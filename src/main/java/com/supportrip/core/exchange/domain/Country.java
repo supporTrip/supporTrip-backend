@@ -21,7 +21,7 @@ public class Country {
     @Column(name = "country_flag_url")
     private String flagUrl;
 
-    @Column(name = "country_curreny_name")
+    @Column(name = "country_currency_name")
     private String currency_name;
 
     @ManyToOne(fetch = FetchType.LAZY)
