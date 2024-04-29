@@ -5,6 +5,9 @@ import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.insurance.dto.UserInfoResponse;
+import com.supportrip.core.log.domain.UserLog;
+import com.supportrip.core.log.dto.UserLogListResponse;
+import com.supportrip.core.log.service.UserLogService;
 import com.supportrip.core.user.domain.PhoneVerification;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
@@ -22,6 +25,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +34,7 @@ public class UserController {
     //    private final SmsService smsService;
     private final PhoneVerificationService phoneVerificationService;
     private final PointWalletService pointWalletService;
+    private final UserLogService userLogService;
 
     @PutMapping("/api/v1/users/signup")
     public SimpleIdResponse signUp(@Valid @RequestBody SignUpRequest request,
@@ -71,6 +76,12 @@ public class UserController {
     public CurrentUserPointResponse getCurrentUserPoint(@AuthenticationPrincipal OidcUser oidcUser) {
         PointWallet pointWallet = pointWalletService.getPointWallet(oidcUser.getUserId());
         return CurrentUserPointResponse.from(pointWallet);
+    }
+
+    @GetMapping("/api/v1/users/{userId}/logs")
+    public UserLogListResponse getUserLog(@AuthenticationPrincipal OidcUser oidcUser) {
+        List<UserLog> userLogs = userLogService.getUserLogs(oidcUser.getUserId());
+        return UserLogListResponse.from(userLogs);
     }
 
     private String makePhoneVerificationMessage(String code) {
