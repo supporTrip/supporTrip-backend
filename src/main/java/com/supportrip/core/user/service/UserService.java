@@ -24,7 +24,7 @@ import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
 import com.supportrip.core.user.exception.UserNotFoundException;
-import com.supportrip.core.user.exception.UserStatusNotFoundException;
+import com.supportrip.core.user.exception.UserNotificationStatusNotFoundException;
 import com.supportrip.core.user.repository.UserConsentStatusRepository;
 import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
@@ -205,7 +205,7 @@ public class UserService {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        UserNotificationStatus status = userNotificationStatusRepository.findById(id).orElseThrow(UserStatusNotFoundException::new);
+        UserNotificationStatus status = userNotificationStatusRepository.findById(id).orElseThrow(UserNotificationStatusNotFoundException::new);
         return AdminUserDetailResponse.of(user, status.getStatus());
     }
 
