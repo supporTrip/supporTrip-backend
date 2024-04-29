@@ -18,7 +18,9 @@ import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserConsentStatus;
 import com.supportrip.core.user.domain.UserNotificationStatus;
 import com.supportrip.core.user.dto.admin.AdminUserDetailResponse;
+import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdatedResponse;
 import com.supportrip.core.user.dto.admin.AdminUserResponse;
+import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdateRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
@@ -209,4 +211,12 @@ public class UserService {
         return AdminUserDetailResponse.of(user, status.getStatus());
     }
 
+    @Transactional
+    public AdminUserEnabledUpdatedResponse userEnabledUpdate(Long userId, AdminUserEnabledUpdateRequest request) {
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        User user = userRepository.findById(request.getId()).orElseThrow(UserNotFoundException::new);
+        user.update(user.getId(), request.isEnabled());
+        return AdminUserEnabledUpdatedResponse.of(user);
+    }
 }

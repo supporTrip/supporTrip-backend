@@ -10,7 +10,9 @@ import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
 import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
 import com.supportrip.core.user.dto.admin.AdminUserDetailResponse;
+import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdatedResponse;
 import com.supportrip.core.user.dto.admin.AdminUserResponse;
+import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdateRequest;
 import com.supportrip.core.user.dto.request.PinNumberVerificationRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.dto.response.CurrentUserPointResponse;
@@ -89,5 +91,11 @@ public class UserController {
     public AdminUserDetailResponse adminGetUserInfo(@AuthenticationPrincipal OidcUser oidcUser,
                                                     @PathVariable("id") Long id) {
         return userService.getUserInfo(oidcUser.getUserId(), id);
+    }
+
+    @PutMapping("/api/v1/admin/users")
+    public AdminUserEnabledUpdatedResponse adminUserUpdate(@AuthenticationPrincipal OidcUser oidcUser,
+                                                           @RequestBody AdminUserEnabledUpdateRequest request) {
+        return userService.userEnabledUpdate(oidcUser.getUserId(), request);
     }
 }
