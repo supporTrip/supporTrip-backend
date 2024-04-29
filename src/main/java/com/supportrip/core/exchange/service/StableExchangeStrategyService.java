@@ -6,13 +6,14 @@ import com.supportrip.core.account.service.ForeignAccountService;
 import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
-import com.supportrip.core.exchange.domain.ExchangeRateRangeAverage;
+import com.supportrip.core.exchange.domain.ExchangeRateRangeStatistics;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.supportrip.core.exchange.domain.PeriodUnit.THREE_MONTH;
 import static com.supportrip.core.exchange.domain.TradingStrategy.STABLE;
 
 @RequiredArgsConstructor
@@ -56,10 +57,10 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
         int remainDays = exchangeTrading.getRemainDays(today);
         long exchangeAmount = exchangeTrading.getExchangeAmount(remainDays);
 
-        ExchangeRateRangeAverage last3MonthExchangeRateAverage =
-                exchangeRateStatisticsService.getLast3MonthExchangeRateAverage(targetCurrency);
+        ExchangeRateRangeStatistics last3MonthExchangeRateAverage =
+                exchangeRateStatisticsService.getExchangeRateAverage(targetCurrency, THREE_MONTH);
 
-        long weight = calculateExchangeWeight(last3MonthExchangeRateAverage.getAverageRate(), exchangeRate);
+        long weight = calculateExchangeWeight(last3MonthExchangeRateAverage.getExchangeRate(), exchangeRate);
 
         exchangeService.exchange(exchangeTrading, exchangeAmount + weight);
     }

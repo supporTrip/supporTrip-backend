@@ -1,6 +1,5 @@
 package com.supportrip.core.exchange.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,10 +15,6 @@ public class Currency {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country country;
-
     @Column(name = "name")
     private String name;
 
@@ -30,17 +25,15 @@ public class Currency {
     private String sign;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Currency(Long id, Country country, String name, String code, String sign) {
+    private Currency(Long id, String name, String code, String sign) {
         this.id = id;
-        this.country = country;
         this.name = name;
         this.code = code;
         this.sign = sign;
     }
 
-    public static Currency of(Country country, String name, String code, String sign) {
+    public static Currency of(String name, String code, String sign) {
         return Currency.builder()
-                .country(country)
                 .name(name)
                 .code(code)
                 .sign(sign)

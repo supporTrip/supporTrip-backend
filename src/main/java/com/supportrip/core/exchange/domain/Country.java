@@ -24,19 +24,30 @@ public class Country {
     @Column(name = "country_curreny_name")
     private String currency_name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
+
+    @Column(name = "code")
+    private String code;
+
     @Builder(access = AccessLevel.PRIVATE)
-    private Country(Long id, String name, String flagUrl, String currency_name) {
+    private Country(Long id, String name, String flagUrl, String currency_name, Currency currency, String code) {
         this.id = id;
         this.name = name;
         this.flagUrl = flagUrl;
         this.currency_name = currency_name;
+        this.currency = currency;
+        this.code = code;
     }
 
-    public static Country of(String name, String flagUrl, String currency_name){
+    public static Country of(String name, String flagUrl, String currency_name, Currency currency, String code){
         return Country.builder()
                 .name(name)
                 .flagUrl(flagUrl)
                 .currency_name(currency_name)
+                .currency(currency)
+                .code(code)
                 .build();
     }
 }

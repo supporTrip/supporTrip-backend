@@ -7,26 +7,26 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class ExchangeRateRangeAverage {
+public class ExchangeRateRangeStatistics {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final Currency targetCurrency;
-    private final Double averageRate;
+    private final Double exchangeRate;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ExchangeRateRangeAverage(LocalDate startDate, LocalDate endDate, Currency targetCurrency, Double averageRate) {
+    private ExchangeRateRangeStatistics(LocalDate startDate, LocalDate endDate, Currency targetCurrency, Double exchangeRate) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.targetCurrency = targetCurrency;
-        this.averageRate = averageRate;
+        this.exchangeRate = exchangeRate;
     }
 
-    public static ExchangeRateRangeAverage of(LocalDate startDate, LocalDate endDate, Currency targetCurrency, Double averageRate) {
-        return ExchangeRateRangeAverage.builder()
+    public static ExchangeRateRangeStatistics of(LocalDate startDate, LocalDate endDate, Currency targetCurrency, Double exchangeRate) {
+        return ExchangeRateRangeStatistics.builder()
                 .startDate(startDate)
                 .endDate(endDate)
                 .targetCurrency(targetCurrency)
-                .averageRate(averageRate)
+                .exchangeRate(exchangeRate)
                 .build();
     }
 }
