@@ -15,29 +15,38 @@ public class AdminFlightInsuranceResponse {
     private int premium;
     private int minAge;
     private int maxAge;
+    private boolean flightDelay;
+    private boolean passportLoss;
+    private boolean foodPoisoning;
     private InsuranceCompany insuranceCompany;
-    private List<SpecialContractResponse> specialContractResponses;
+    private List<SpecialContractResponse> specialContracts;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private AdminFlightInsuranceResponse(Long id, String name, int premium, int minAge, int maxAge, InsuranceCompany insuranceCompany, List<SpecialContractResponse> specialContractResponses) {
+    private AdminFlightInsuranceResponse(Long id, String name, int premium, int minAge, int maxAge, boolean flightDelay, boolean passportLoss, boolean foodPoisoning, InsuranceCompany insuranceCompany, List<SpecialContractResponse> specialContracts) {
         this.id = id;
         this.name = name;
         this.premium = premium;
         this.minAge = minAge;
         this.maxAge = maxAge;
+        this.flightDelay = flightDelay;
+        this.passportLoss = passportLoss;
+        this.foodPoisoning = foodPoisoning;
         this.insuranceCompany = insuranceCompany;
-        this.specialContractResponses = specialContractResponses;
+        this.specialContracts = specialContracts;
     }
 
-    public static AdminFlightInsuranceResponse of (FlightInsurance flightInsurance, List<SpecialContractResponse> specialContractResponses) {
+    public static AdminFlightInsuranceResponse of (FlightInsurance flightInsurance, List<SpecialContractResponse> specialContracts) {
         return AdminFlightInsuranceResponse.builder()
                 .id(flightInsurance.getId())
                 .name(flightInsurance.getName())
                 .premium(flightInsurance.getPremium())
                 .minAge(flightInsurance.getMinJoinAge())
                 .maxAge(flightInsurance.getMaxJoinAge())
+                .flightDelay(flightInsurance.isFlightDelay())
+                .passportLoss(flightInsurance.isPassportLoss())
+                .foodPoisoning(flightInsurance.isFoodPoisoning())
                 .insuranceCompany(flightInsurance.getInsuranceCompany())
-                .specialContractResponses(specialContractResponses)
+                .specialContracts(specialContracts)
                 .build();
     }
 }
