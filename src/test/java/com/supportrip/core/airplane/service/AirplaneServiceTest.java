@@ -1,8 +1,8 @@
-package com.supportrip.core.airplain.service;
+package com.supportrip.core.airplane.service;
 
-import com.supportrip.core.airplain.domain.AirplainCertification;
-import com.supportrip.core.airplain.dto.request.CertificatePnrNumberRequest;
-import com.supportrip.core.airplain.repository.AirplainRepository;
+import com.supportrip.core.airplane.domain.AirplaneCertification;
+import com.supportrip.core.airplane.dto.request.CertificatePnrNumberRequest;
+import com.supportrip.core.airplane.repository.AirplaneRepository;
 import com.supportrip.core.exchange.domain.Country;
 import com.supportrip.core.exchange.exception.CountryNotFoundException;
 import com.supportrip.core.exchange.repository.CountryRepository;
@@ -18,16 +18,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-class AirplainServiceTest {
+class AirplaneServiceTest {
 
     @Mock
-    private AirplainRepository airplainRepository;
+    private AirplaneRepository airplaneRepository;
 
     @Mock
     private CountryRepository countryRepository;
 
     @InjectMocks
-    private AirplainService airplainService;
+    private AirplaneService airplaneService;
 
     @BeforeEach
     void setUp() {
@@ -47,11 +47,11 @@ class AirplainServiceTest {
         Country mockCountry = Country.of(mockName, mockUrl, mockCurrency);
         when(countryRepository.findByName(mockName)).thenReturn(mockCountry);
 
-        AirplainCertification mockCertification = AirplainCertification.of(mockCountry,mockPnr,mockDepartAt, true);
-        when(airplainRepository.save(any(AirplainCertification.class))).thenReturn(mockCertification);
+        AirplaneCertification mockCertification = AirplaneCertification.of(mockCountry,mockPnr,mockDepartAt, true);
+        when(airplaneRepository.save(any(AirplaneCertification.class))).thenReturn(mockCertification);
 
         // When
-        AirplainCertification actual = airplainService.certificatePnrNumber(request);
+        AirplaneCertification actual = airplaneService.certificatePnrNumber(request);
 
         // Then
         assertEquals(mockName, actual.getCountry().getName());
@@ -68,6 +68,6 @@ class AirplainServiceTest {
         when(countryRepository.findByName("지원하지않는국가")).thenReturn(null);
 
         // When, Then
-        assertThrows(CountryNotFoundException.class, () -> airplainService.certificatePnrNumber(request));
+        assertThrows(CountryNotFoundException.class, () -> airplaneService.certificatePnrNumber(request));
     }
 }

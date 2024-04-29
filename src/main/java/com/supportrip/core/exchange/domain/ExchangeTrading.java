@@ -1,6 +1,6 @@
 package com.supportrip.core.exchange.domain;
 
-import com.supportrip.core.airplain.domain.AirplainCertification;
+import com.supportrip.core.airplane.domain.AirplaneCertification;
 import com.supportrip.core.common.BaseEntity;
 import com.supportrip.core.exchange.exception.AlreadyCompletedTradingException;
 import com.supportrip.core.exchange.exception.NotEnoughTradingAmountException;
@@ -45,7 +45,7 @@ public class ExchangeTrading extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airplain_certification_id")
-    private AirplainCertification airplainCertification;
+    private AirplaneCertification airplaneCertification;
 
     @Column(name = "display_name", nullable = false)
     private String displayName;
@@ -71,13 +71,13 @@ public class ExchangeTrading extends BaseEntity {
     private LocalDate completeDate;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public ExchangeTrading(Long id, User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, AirplainCertification airplainCertification, String displayName, Long tradingAmount, Long currentAmount, TradingStatus status, TradingStrategy strategy, Double targetExchangeRate, LocalDate completeDate) {
+    public ExchangeTrading(Long id, User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, AirplaneCertification airplaneCertification, String displayName, Long tradingAmount, Long currentAmount, TradingStatus status, TradingStrategy strategy, Double targetExchangeRate, LocalDate completeDate) {
         this.id = id;
         this.user = user;
         this.baseCurrency = baseCurrency;
         this.targetCurrency = targetCurrency;
         this.startingExchangeRate = startingExchangeRate;
-        this.airplainCertification = airplainCertification;
+        this.airplaneCertification = airplaneCertification;
         this.displayName = displayName;
         this.tradingAmount = tradingAmount;
         this.currentAmount = currentAmount;
@@ -87,13 +87,13 @@ public class ExchangeTrading extends BaseEntity {
         this.completeDate = completeDate;
     }
 
-    public static ExchangeTrading of(User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, AirplainCertification airplainCertification, String displayName, Long tradingAmount, TradingStrategy tradingStrategy, Double targetExchangeRate, LocalDate completeDate) {
+    public static ExchangeTrading of(User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, AirplaneCertification airplaneCertification, String displayName, Long tradingAmount, TradingStrategy tradingStrategy, Double targetExchangeRate, LocalDate completeDate) {
         return ExchangeTrading.builder()
                 .user(user)
                 .baseCurrency(baseCurrency)
                 .targetCurrency(targetCurrency)
                 .startingExchangeRate(startingExchangeRate)
-                .airplainCertification(airplainCertification)
+                .airplaneCertification(airplaneCertification)
                 .displayName(displayName)
                 .strategy(tradingStrategy)
                 .tradingAmount(tradingAmount)

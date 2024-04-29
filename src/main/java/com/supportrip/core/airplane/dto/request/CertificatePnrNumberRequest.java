@@ -1,4 +1,4 @@
-package com.supportrip.core.airplain.dto.request;
+package com.supportrip.core.airplane.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

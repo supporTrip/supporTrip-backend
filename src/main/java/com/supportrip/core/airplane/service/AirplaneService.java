@@ -1,8 +1,8 @@
-package com.supportrip.core.airplain.service;
+package com.supportrip.core.airplane.service;
 
-import com.supportrip.core.airplain.domain.AirplainCertification;
-import com.supportrip.core.airplain.dto.request.CertificatePnrNumberRequest;
-import com.supportrip.core.airplain.repository.AirplainRepository;
+import com.supportrip.core.airplane.domain.AirplaneCertification;
+import com.supportrip.core.airplane.dto.request.CertificatePnrNumberRequest;
+import com.supportrip.core.airplane.repository.AirplaneRepository;
 import com.supportrip.core.exchange.domain.Country;
 import com.supportrip.core.exchange.repository.CountryRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,19 +16,19 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class AirplainService {
+public class AirplaneService {
     private static final Random RANDOM = new Random();
-    private final AirplainRepository airplainRepository;
+    private final AirplaneRepository airplaneRepository;
     private final CountryRepository countryRepository;
 
-    public AirplainCertification certificatePnrNumber(CertificatePnrNumberRequest request) {
-        List<Country> countries = countryRepository.findAll();
+    public AirplaneCertification certificatePnrNumber(CertificatePnrNumberRequest request) {
+        List<Country> countries = countryRepository.findByNameNot("대한민국");
         Country randomCountry = getRandomCountry(countries);
 
         LocalDateTime randomDepartAt = generateRandomDate(LocalDate.now(), 7, 30);
 
-        return airplainRepository.save(
-                AirplainCertification.of(
+        return airplaneRepository.save(
+                AirplaneCertification.of(
                         randomCountry,
                         request.getPnrNumber(),
                         randomDepartAt,

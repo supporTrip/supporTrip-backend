@@ -1,4 +1,4 @@
-package com.supportrip.core.airplain.domain;
+package com.supportrip.core.airplane.domain;
 
 import com.supportrip.core.exchange.domain.Country;
 import jakarta.persistence.*;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "airplain_certification")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverride(name = "createdAt", column = @Column(name = "certified_at"))
-public class AirplainCertification {
+public class AirplaneCertification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,15 +33,15 @@ public class AirplainCertification {
     private Boolean certification;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private AirplainCertification(Country country, String pnrNumber, LocalDateTime departAt, Boolean certification) {
+    private AirplaneCertification(Country country, String pnrNumber, LocalDateTime departAt, Boolean certification) {
         this.country = country;
         this.pnrNumber = pnrNumber;
         this.departAt = departAt;
         this.certification = certification;
     }
 
-    public static AirplainCertification of(Country country, String pnrNumber, LocalDateTime departAt, Boolean certification) {
-        return AirplainCertification.builder()
+    public static AirplaneCertification of(Country country, String pnrNumber, LocalDateTime departAt, Boolean certification) {
+        return AirplaneCertification.builder()
                 .country(country)
                 .pnrNumber(pnrNumber)
                 .departAt(departAt)
