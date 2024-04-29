@@ -39,7 +39,9 @@ public class UserController {
     @PutMapping("/api/v1/users/signup")
     public SimpleIdResponse signUp(@Valid @RequestBody SignUpRequest request,
                                    @AuthenticationPrincipal OidcUser oidcUser) {
-        User user = userService.signUp(oidcUser.getUserId(), request);
+        Long userId = oidcUser.getUserId();
+        User user = userService.signUp(userId, request);
+        userLogService.appendUserLog(userId, "Signup successful for the new user: [ID=" + userId + "]");
         return SimpleIdResponse.from(user.getId());
     }
 
