@@ -1,16 +1,16 @@
 package com.supportrip.core.insurance.controller;
 
-import com.supportrip.core.insurance.dto.FlightInsuranceDetailRequest;
-import com.supportrip.core.insurance.dto.FlightInsuranceDetailResponse;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceRequest;
-import com.supportrip.core.insurance.dto.SearchFlightInsuranceResponse;
+import com.supportrip.core.auth.domain.OidcUser;
+import com.supportrip.core.common.SimpleIdResponse;
+import com.supportrip.core.insurance.domain.FlightInsurance;
+import com.supportrip.core.insurance.domain.InsuranceSubscription;
+import com.supportrip.core.insurance.dto.*;
 import com.supportrip.core.insurance.service.FlightInsuranceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,10 +26,46 @@ public class FlightInsuranceApiController {
         return ResponseEntity.ok(flightInsurances);
     }
 
-    @GetMapping("/api/v1/flight-insurance/{id}")
+    @GetMapping("/api/v1/flight-insurances/{id}")
     public ResponseEntity<FlightInsuranceDetailResponse> detail(@PathVariable("id") Long flightInsuranceId, @Valid FlightInsuranceDetailRequest request) {
         FlightInsuranceDetailResponse flightInsuranceDetail = flightInsuranceService.findFlightInsuranceDetail(flightInsuranceId, request);
 
         return ResponseEntity.ok(flightInsuranceDetail);
+    }
+
+    @PostMapping("/api/v1/flight-insurance-subscriptions")
+    public ResponseEntity<SimpleIdResponse> insuranceSubscription(@AuthenticationPrincipal OidcUser oidcUser,
+                                                                  @Valid @RequestBody SubscriptionRequest request) {
+        InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(oidcUser.getUserId(), request);
+        SimpleIdResponse response = SimpleIdResponse.from(insuranceSubscription.getId());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/api/v1/admin/flight-insurances")
+    public List<AdminFlightInsuranceResponse> adminSearch(@AuthenticationPrincipal OidcUser oidcUser) {
+        return flightInsuranceService.findFlightInsurances(oidcUser.getUserId());
+    }
+
+    @GetMapping("/api/v1/admin/flight-insurances/{id}")
+    public AdminFlightInsuranceResponse details(@AuthenticationPrincipal OidcUser oidcUser, @PathVariable("id") Long flightInsuranceId) {
+        return flightInsuranceService.findInsurance(oidcUser.getUserId(), flightInsuranceId);
+    }
+
+    @PostMapping("/api/v1/admin/flight-insurances")
+    public SimpleIdResponse createFlightInsurance(@AuthenticationPrincipal OidcUser oidcUser,
+                                      @Valid @RequestBody AdminFlightInsuranceRequest request) {
+        FlightInsurance flightInsurance = flightInsuranceService.create(oidcUser.getUserId(), request);
+        return SimpleIdResponse.from(flightInsurance.getId());
+    }
+
+    @PutMapping("/api/v1/admin/flight-insurances")
+    public AdminFlightInsuranceResponse update (@AuthenticationPrincipal OidcUser oidcUser,
+                                                @Valid @RequestBody AdminFlightInsuranceRequest request) {
+        return flightInsuranceService.update(oidcUser.getUserId(), request);
+    }
+
+    @DeleteMapping("/api/v1/admin/flight-insurances/{id}")
+    public void delete (@PathVariable("id") Long flightInsuranceId, @AuthenticationPrincipal OidcUser oidcUser) {
+        flightInsuranceService.delete(oidcUser.getUserId(), flightInsuranceId);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -23,7 +24,9 @@ public class KoreaExImExchangeRateClient {
     }
 
     public List<KoreaExImExchangeRateResponse> fetchExchangeRate(LocalDate searchDate) {
-        List<KoreaExImExchangeRateResponse> response = exchangeRateAPI.fetchExchangeRate(authKey, data, searchDate);
+        String searchdate = searchDate != null ? DateTimeFormatter.ISO_LOCAL_DATE.format(searchDate) : null;
+
+        List<KoreaExImExchangeRateResponse> response = exchangeRateAPI.fetchExchangeRate(authKey, data, searchdate);
         log.info("Fetched {} exchange rates from koreaExIm at {}", response.size(), LocalDateTime.now());
         return response;
     }

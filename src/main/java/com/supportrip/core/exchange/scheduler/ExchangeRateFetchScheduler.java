@@ -21,8 +21,8 @@ public class ExchangeRateFetchScheduler {
     private final KoreaExImExchangeRateMapper exchangeRateMapper;
     private final ExchangeRateRepository exchangeRateRepository;
 
-    // 수출입은행 Open API로부터 매일 정오에 1번 환율 정보를 가져와 DB에 저장
-    @Scheduled(cron = "0 0 12 ? * MON-FRI")
+    // 수출입은행 Open API로부터 평일 12시, 18시에 환율 정보를 가져와 DB에 저장
+    @Scheduled(cron = "0 0 12,18 ? * MON-FRI")
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void fetchAndStoreExchangeRate() {
         LocalDate searchDate = LocalDate.now();
@@ -33,7 +33,7 @@ public class ExchangeRateFetchScheduler {
         }
 
         List<ExchangeRate> exchangeRates = response.stream()
-                .map(exchangeRateMapper::convertEntityFrom)
+                .map((res) -> exchangeRateMapper.convertEntityFrom(res,searchDate))
                 .toList();
 
         exchangeRateRepository.saveAll(exchangeRates);

@@ -20,7 +20,7 @@ public class ForeignCurrencyWallet {
     @JoinColumn(name = "foreign_account_id")
     private ForeignAccount foreignAccount;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "currency_id")
     private Currency currency;
 
@@ -41,5 +41,9 @@ public class ForeignCurrencyWallet {
                 .currency(currency)
                 .totalAmount(totalAmount)
                 .build();
+    }
+
+    public void deposit(long amount) {
+        this.totalAmount += amount;
     }
 }

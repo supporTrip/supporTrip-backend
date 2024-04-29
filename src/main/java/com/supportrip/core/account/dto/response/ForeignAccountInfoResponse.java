@@ -30,14 +30,13 @@ public class ForeignAccountInfoResponse {
         this.details = details;
     }
 
-    public static ForeignAccountInfoResponse of(ForeignCurrencyWallet foreignCurrencyWallet, Double averageRate, List<ForeignAccountTransactionDetailResponse> details){
-        Country country = foreignCurrencyWallet.getCurrency().getCountry();
-        Currency currency = foreignCurrencyWallet.getCurrency();
+    public static ForeignAccountInfoResponse of(ForeignCurrencyWallet foreignCurrencyWallet, Country country, Double averageRate, List<ForeignAccountTransactionDetailResponse> details){
+        Currency currency = country.getCurrency();
         return ForeignAccountInfoResponse.builder()
                 .flag(country.getFlagUrl())
                 .name(country.getCurrency_name())
                 .sign(currency.getSign())
-                .unitName(currency.getUnit())
+                .unitName(currency.getCode())
                 .totalAmount(foreignCurrencyWallet.getTotalAmount().toString())
                 .averageRate(averageRate.toString())
                 .details(details)

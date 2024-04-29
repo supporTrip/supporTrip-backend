@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "ponit_transaction")
+@Table(name = "point_transaction")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverride(name = "createdAt", column = @Column(name = "transacted_at"))
 public class PointTransaction extends BaseEntity {
@@ -43,5 +43,15 @@ public class PointTransaction extends BaseEntity {
         this.amount = amount;
         this.type = type;
         this.totalAmount = totalAmount;
+    }
+
+    public static PointTransaction of(PointWallet pointWallet, LinkedAccount linkedAccount, Long amount, PointTransactionType type, Long totalAmount) {
+        return PointTransaction.builder()
+                .pointWallet(pointWallet)
+                .linkedAccount(linkedAccount)
+                .amount(amount)
+                .type(type)
+                .totalAmount(totalAmount)
+                .build();
     }
 }

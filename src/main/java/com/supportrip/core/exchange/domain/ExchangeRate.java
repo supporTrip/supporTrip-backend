@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Table(name = "exchange_rate")
@@ -16,6 +18,9 @@ public class ExchangeRate extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "date")
+    private LocalDate date;
 
     @JoinColumn(name = "target_currency_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,20 +37,26 @@ public class ExchangeRate extends BaseEntity {
     private double dealBaseRate;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ExchangeRate(Long id, Currency targetCurrency, Long targetCurrencyUnit, Currency baseCurrency, double dealBaseRate) {
+    private ExchangeRate(Long id, LocalDate date, Currency targetCurrency, Long targetCurrencyUnit, Currency baseCurrency, double dealBaseRate) {
         this.id = id;
+        this.date = date;
         this.targetCurrency = targetCurrency;
         this.targetCurrencyUnit = targetCurrencyUnit;
         this.baseCurrency = baseCurrency;
         this.dealBaseRate = dealBaseRate;
     }
 
-    public static ExchangeRate of(Currency targetCurrency, Long targetCurrencyUnit, Currency baseCurrency, double dealBaseRate) {
+    public static ExchangeRate of(LocalDate date, Currency targetCurrency, Long targetCurrencyUnit, Currency baseCurrency, double dealBaseRate) {
         return ExchangeRate.builder()
+                .date(date)
                 .targetCurrency(targetCurrency)
                 .targetCurrencyUnit(targetCurrencyUnit)
                 .baseCurrency(baseCurrency)
                 .dealBaseRate(dealBaseRate)
                 .build();
+    }
+
+    public boolean isValid(LocalDate today) {
+        return this.date.isEqual(today);
     }
 }

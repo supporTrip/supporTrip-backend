@@ -1,6 +1,5 @@
 package com.supportrip.core.exchange.dto.response;
 
-import com.supportrip.core.exchange.domain.ExchangeTrading;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,16 +8,16 @@ import java.util.List;
 
 @Getter
 public class InProgressExchangeTradingsResponse {
-    private final List<ExchangeTrading> inProgressExchanges;
+    private final List<ExchangeTradingResponse> inProgressExchanges;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private InProgressExchangeTradingsResponse(List<ExchangeTrading> inProgressExchanges) {
+    private InProgressExchangeTradingsResponse(List<ExchangeTradingResponse> inProgressExchanges) {
         this.inProgressExchanges = inProgressExchanges;
     }
 
-    public static InProgressExchangeTradingsResponse of(List<ExchangeTrading> exchangeTradings) {
+    public static InProgressExchangeTradingsResponse of(List<ExchangeTradingResponse> inProgressExchangeTradings) {
         return InProgressExchangeTradingsResponse.builder()
-                .inProgressExchanges(exchangeTradings)
+                .inProgressExchanges(inProgressExchangeTradings)
                 .build();
     }
 }
