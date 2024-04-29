@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "user_notification_status")
+@Table(name = "user_ci")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserNotificationStatus {
+public class UserCI {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,28 +19,21 @@ public class UserNotificationStatus {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "status")
-    private boolean status;
+    @Column(name = "token")
+    private String token;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public UserNotificationStatus(Long id, User user, boolean status) {
+
+    public UserCI(Long id, User user, String token) {
         this.id = id;
         this.user = user;
-        this.status = status;
+        this.token = token;
     }
 
-    public static UserNotificationStatus of(User user, boolean status){
-        return UserNotificationStatus.builder()
+    public static UserCI of(User user, String token){
+        return UserCI.builder()
                 .user(user)
-                .status(status)
+                .token(token)
                 .build();
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public boolean getStatus(){
-        return this.status;
     }
 }
