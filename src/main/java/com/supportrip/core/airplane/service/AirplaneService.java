@@ -2,6 +2,7 @@ package com.supportrip.core.airplane.service;
 
 import com.supportrip.core.airplane.domain.AirplaneCertification;
 import com.supportrip.core.airplane.dto.request.CertificatePnrNumberRequest;
+import com.supportrip.core.airplane.dto.response.CertificatePnrNumberResponse;
 import com.supportrip.core.airplane.repository.AirplaneRepository;
 import com.supportrip.core.exchange.domain.Country;
 import com.supportrip.core.exchange.repository.CountryRepository;
@@ -21,20 +22,22 @@ public class AirplaneService {
     private final AirplaneRepository airplaneRepository;
     private final CountryRepository countryRepository;
 
-    public AirplaneCertification certificatePnrNumber(CertificatePnrNumberRequest request) {
+    public CertificatePnrNumberResponse certificatePnrNumber(CertificatePnrNumberRequest request) {
         List<Country> countries = countryRepository.findByNameNot("대한민국");
         Country randomCountry = getRandomCountry(countries);
 
         LocalDateTime randomDepartAt = generateRandomDate(LocalDate.now(), 7, 30);
 
-        return airplaneRepository.save(
-                AirplaneCertification.of(
-                        randomCountry,
-                        request.getPnrNumber(),
-                        randomDepartAt,
-                        true
-                )
-        );
+        return CertificatePnrNumberResponse.of(randomCountry, randomDepartAt);
+    }
+
+    public AirplaneCertification createAirplaneCertification(Country country, String pnrNumber, LocalDateTime departAt) {
+        return airplaneRepository.save(AirplaneCertification.of(
+                country,
+                pnrNumber,
+                departAt,
+                true
+        ));
     }
 
     private Country getRandomCountry(List<Country> countries) {
