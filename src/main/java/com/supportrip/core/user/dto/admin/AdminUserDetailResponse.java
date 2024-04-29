@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class AdminUserDetailResponse {
+    private Long id;
     private String name;
     private String email;
     private String phoneNumber;
@@ -22,7 +23,8 @@ public class AdminUserDetailResponse {
     private boolean notificationStatus;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private AdminUserDetailResponse(String name, String email, String phoneNumber, LocalDate birthDay, Gender gender, LocalDateTime joinedAt, String profileImageUrl, boolean enabled, boolean notificationStatus) {
+    private AdminUserDetailResponse(Long id, String name, String email, String phoneNumber, LocalDate birthDay, Gender gender, LocalDateTime joinedAt, String profileImageUrl, boolean enabled, boolean notificationStatus) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -36,6 +38,7 @@ public class AdminUserDetailResponse {
 
     public static AdminUserDetailResponse of(User user, boolean status) {
         return AdminUserDetailResponse.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
