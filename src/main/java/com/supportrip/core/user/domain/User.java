@@ -134,6 +134,9 @@ public class User extends BaseEntity {
 
     public String toLogMessage() {
         return "email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'';
+    }
 
+    public String getSmsPhoneNumber() {
+        return this.phoneNumber.replace("-", "");
     }
 }
