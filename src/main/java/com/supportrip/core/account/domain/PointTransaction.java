@@ -44,4 +44,14 @@ public class PointTransaction extends BaseEntity {
         this.type = type;
         this.totalAmount = totalAmount;
     }
+
+    public static PointTransaction of(PointWallet pointWallet, LinkedAccount linkedAccount, Long amount, PointTransactionType type, Long totalAmount) {
+        return PointTransaction.builder()
+                .pointWallet(pointWallet)
+                .linkedAccount(linkedAccount)
+                .amount(amount)
+                .type(type)
+                .totalAmount(totalAmount)
+                .build();
+    }
 }

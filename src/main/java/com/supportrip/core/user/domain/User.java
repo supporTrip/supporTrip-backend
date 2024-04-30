@@ -119,7 +119,7 @@ public class User extends BaseEntity {
     public boolean matchPinNumber(String pinNumber) {
         return this.pinNumber.equals(pinNumber);
     }
-  
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -130,5 +130,9 @@ public class User extends BaseEntity {
 
     public void enabledUpdate(boolean enabled) {
         this.enabled = enabled;
+
+    public String toLogMessage() {
+        return "email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'';
+
     }
 }

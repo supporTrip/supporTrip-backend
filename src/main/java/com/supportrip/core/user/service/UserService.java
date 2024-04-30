@@ -132,12 +132,14 @@ public class UserService {
             user.setPhoneNumber(request.getPhoneNumber());
         }
 
-        if (request.getBankAccounts() != null) {
-            BankRequest bankRequest = request.getBankAccounts();
-            Bank bank = bankRepository.findByCode(bankRequest.getBankCode()).orElseThrow(BankNotFoundException::new);
-            linkedAccount.setBank(bank);
-            linkedAccount.setAccountNumber(bankRequest.getAccountNum());
-            linkedAccount.setTotalAmount(500000L);
+        if (request.getBankAccounts()!=null ) {
+            if(request.getBankAccounts().getAccountNum() != null && request.getBankAccounts().getBankCode() != null){
+                BankRequest bankRequest = request.getBankAccounts();
+                Bank bank = bankRepository.findByCode(bankRequest.getBankCode()).orElseThrow(BankNotFoundException::new);
+                linkedAccount.setBank(bank);
+                linkedAccount.setAccountNumber(bankRequest.getAccountNum());
+                linkedAccount.setTotalAmount(500000L);
+            }
         }
 
         if (request.getEmail() != null) {
