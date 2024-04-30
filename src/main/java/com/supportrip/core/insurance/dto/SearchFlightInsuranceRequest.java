@@ -52,4 +52,18 @@ public class SearchFlightInsuranceRequest {
                 .foodPoisoning(foodPoisoning)
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "departAt=" + departAt +
+                ", arrivalAt=" + arrivalAt +
+                ", birthDay=" + birthDay +
+                ", gender=" + gender +
+                ", planName='" + planName + '\'' +
+                ", flightDelay=" + flightDelay +
+                ", passportLoss=" + passportLoss +
+                ", foodPoisoning=" + foodPoisoning +
+                '}';
+    }
 }

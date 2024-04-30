@@ -43,7 +43,7 @@ public class PointWallet {
     }
 
     public void reduce(long amount) {
-        if (hasMoreAmount(amount)) {
+        if (!hasMoreAmount(amount)) {
             throw new NotEnoughPointException();
         }
 

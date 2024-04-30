@@ -8,18 +8,25 @@ import com.supportrip.core.account.exception.BankNotFoundException;
 import com.supportrip.core.account.exception.LinkedAccountNotFoundException;
 import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
-import com.supportrip.core.account.service.PointWalletService;
-import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.account.repository.PointWalletRepository;
+import com.supportrip.core.account.service.PointWalletService;
+import com.supportrip.core.common.EncryptService;
+import com.supportrip.core.common.SimpleIdResponse;
+import com.supportrip.core.user.domain.*;
 import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserConsentStatus;
 import com.supportrip.core.user.domain.UserNotificationStatus;
+import com.supportrip.core.user.dto.admin.AdminUserDetailResponse;
+import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdatedResponse;
+import com.supportrip.core.user.dto.admin.AdminUserResponse;
+import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdateRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
 import com.supportrip.core.user.exception.UserNotFoundException;
+import com.supportrip.core.user.exception.UserNotificationStatusNotFoundException;
 import com.supportrip.core.user.repository.UserConsentStatusRepository;
 import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
@@ -42,7 +49,9 @@ public class UserService {
     private final PointWalletRepository pointWalletRepository;
     private final UserNotificationStatusRepository userNotificationStatusRepository;
     private final PointWalletService pointWalletService;
-  
+    private final EncryptService encryptService;
+
+
     @Transactional
     public User signUp(Long userId, SignUpRequest request) {
         User user = getUser(userId);
@@ -85,6 +94,9 @@ public class UserService {
         UserNotificationStatus userNotificationStatus = UserNotificationStatus.of(user, true);
         userNotificationStatusRepository.save(userNotificationStatus);
 
+        String token = encryptService.encryptPhoneNum(request.getPhoneNumber());
+        UserCI userCI = UserCI.of(user, token);
+
         return user;
     }
 
@@ -120,12 +132,14 @@ public class UserService {
             user.setPhoneNumber(request.getPhoneNumber());
         }
 
-        if (request.getBankAccounts() != null) {
-            BankRequest bankRequest = request.getBankAccounts();
-            Bank bank = bankRepository.findByCode(bankRequest.getBankCode()).orElseThrow(BankNotFoundException::new);
-            linkedAccount.setBank(bank);
-            linkedAccount.setAccountNumber(bankRequest.getAccountNum());
-            linkedAccount.setTotalAmount(500000L);
+        if (request.getBankAccounts()!=null ) {
+            if(request.getBankAccounts().getAccountNum() != null && request.getBankAccounts().getBankCode() != null){
+                BankRequest bankRequest = request.getBankAccounts();
+                Bank bank = bankRepository.findByCode(bankRequest.getBankCode()).orElseThrow(BankNotFoundException::new);
+                linkedAccount.setBank(bank);
+                linkedAccount.setAccountNumber(bankRequest.getAccountNum());
+                linkedAccount.setTotalAmount(500000L);
+            }
         }
 
         if (request.getEmail() != null) {
@@ -171,5 +185,40 @@ public class UserService {
     public boolean verifyPinNumber(Long userId, String pinNumber) {
         User user = getUser(userId);
         return user.matchPinNumber(pinNumber);
+    }
+
+    /**
+     * 관리자 페이지 유저목록 조회
+     */
+    public List<AdminUserResponse> getUsers(Long userId) {
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        List<AdminUserResponse> adminUserResponses = new ArrayList<>();
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            AdminUserResponse response = AdminUserResponse.of(user);
+            adminUserResponses.add(response);
+        }
+        return adminUserResponses;
+    }
+
+    /**
+     * 관리자 페이지 유저 세부정보 조회
+     */
+    public AdminUserDetailResponse getUserInfo(Long userId, Long id) {
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        UserNotificationStatus status = userNotificationStatusRepository.findById(id).orElseThrow(UserNotificationStatusNotFoundException::new);
+        return AdminUserDetailResponse.of(user, status.getStatus());
+    }
+
+    @Transactional
+    public AdminUserEnabledUpdatedResponse userEnabledUpdate(Long userId, AdminUserEnabledUpdateRequest request) {
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        User user = userRepository.findById(request.getId()).orElseThrow(UserNotFoundException::new);
+        user.enabledUpdate(request.isEnabled());
+        return AdminUserEnabledUpdatedResponse.of(user);
     }
 }
