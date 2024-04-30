@@ -128,7 +128,11 @@ public class User extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    public void enabledUpdate(boolean enabled) {
+        this.enabled = enabled;
+
     public String toLogMessage() {
         return "email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'';
+
     }
 }
