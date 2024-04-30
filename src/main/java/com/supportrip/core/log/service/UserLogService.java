@@ -26,7 +26,8 @@ public class UserLogService {
 
     @Transactional
     public void appendAnonymousUserLog(String message) {
-        appendUserLog(null, message);
+        UserLog userLog = UserLog.of(null, message);
+        userLogRepository.save(userLog);
     }
 
     public List<UserLog> getUserLogs(Long userId) {
