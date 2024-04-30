@@ -4,6 +4,7 @@ import com.supportrip.core.account.domain.ForeignAccountTransaction;
 import com.supportrip.core.account.domain.PointWallet;
 import com.supportrip.core.account.service.ForeignAccountService;
 import com.supportrip.core.account.service.PointWalletService;
+import com.supportrip.core.common.SmsService;
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
 import com.supportrip.core.exchange.domain.ExchangeRateRangeStatistics;
@@ -23,6 +24,7 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
     private final ExchangeRateService exchangeRateService;
     private final PointWalletService pointWalletService;
     private final ForeignAccountService foreignAccountService;
+    private final SmsService smsService;
 
     @Override
     public void execute(ExchangeTrading exchangeTrading, LocalDate today) {
@@ -51,6 +53,8 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
             PointWallet pointWallet = pointWalletService.getPointWallet(exchangeTrading.getUser());
             pointWallet.increase(exchangeTrading.flushCurrentAmount() + additionalPoint);
             exchangeTrading.changeToComplete();
+
+            smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
             return;
         }
 
@@ -99,5 +103,10 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
         final long weight = 100;
         double difference = exchangeRateAverage - exchangeRate.getDealBaseRate();
         return (long) (difference * weight);
+    }
+
+    private String makeSmsMessage(ExchangeTrading exchangeTrading) {
+        return "[서포트립] " + exchangeTrading.getUser().getName() + "님의 '"
+                + exchangeTrading.getDisplayName() + "' 여행을 위한 환전 거래가 완료되었어요!";
     }
 }
