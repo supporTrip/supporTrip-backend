@@ -62,13 +62,11 @@ public class InsuranceService {
         List<RecomandInsuranceResponse> recomandInsuranceResponseList = new ArrayList<>();
         int age = flightInsuranceService.calculateAge(user.getBirthDay());
         int period = flightInsuranceService.calculatePeriod(departAt, arrivalAt);
-        List<FlightInsurance> calInsus = new ArrayList<>();
+        List<FilterAndCalPremiumResponse> calInsus = new ArrayList<>();
         if(corporations.isEmpty()) {
             List<FlightInsurance> insurances = flightInsuranceRepository.findTop3ByOrderByPremiumAsc();
-            calInsus = flightInsuranceCalculatePremiumService.calculatePremium(age,period, "standard", user.getGender(),insurances);
-            for(FlightInsurance insurance : calInsus)
-                recomandInsuranceResponseList.add(RecomandInsuranceResponse.of(insurance.getInsuranceCompany().getName(), insurance.getName(), insurance.getPremium()));
 
+            calInsus = flightInsuranceService.caledInsurances(age, period, "standard", user.getGender(), departAt, arrivalAt, insurances);
         }else {
             for(InsuranceCorporationResponse insuranceCorporationResponse : corporations){
                 List<InsuranceResponse> insurances = insuranceClientService.getInsured(userCI.getToken(), insuranceCorporationResponse.getOrg_code(), "14").getInsuranceList();
@@ -77,13 +75,13 @@ public class InsuranceService {
                         InsuranceCompany insuranceCompany = insuranceCompanyRepository.findByName(insuranceResponse.getCorporationName());
                         insuranceList.add(flightInsuranceRepository.findByInsuranceCompany(insuranceCompany));
                     }
-                calInsus = flightInsuranceCalculatePremiumService.calculatePremium(age,period, "standard", user.getGender(),insuranceList);
-
+                calInsus = flightInsuranceService.caledInsurances(age, period, "standard", user.getGender(), departAt, arrivalAt, insuranceList);
             }
         }
 
-        for(FlightInsurance insurance : calInsus)
-            recomandInsuranceResponseList.add(RecomandInsuranceResponse.of(insurance.getInsuranceCompany().getName(), insurance.getName(), insurance.getPremium()));
+        for (FilterAndCalPremiumResponse insurance : calInsus) {
+            recomandInsuranceResponseList.add(RecomandInsuranceResponse.of(insurance.getCompanyName(), insurance.getInsuranceName(), insurance.getPremium()));
+        }
         return RecomandInsuranceListResponse.of(recomandInsuranceResponseList);
     }
 
