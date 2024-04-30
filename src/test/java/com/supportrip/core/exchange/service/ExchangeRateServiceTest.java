@@ -32,8 +32,8 @@ class ExchangeRateServiceTest {
     @DisplayName("특정 통화에 대한 최신 환율 정보를 1개 조회한다.")
     void getLatestExchangeRateSuccess() {
         // given
-        final Currency KOREA_CURRENCY = Currency.of(null, "원", "KRW", "₩");
-        final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final Currency KOREA_CURRENCY = Currency.of("원", "KRW", "₩");
+        final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
         final LocalDate TODAY = LocalDate.now();
 
         ExchangeRate exchangeRate = ExchangeRate.of(TODAY, JAPAN_CURRENCY, 100L, KOREA_CURRENCY, 1.0);
@@ -55,8 +55,8 @@ class ExchangeRateServiceTest {
     @DisplayName("특정 통화에 대한 최신 환율 정보가 이전 환율 정보라면 예외가 발생한다.")
     void getOutdatedExchangeRateFail() {
         // given
-        final Currency KOREA_CURRENCY = Currency.of(null, "원", "KRW", "₩");
-        final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final Currency KOREA_CURRENCY = Currency.of("원", "KRW", "₩");
+        final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
         final LocalDate YESTERDAY = LocalDate.now().minusDays(1);
 
         ExchangeRate exchangeRate = ExchangeRate.of(YESTERDAY, KOREA_CURRENCY, 100L, JAPAN_CURRENCY, 1.0);

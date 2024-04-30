@@ -130,6 +130,7 @@ public class User extends BaseEntity {
 
     public void enabledUpdate(boolean enabled) {
         this.enabled = enabled;
+    }
 
     public String toLogMessage() {
         return "email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'';
