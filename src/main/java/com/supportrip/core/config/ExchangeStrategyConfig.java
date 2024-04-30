@@ -4,6 +4,7 @@ import com.supportrip.core.account.service.ForeignAccountService;
 import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.common.SmsService;
 import com.supportrip.core.exchange.service.*;
+import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ public class ExchangeStrategyConfig {
     private final PointWalletService pointWalletService;
     private final ForeignAccountService foreignAccountService;
     private final SmsService smsService;
+    private final UserNotificationStatusRepository userNotificationStatusRepository;
 
     @Bean
     public ExchangeStrategyManager exchangeStrategyManager() {
@@ -32,13 +34,15 @@ public class ExchangeStrategyConfig {
                         exchangeRateService,
                         pointWalletService,
                         foreignAccountService,
-                        smsService
+                        smsService,
+                        userNotificationStatusRepository
                 ),
                 new TargetExchangeStrategyService(
                         exchangeService,
                         pointWalletService,
                         exchangeRateService,
-                        smsService
+                        smsService,
+                        userNotificationStatusRepository
                 )
         );
 
