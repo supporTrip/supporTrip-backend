@@ -2,6 +2,7 @@ package com.supportrip.core.config;
 
 import com.supportrip.core.account.service.ForeignAccountService;
 import com.supportrip.core.account.service.PointWalletService;
+import com.supportrip.core.common.SmsService;
 import com.supportrip.core.exchange.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class ExchangeStrategyConfig {
     private final ExchangeRateService exchangeRateService;
     private final PointWalletService pointWalletService;
     private final ForeignAccountService foreignAccountService;
+    private final SmsService smsService;
 
     @Bean
     public ExchangeStrategyManager exchangeStrategyManager() {
@@ -29,12 +31,14 @@ public class ExchangeStrategyConfig {
                         exchangeRateStatisticsService,
                         exchangeRateService,
                         pointWalletService,
-                        foreignAccountService
+                        foreignAccountService,
+                        smsService
                 ),
                 new TargetExchangeStrategyService(
                         exchangeService,
                         pointWalletService,
-                        exchangeRateService
+                        exchangeRateService,
+                        smsService
                 )
         );
 

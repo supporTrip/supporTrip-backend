@@ -5,6 +5,7 @@ import com.supportrip.core.account.domain.ForeignCurrencyWallet;
 import com.supportrip.core.account.domain.PointWallet;
 import com.supportrip.core.account.service.ForeignAccountService;
 import com.supportrip.core.account.service.PointWalletService;
+import com.supportrip.core.common.SmsService;
 import com.supportrip.core.exchange.domain.*;
 import com.supportrip.core.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +23,7 @@ import java.util.List;
 
 import static com.supportrip.core.exchange.domain.TradingStatus.COMPLETED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.Mockito.doAnswer;
@@ -48,6 +48,9 @@ class StableExchangeStrategyServiceTest {
 
     @Mock
     private ForeignAccountService foreignAccountService;
+
+    @Mock
+    private SmsService smsService;
 
     @Captor
     private ArgumentCaptor<Long> exchangeAmountCaptor;
@@ -98,7 +101,7 @@ class StableExchangeStrategyServiceTest {
         final double STARTING_DEAL_BASE_RATE = 1100.0;
         final double DEAL_BASE_RATE = 1200.0;
 
-        User user = User.userOf(null, null, null, null, null, null);
+        User user = User.userOf(null, null, null, "010-0000-0000", null, null);
         ExchangeRate startingExchangeRate = ExchangeRate.of(null, null, null, null, STARTING_DEAL_BASE_RATE);
         ExchangeRate exchangeRate = ExchangeRate.of(null, null, JAPAN_CURRENCY_UNIT, null, DEAL_BASE_RATE);
         ExchangeTrading exchangeTrading = ExchangeTrading.of(user, null, JAPAN_CURRENCY, startingExchangeRate,
@@ -128,6 +131,7 @@ class StableExchangeStrategyServiceTest {
         stableExchangeStrategyService.execute(exchangeTrading, TODAY);
 
         // then
+        verify(smsService).sendOne(anyString(), anyString());
         verify(exchangeService).exchange(any(ExchangeTrading.class), exchangeAmountCaptor.capture());
         assertThat(exchangeAmountCaptor.getValue()).isEqualTo(MAX_EXCHANGEABLE_AMOUNT);
 

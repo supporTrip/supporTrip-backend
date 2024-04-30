@@ -2,6 +2,7 @@ package com.supportrip.core.exchange.service;
 
 import com.supportrip.core.account.domain.PointWallet;
 import com.supportrip.core.account.service.PointWalletService;
+import com.supportrip.core.common.SmsService;
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
@@ -40,6 +41,9 @@ class TargetExchangeStrategyServiceTest {
 
     @Mock
     private ExchangeRateService exchangeRateService;
+
+    @Mock
+    private SmsService smsService;
 
     @Captor
     private ArgumentCaptor<Long> exchangeAmountCaptor;
@@ -99,7 +103,7 @@ class TargetExchangeStrategyServiceTest {
     @DisplayName("마지막날인 경우 모든 금액을 환전하고, 남은 금액을 PointWallet으로 옮긴다.")
     void executeAtLastDay() {
         // given
-        User user = User.userOf(null, null, null, null, null, null);
+        User user = User.userOf(null, null, null, "010-0000-0000", null, null);
         final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
         final long TRADING_AMOUNT = 12300L;
         final double TARGET_EXCHANGE_RATE = 1000.0;
@@ -123,6 +127,7 @@ class TargetExchangeStrategyServiceTest {
         targetExchangeStrategyService.execute(exchangeTrading, TODAY);
 
         // then
+        verify(smsService).sendOne(anyString(), anyString());
         verify(exchangeService).exchange(any(ExchangeTrading.class), exchangeAmountCaptor.capture());
 
         Long exchangeAmount = exchangeAmountCaptor.getValue();
