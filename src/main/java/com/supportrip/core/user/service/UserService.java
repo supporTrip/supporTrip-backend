@@ -216,7 +216,7 @@ public class UserService {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         User user = userRepository.findById(request.getId()).orElseThrow(UserNotFoundException::new);
-        user.update(user.getId(), request.isEnabled());
+        user.enabledUpdate(request.isEnabled());
         return AdminUserEnabledUpdatedResponse.of(user);
     }
 }

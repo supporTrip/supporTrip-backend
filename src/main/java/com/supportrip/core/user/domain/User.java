@@ -128,8 +128,7 @@ public class User extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public void update(Long id, boolean enabled) {
-        this.id = id;
+    public void enabledUpdate(boolean enabled) {
         this.enabled = enabled;
     }
 }
