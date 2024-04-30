@@ -7,12 +7,16 @@ import com.supportrip.core.insurance.domain.InsuranceSubscription;
 import com.supportrip.core.insurance.dto.*;
 import com.supportrip.core.insurance.service.FlightInsuranceService;
 import com.supportrip.core.log.service.UserLogService;
+import com.supportrip.core.insurance.service.InsuranceService;
+import com.supportrip.core.user.domain.User;
+import com.supportrip.core.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -20,6 +24,8 @@ import java.util.List;
 public class FlightInsuranceApiController {
     private final FlightInsuranceService flightInsuranceService;
     private final UserLogService userLogService;
+    private final UserService userService;
+    private final InsuranceService insuranceService;
 
     @GetMapping("/api/v1/flight-insurances/search")
     public ResponseEntity<List<SearchFlightInsuranceResponse>> searchFlightInsurance(@Valid SearchFlightInsuranceRequest request,
@@ -95,5 +101,13 @@ public class FlightInsuranceApiController {
     @DeleteMapping("/api/v1/admin/flight-insurances/{id}")
     public void delete(@PathVariable("id") Long flightInsuranceId, @AuthenticationPrincipal OidcUser oidcUser) {
         flightInsuranceService.delete(oidcUser.getUserId(), flightInsuranceId);
+    }
+
+    @GetMapping("/api/v1/flight-insurances/recomands")
+    public RecomandInsuranceListResponse getRecomandInsuranceList(@AuthenticationPrincipal OidcUser oidcUser,
+                                                                  @RequestParam(name = "departAt") LocalDateTime departAt,
+                                                                  @RequestParam(name = "arrivalAt") LocalDateTime arrivalAt){
+        User user = userService.getUser(oidcUser.getUserId());
+        return insuranceService.getRecomandInsuranceList(user, departAt, arrivalAt);
     }
 }

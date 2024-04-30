@@ -1,5 +1,6 @@
 package com.supportrip.core.exchange.domain;
 
+import com.supportrip.core.airplane.domain.AirplaneCertification;
 import com.supportrip.core.common.BaseEntity;
 import com.supportrip.core.exchange.exception.AlreadyCompletedTradingException;
 import com.supportrip.core.exchange.exception.NotEnoughTradingAmountException;
@@ -26,39 +27,41 @@ public class ExchangeTrading extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @JoinColumn(name = "base_currency_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "base_currency_id", nullable = false)
     private Currency baseCurrency;
 
-    @JoinColumn(name = "target_currency_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "target_currency_id", nullable = false)
     private Currency targetCurrency;
 
-    @JoinColumn(name = "starting_exchange_rate_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "starting_exchange_rate_id", nullable = false)
     private ExchangeRate startingExchangeRate;
 
-    // TODO: 비행기 인증 추가
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "airplain_certification_id")
+    private AirplaneCertification airplaneCertification;
 
-    @Column(name = "display_name")
+    @Column(name = "display_name", nullable = false)
     private String displayName;
 
-    @Column(name = "trading_amount")
+    @Column(name = "trading_amount", nullable = false)
     private Long tradingAmount;
 
     @Column(name = "current_amount")
     private Long currentAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private TradingStatus status;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "strategy")
+    @Column(name = "strategy", nullable = false)
     private TradingStrategy strategy;
 
     @Column(name = "target_exchange_rate")
@@ -68,12 +71,13 @@ public class ExchangeTrading extends BaseEntity {
     private LocalDate completeDate;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public ExchangeTrading(Long id, User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, String displayName, Long tradingAmount, Long currentAmount, TradingStatus status, TradingStrategy strategy, Double targetExchangeRate, LocalDate completeDate) {
+    public ExchangeTrading(Long id, User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, AirplaneCertification airplaneCertification, String displayName, Long tradingAmount, Long currentAmount, TradingStatus status, TradingStrategy strategy, Double targetExchangeRate, LocalDate completeDate) {
         this.id = id;
         this.user = user;
         this.baseCurrency = baseCurrency;
         this.targetCurrency = targetCurrency;
         this.startingExchangeRate = startingExchangeRate;
+        this.airplaneCertification = airplaneCertification;
         this.displayName = displayName;
         this.tradingAmount = tradingAmount;
         this.currentAmount = currentAmount;
@@ -83,12 +87,13 @@ public class ExchangeTrading extends BaseEntity {
         this.completeDate = completeDate;
     }
 
-    public static ExchangeTrading of(User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, String displayName, Long tradingAmount, TradingStrategy tradingStrategy, Double targetExchangeRate, LocalDate completeDate) {
+    public static ExchangeTrading of(User user, Currency baseCurrency, Currency targetCurrency, ExchangeRate startingExchangeRate, AirplaneCertification airplaneCertification, String displayName, Long tradingAmount, TradingStrategy tradingStrategy, Double targetExchangeRate, LocalDate completeDate) {
         return ExchangeTrading.builder()
                 .user(user)
                 .baseCurrency(baseCurrency)
                 .targetCurrency(targetCurrency)
                 .startingExchangeRate(startingExchangeRate)
+                .airplaneCertification(airplaneCertification)
                 .displayName(displayName)
                 .strategy(tradingStrategy)
                 .tradingAmount(tradingAmount)

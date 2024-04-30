@@ -133,7 +133,7 @@ public class FlightInsuranceService {
     /**
      * 만 나이 계산
      */
-    private int calculateAge(LocalDate birthDay) {
+    public int calculateAge(LocalDate birthDay) {
 
         // 현재시간
         LocalDate currentDate = LocalDate.now();
@@ -147,7 +147,7 @@ public class FlightInsuranceService {
     /**
      * 여행기간 계산
      */
-    private int calculatePeriod(LocalDateTime departAt, LocalDateTime arrivalAt) {
+    public int calculatePeriod(LocalDateTime departAt, LocalDateTime arrivalAt) {
         // LocalDateTime to LocalDate
         LocalDate departDate = departAt.toLocalDate();
         LocalDate arrivalDate = arrivalAt.toLocalDate();
