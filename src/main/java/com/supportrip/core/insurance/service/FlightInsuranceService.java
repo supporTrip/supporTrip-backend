@@ -52,20 +52,24 @@ public class FlightInsuranceService {
                 request.getFlightDelay(),
                 request.getPassportLoss(), request.getFoodPoisoning());
 
-        //보험료 계산
-        List<FlightInsurance> flightInsurances = calculatePremiumService.calculatePremium(age, period, request.getPlanName(), request.getGender(), filteredInsurances);
+        List<FilterAndCalPremiumResponse> filterAndCalPremiumResponses = new ArrayList<>();
+        for (FlightInsurance filteredInsurance : filteredInsurances) {
+            int calPremium = calculatePremiumService.calculatePremium(age, period, request.getPlanName(), request.getGender(), filteredInsurance);
+            FilterAndCalPremiumResponse filterAndCalPremiumResponse = FilterAndCalPremiumResponse.of(filteredInsurance, calPremium, request.getDepartAt(), request.getArrivalAt());
+            filterAndCalPremiumResponses.add(filterAndCalPremiumResponse);
+        }
 
         //특약 상위3개 추가
-        return addTop3SpecialContract(flightInsurances, request.getPlanName(), request.getDepartAt(), request.getArrivalAt());
+        return addTop3SpecialContract(filterAndCalPremiumResponses, request.getPlanName(), request.getDepartAt(), request.getArrivalAt());
     }
 
     /**
      * 여행자 보험 상품에 특약 상위3개 리스트로 추가
      */
-    private List<SearchFlightInsuranceResponse> addTop3SpecialContract(List<FlightInsurance> flightInsurances, String planName, LocalDateTime departAt, LocalDateTime arrivalAt) {
+    private List<SearchFlightInsuranceResponse> addTop3SpecialContract(List<FilterAndCalPremiumResponse> flightInsurances, String planName, LocalDateTime departAt, LocalDateTime arrivalAt) {
         List<SearchFlightInsuranceResponse> searchFlightInsuranceResponses = new ArrayList<>();
 
-        for (FlightInsurance flightInsurance : flightInsurances) {
+        for (FilterAndCalPremiumResponse flightInsurance : flightInsurances) {
             List<SpecialContract> findSpecialContracts = specialContractRepository.findByFlightInsuranceId(flightInsurance.getId(), PageRequest.of(0, 3));
             List<Top3SpecialContractResponse> contractTop3Responses = new ArrayList<>();
             for (SpecialContract findSpecialContract : findSpecialContracts) {

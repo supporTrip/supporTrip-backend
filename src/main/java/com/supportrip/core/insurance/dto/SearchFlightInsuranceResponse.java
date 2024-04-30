@@ -31,14 +31,14 @@ public class SearchFlightInsuranceResponse {
         this.specialContracts = specialContracts;
     }
 
-    public static SearchFlightInsuranceResponse toDTO(FlightInsurance flightInsurance, List<Top3SpecialContractResponse> specialContracts, String planName, LocalDateTime departAt, LocalDateTime arrivalAt) {
+    public static SearchFlightInsuranceResponse toDTO(FilterAndCalPremiumResponse flightInsurance, List<Top3SpecialContractResponse> specialContracts, String planName, LocalDateTime departAt, LocalDateTime arrivalAt) {
         SearchFlightInsuranceResponse response = SearchFlightInsuranceResponse.builder()
                 .id(flightInsurance.getId())
-                .insuranceName(flightInsurance.getName())
+                .insuranceName(flightInsurance.getCompanyName())
                 .premium(flightInsurance.getPremium())
                 .planName(planName)
-                .companyName(flightInsurance.getInsuranceCompany().getName())
-                .logoImageUrl(flightInsurance.getInsuranceCompany().getLogoImageUrl())
+                .companyName(flightInsurance.getCompanyName())
+                .logoImageUrl(flightInsurance.getLogoImageUrl())
                 .departAt(departAt)
                 .arrivalAt(arrivalAt)
                 .specialContracts(specialContracts)
