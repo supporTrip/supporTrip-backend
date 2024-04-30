@@ -36,8 +36,19 @@ public class UserCardService {
 
         List<CountryRank> ranking = calculateRanking(approvalsPerCard);
 
-//        return OverseasListResponse.of(ranking, );
-        return null;
+        List<UserCardApproval> userCardApprovals = approvalsPerCard.stream()
+                .flatMap(approvalResponse -> approvalResponse.getCardResponseList().stream())
+                .toList();
+
+        List<OverSeasHistory> overSeasHistories = userCardApprovals.stream()
+                .sorted(Comparator.comparing(UserCardApproval::getApprovedAt).reversed())
+                .map((approval) -> {
+                    String code = approval.getCountryCode();
+                    return OverSeasHistory.of(countryRepository.findByCode(code).getName(), LocalDate.from(approval.getApprovedAt()));
+                })
+                .toList();
+
+        return OverseasListResponse.of(ranking, overSeasHistories);
     }
 
     private List<CountryRank> calculateRanking(List<UserCardApprovalListResponse> approvalsPerCard) {
