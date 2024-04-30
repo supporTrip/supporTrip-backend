@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 public class FlightInsuranceDetailResponse {
     private String companyName;
+    private String companyUrl;
     private String logoImageUrl;
     private String insuranceName;
     private LocalDateTime coverageStartAt;
@@ -20,8 +21,9 @@ public class FlightInsuranceDetailResponse {
     private List<SpecialContractResponse> specialContracts;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private FlightInsuranceDetailResponse(String companyName, String logoImageUrl, String insuranceName, LocalDateTime coverageStartAt, LocalDateTime coverageEndAt, int premium, String planName, List<SpecialContractResponse> specialContracts) {
+    private FlightInsuranceDetailResponse(String companyName, String companyUrl, String logoImageUrl, String insuranceName, LocalDateTime coverageStartAt, LocalDateTime coverageEndAt, int premium, String planName, List<SpecialContractResponse> specialContracts) {
         this.companyName = companyName;
+        this.companyUrl = companyUrl;
         this.logoImageUrl = logoImageUrl;
         this.insuranceName = insuranceName;
         this.coverageStartAt = coverageStartAt;
@@ -34,6 +36,7 @@ public class FlightInsuranceDetailResponse {
     public static FlightInsuranceDetailResponse toDTO(FlightInsurance flightInsurance, LocalDateTime coverageStartAt, LocalDateTime coverageEndAt, int premium, String planName, List<SpecialContractResponse> specialContracts) {
        return FlightInsuranceDetailResponse.builder()
                 .companyName(flightInsurance.getInsuranceCompany().getName())
+                .companyUrl(flightInsurance.getInsuranceCompany().getInsuranceCompanyUrl())
                 .logoImageUrl(flightInsurance.getInsuranceCompany().getLogoImageUrl())
                 .insuranceName(flightInsurance.getName())
                 .coverageStartAt(coverageStartAt)
