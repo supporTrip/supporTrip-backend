@@ -34,7 +34,7 @@ public class SearchFlightInsuranceRequest {
         this.arrivalAt = arrivalAt;
         this.birthDay = birthDay;
         this.gender = gender;
-        this.planName = planName == null ? "standard" : planName;
+        this.planName = planName.equals("") ? "standard" : planName;
         this.flightDelay = flightDelay == null ? Boolean.FALSE : flightDelay;
         this.passportLoss = passportLoss == null ? Boolean.FALSE : passportLoss;
         this.foodPoisoning = foodPoisoning == null ? Boolean.FALSE : foodPoisoning;
