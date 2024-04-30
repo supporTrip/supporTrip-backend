@@ -10,4 +10,5 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
     Country findByCurrency(Currency currency);
     Country findByName(String name);
     List<Country> findByNameNot(String name);
+    Country findByCode(String code);
 }
