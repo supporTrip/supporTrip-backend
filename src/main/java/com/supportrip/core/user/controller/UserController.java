@@ -5,10 +5,17 @@ import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.insurance.dto.UserInfoResponse;
+import com.supportrip.core.log.domain.UserLog;
+import com.supportrip.core.log.dto.UserLogListResponse;
+import com.supportrip.core.log.service.UserLogService;
 import com.supportrip.core.user.domain.PhoneVerification;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.InitiatePhoneVerificationRequest;
 import com.supportrip.core.user.dto.VerifyPhoneVerificationCodeRequest;
+import com.supportrip.core.user.dto.admin.AdminUserDetailResponse;
+import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdatedResponse;
+import com.supportrip.core.user.dto.admin.AdminUserResponse;
+import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdateRequest;
 import com.supportrip.core.user.dto.request.PinNumberVerificationRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.dto.response.CurrentUserPointResponse;
@@ -22,6 +29,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,11 +38,14 @@ public class UserController {
     //    private final SmsService smsService;
     private final PhoneVerificationService phoneVerificationService;
     private final PointWalletService pointWalletService;
+    private final UserLogService userLogService;
 
     @PutMapping("/api/v1/users/signup")
     public SimpleIdResponse signUp(@Valid @RequestBody SignUpRequest request,
                                    @AuthenticationPrincipal OidcUser oidcUser) {
-        User user = userService.signUp(oidcUser.getUserId(), request);
+        Long userId = oidcUser.getUserId();
+        User user = userService.signUp(userId, request);
+        userLogService.appendUserLog(userId, "Signup successful for the new user: [ID=" + userId + "]");
         return SimpleIdResponse.from(user.getId());
     }
 
@@ -73,7 +84,30 @@ public class UserController {
         return CurrentUserPointResponse.from(pointWallet);
     }
 
+    @GetMapping("/api/v1/users/{userId}/logs")
+    public UserLogListResponse getUserLog(@AuthenticationPrincipal OidcUser oidcUser) {
+        List<UserLog> userLogs = userLogService.getUserLogs(oidcUser.getUserId());
+        return UserLogListResponse.from(userLogs);
+    }
+
     private String makePhoneVerificationMessage(String code) {
         return String.format("[서포트립] 인증번호는 [%s] 입니다. 본인 확인을 위해 2분 내에 입력해주세요.", code);
+    }
+
+    @GetMapping("/api/v1/admin/users")
+    public List<AdminUserResponse> adminGetUsersInfo(@AuthenticationPrincipal OidcUser oidcUser) {
+        return userService.getUsers(oidcUser.getUserId());
+    }
+
+    @GetMapping("/api/v1/admin/users/{id}")
+    public AdminUserDetailResponse adminGetUserInfo(@AuthenticationPrincipal OidcUser oidcUser,
+                                                    @PathVariable("id") Long id) {
+        return userService.getUserInfo(oidcUser.getUserId(), id);
+    }
+
+    @PutMapping("/api/v1/admin/users")
+    public AdminUserEnabledUpdatedResponse adminUserUpdate(@AuthenticationPrincipal OidcUser oidcUser,
+                                                           @RequestBody AdminUserEnabledUpdateRequest request) {
+        return userService.userEnabledUpdate(oidcUser.getUserId(), request);
     }
 }

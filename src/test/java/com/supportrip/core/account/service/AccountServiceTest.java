@@ -10,6 +10,7 @@ import com.supportrip.core.account.repository.ForeignAccountTransactionRepositor
 import com.supportrip.core.account.repository.ForeignCurrencyWalletRepository;
 import com.supportrip.core.exchange.domain.Country;
 import com.supportrip.core.exchange.domain.Currency;
+import com.supportrip.core.exchange.repository.CountryRepository;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +32,9 @@ import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.when;
 
 class AccountServiceTest {
+    @InjectMocks
+    private AccountService accountService;
+
     @Mock
     private UserRepository userRepository;
 
@@ -43,8 +47,8 @@ class AccountServiceTest {
     @Mock
     private ForeignAccountTransactionRepository foreignAccountTransactionRepository;
 
-    @InjectMocks
-    private AccountService accountService;
+    @Mock
+    private CountryRepository countryRepository;
 
     @BeforeEach
     void setUp() {
@@ -75,9 +79,9 @@ class AccountServiceTest {
         Bank bank = Bank.of("우리은행", "WOORI", "bank_img");
         ForeignAccount foreignAccount = ForeignAccount.of(user, bank, "1111");
         List<ForeignCurrencyWallet> walletList = new ArrayList<>();
-        Country country = Country.of("미국", "미국국기", "미국달러");
+        Currency currency = Currency.of("미국달러", "USD", "$");
 
-        Currency currency = Currency.of(country, "미국달러", "USD", "$");
+        Country country = Country.of("미국", "미국국기", "미국달러", currency, "US");
         ForeignCurrencyWallet wallet = ForeignCurrencyWallet.of(foreignAccount, currency, 10L);
         walletList.add(wallet);
 
@@ -94,7 +98,7 @@ class AccountServiceTest {
         when(foreignAccountRepository.findByUser(any())).thenReturn(Optional.of(foreignAccount));
         when(foreignCurrencyWalletRepository.findByForeignAccountAndTotalAmountGreaterThan(any(), anyDouble()))
                 .thenReturn(walletList);
-
+        when(countryRepository.findByCurrency(any(Currency.class))).thenReturn(country);
 
         // When
         ForeignAccountInfoListResponse response = accountService.getForeignAccountInfo(userId);

@@ -52,14 +52,14 @@ class ExchangeServiceTest {
     void exchangeSuccess() {
         // given
         final long TRADING_AMOUNT = 100_000L;
-        final Currency KOREA_CURRENCY = Currency.of(null, "원", "KRW", "₩");
-        final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final Currency KOREA_CURRENCY = Currency.of("원", "KRW", "₩");
+        final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
 
         User user = User.userOf(NAME, EMAIL, GENDER, PHONE_NUMBER, BIRTH_DAY, PROFILE_IMAGE_URL);
         ExchangeRate exchangeRate = ExchangeRate.of(null, JAPAN_CURRENCY, 100L, KOREA_CURRENCY, 1.0);
         final LocalDate oneMonthLater = LocalDate.now().plusMonths(1);
         ExchangeTrading exchangeTrading =
-                ExchangeTrading.of(user, KOREA_CURRENCY, JAPAN_CURRENCY, exchangeRate, EXCHANGE_TRADING_NAME, TRADING_AMOUNT, TRADING_STRATEGY, null, oneMonthLater);
+                ExchangeTrading.of(user, KOREA_CURRENCY, JAPAN_CURRENCY, exchangeRate, null, EXCHANGE_TRADING_NAME, TRADING_AMOUNT, TRADING_STRATEGY, null, oneMonthLater);
 
         ForeignCurrencyWallet foreignCurrencyWallet = ForeignCurrencyWallet.of(null, JAPAN_CURRENCY, 0L);
 

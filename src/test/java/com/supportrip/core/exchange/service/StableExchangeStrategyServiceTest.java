@@ -56,7 +56,7 @@ class StableExchangeStrategyServiceTest {
     @DisplayName("마지막날보다 이전에 실행한 경우 남은일수 기준으로 나눈 금액에서 이전 3개월 평균 환율과 현재 환율을 비교해 차등 구매한다.")
     void executeBeforeLastDay() {
         // given
-        final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
         long JAPAN_CURRENCY_UNIT = 100L;
         final LocalDate TODAY = LocalDate.now();
         final LocalDate TOMORROW = TODAY.plusDays(1);
@@ -68,7 +68,7 @@ class StableExchangeStrategyServiceTest {
         ExchangeRate startingExchangeRate = ExchangeRate.of(null, null, null, null, STARTING_DEAL_BASE_RATE);
         ExchangeRate exchangeRate = ExchangeRate.of(null, null, JAPAN_CURRENCY_UNIT, null, DEAL_BASE_RATE);
         ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, JAPAN_CURRENCY, startingExchangeRate,
-                null, TRADING_AMOUNT, null, null, TOMORROW);
+                null, null, TRADING_AMOUNT, null, null, TOMORROW);
 
         ExchangeRateRangeStatistics exchangeRateRangeStatistics =
                 ExchangeRateRangeStatistics.of(null, null, null, DEAL_BASE_RATE_AVERAGE);
@@ -91,7 +91,7 @@ class StableExchangeStrategyServiceTest {
     @DisplayName("마지막날에 실행한 경우 남은 금액 전부 환전하며, 처음 환율과 비교해 손해인 경우 남은 금액에 손해만큼 추가해 포인트를 지급한다.")
     void executeAtLastDay() {
         // given
-        final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
         long JAPAN_CURRENCY_UNIT = 100L;
         final LocalDate TODAY = LocalDate.now();
         final long TRADING_AMOUNT = 1300L;
@@ -102,7 +102,7 @@ class StableExchangeStrategyServiceTest {
         ExchangeRate startingExchangeRate = ExchangeRate.of(null, null, null, null, STARTING_DEAL_BASE_RATE);
         ExchangeRate exchangeRate = ExchangeRate.of(null, null, JAPAN_CURRENCY_UNIT, null, DEAL_BASE_RATE);
         ExchangeTrading exchangeTrading = ExchangeTrading.of(user, null, JAPAN_CURRENCY, startingExchangeRate,
-                null, TRADING_AMOUNT, null, null, TODAY);
+                null, null, TRADING_AMOUNT, null, null, TODAY);
         PointWallet pointWallet = PointWallet.of(null, 0L);
 
         given(exchangeRateService.getLatestExchangeRate(any(Currency.class))).willReturn(exchangeRate);
