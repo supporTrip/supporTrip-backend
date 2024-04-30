@@ -95,6 +95,7 @@ public class UserService {
 
         String token = encryptService.encryptPhoneNum(request.getPhoneNumber());
         UserCI userCI = UserCI.of(user, token);
+        userCIRepository.save(userCI);
 
         return user;
     }
