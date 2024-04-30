@@ -14,7 +14,7 @@ class ExchangeTradingTest {
     @DisplayName("환전 거래를 종료한다.")
     void changeToCompleteSuccess() {
         // given
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null);
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null, null);
 
         // when
         exchangeTrading.changeToComplete();
@@ -27,7 +27,7 @@ class ExchangeTradingTest {
     @DisplayName("이미 종료된 환전 거래를 다시 종료하는 경우 예외가 발생한다.")
     void alreadyChangeToCompleteFail() {
         // given
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null);
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null, null);
         exchangeTrading.changeToComplete();
 
         // expected
@@ -42,7 +42,7 @@ class ExchangeTradingTest {
         final long ENOUGH_AMOUNT = 100_000L;
         final long REDUCE_AMOUNT = 100L;
         ExchangeTrading exchangeTrading =
-                ExchangeTrading.of(null, null, null, null, null, ENOUGH_AMOUNT, null, null, null);
+                ExchangeTrading.of(null, null, null, null, null, null, ENOUGH_AMOUNT, null, null, null);
 
         // when
         exchangeTrading.reduceAmount(REDUCE_AMOUNT);
@@ -58,7 +58,7 @@ class ExchangeTradingTest {
         final long NOT_ENOUGH_AMOUNT = 10L;
         final long REDUCE_AMOUNT = 100L;
         ExchangeTrading exchangeTrading =
-                ExchangeTrading.of(null, null, null, null, null, NOT_ENOUGH_AMOUNT, null, null, null);
+                ExchangeTrading.of(null, null, null, null, null, null, NOT_ENOUGH_AMOUNT, null, null, null);
 
         // expected
         assertThatThrownBy(() -> exchangeTrading.reduceAmount(REDUCE_AMOUNT))
@@ -71,7 +71,7 @@ class ExchangeTradingTest {
         // given
         final long TRADING_AMOUNT = 1000L;
         final int REMAIN_DAYS = 3;
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, TRADING_AMOUNT, null, null, null);
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, TRADING_AMOUNT, null, null, null);
 
         // when
         long exchangeAmount = exchangeTrading.getExchangeAmount(REMAIN_DAYS);
@@ -84,7 +84,7 @@ class ExchangeTradingTest {
     @DisplayName("현재 남은 일수가 0보다 작은 경우 예외가 발생한다.")
     void getExchangeAmountFail() {
         // given
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null);
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null, null);
 
         // expected
         assertThatThrownBy(() -> exchangeTrading.getExchangeAmount(-1))
@@ -97,7 +97,7 @@ class ExchangeTradingTest {
         // given
         final long TRADING_AMOUNT = 1000L;
         final double EXCHANGE_RATE = 904.04;
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, TRADING_AMOUNT, null, null, null);
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, TRADING_AMOUNT, null, null, null);
 
         // when
         long maxExchangeableAmount = exchangeTrading.getMaxExchangeableAmount(EXCHANGE_RATE);
@@ -110,7 +110,7 @@ class ExchangeTradingTest {
     @DisplayName("입력한 환율이 0보다 작은 경우 예외가 발생한다.")
     void getMaxExchangeableAmountFail() {
         // given
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null);
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null, null);
 
         // expected
         assertThatThrownBy(() -> exchangeTrading.getMaxExchangeableAmount(-1.0))
@@ -122,7 +122,7 @@ class ExchangeTradingTest {
     void flushCurrentAmount() {
         // given
         final long TRADING_AMOUNT = 1000L;
-        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, TRADING_AMOUNT, null, null, null);
+        ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, TRADING_AMOUNT, null, null, null);
 
         // when
         long amount = exchangeTrading.flushCurrentAmount();

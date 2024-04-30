@@ -33,8 +33,8 @@ class ExchangeRateStatisticsServiceTest {
     @DisplayName("특정 통화에 대한 최근 3개월간 평균 환율을 계산해 반환한다.")
     void getLast3MonthExchangeRateAverage() {
         // given
-        final Currency KOREA_CURRENCY = Currency.of(null, "원", "KRW", "₩");
-        final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final Currency KOREA_CURRENCY = Currency.of("원", "KRW", "₩");
+        final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
         final LocalDate TODAY = LocalDate.now();
         final LocalDate YESTERDAY = LocalDate.now();
         final LocalDate TWO_DAYS_AGO = LocalDate.now();

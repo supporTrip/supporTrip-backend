@@ -4,6 +4,7 @@ import com.supportrip.core.account.domain.Bank;
 import com.supportrip.core.account.repository.BankRepository;
 import com.supportrip.core.account.repository.LinkedAccountRepository;
 import com.supportrip.core.account.repository.PointWalletRepository;
+import com.supportrip.core.common.EncryptService;
 import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.request.SignUpRequest;
@@ -72,6 +73,9 @@ class UserServiceTest {
 
     @Mock
     private UserNotificationStatusRepository userNotificationStatusRepository;
+
+    @Mock
+    private EncryptService encryptService;
 
     @Test
     @DisplayName("initialUser가 회원 가입하는 경우 회원 가입에 성공한다.")

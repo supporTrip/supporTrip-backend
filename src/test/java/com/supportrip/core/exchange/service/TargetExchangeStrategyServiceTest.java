@@ -5,7 +5,6 @@ import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
-import com.supportrip.core.exchange.domain.TradingStrategy;
 import com.supportrip.core.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.LocalDate;
 
 import static com.supportrip.core.exchange.domain.TradingStatus.COMPLETED;
+import static com.supportrip.core.exchange.domain.TradingStrategy.TARGET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.any;
@@ -49,7 +49,7 @@ class TargetExchangeStrategyServiceTest {
     void executeBeforeLastDayAndReachedTargetExchangeRate() {
         // given
         User user = User.userOf(null, null, null, null, null, null);
-        final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
         final long TRADING_AMOUNT = 12300L;
         final double TARGET_EXCHANGE_RATE = 1000.0;
         final double REACHED_DEAL_BASE_RATE = 950.5;
@@ -57,7 +57,7 @@ class TargetExchangeStrategyServiceTest {
         final LocalDate TOMORROW = TODAY.plusDays(1);
         final ExchangeRate exchangeRate = ExchangeRate.of(TODAY, JAPAN_CURRENCY, 100L, null, REACHED_DEAL_BASE_RATE);
         ExchangeTrading exchangeTrading =
-                ExchangeTrading.of(user, null, JAPAN_CURRENCY, null, null, TRADING_AMOUNT, TradingStrategy.TARGET, TARGET_EXCHANGE_RATE, TOMORROW);
+                ExchangeTrading.of(user, null, JAPAN_CURRENCY, null, null, null, TRADING_AMOUNT, TARGET, TARGET_EXCHANGE_RATE, TOMORROW);
 
         given(exchangeRateService.getLatestExchangeRate(any(Currency.class))).willReturn(exchangeRate);
 
@@ -76,7 +76,7 @@ class TargetExchangeStrategyServiceTest {
     void executeBeforeLastDayAndNotReachedTargetExchangeRate() {
         // given
         User user = User.userOf(null, null, null, null, null, null);
-        final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
         final long TRADING_AMOUNT = 12300L;
         final double TARGET_EXCHANGE_RATE = 1000.0;
         final double NOT_REACHED_DEAL_BASE_RATE = 1000.5;
@@ -84,7 +84,7 @@ class TargetExchangeStrategyServiceTest {
         final LocalDate TOMORROW = TODAY.plusDays(1);
         final ExchangeRate exchangeRate = ExchangeRate.of(TODAY, JAPAN_CURRENCY, 100L, null, NOT_REACHED_DEAL_BASE_RATE);
         ExchangeTrading exchangeTrading =
-                ExchangeTrading.of(user, null, JAPAN_CURRENCY, null, null, TRADING_AMOUNT, TradingStrategy.TARGET, TARGET_EXCHANGE_RATE, TOMORROW);
+                ExchangeTrading.of(user, null, JAPAN_CURRENCY, null, null, null, TRADING_AMOUNT, TARGET, TARGET_EXCHANGE_RATE, TOMORROW);
 
         given(exchangeRateService.getLatestExchangeRate(any(Currency.class))).willReturn(exchangeRate);
 
@@ -100,14 +100,14 @@ class TargetExchangeStrategyServiceTest {
     void executeAtLastDay() {
         // given
         User user = User.userOf(null, null, null, null, null, null);
-        final Currency JAPAN_CURRENCY = Currency.of(null, "엔", "JPY", "￥");
+        final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
         final long TRADING_AMOUNT = 12300L;
         final double TARGET_EXCHANGE_RATE = 1000.0;
         final double NOT_REACHED_DEAL_BASE_RATE = 1000.5;
         final LocalDate TODAY = LocalDate.now();
         final ExchangeRate exchangeRate = ExchangeRate.of(TODAY, JAPAN_CURRENCY, 100L, null, NOT_REACHED_DEAL_BASE_RATE);
         ExchangeTrading exchangeTrading =
-                ExchangeTrading.of(user, null, JAPAN_CURRENCY, null, null, TRADING_AMOUNT, TradingStrategy.TARGET, TARGET_EXCHANGE_RATE, TODAY);
+                ExchangeTrading.of(user, null, JAPAN_CURRENCY, null, null, null, TRADING_AMOUNT, TARGET, TARGET_EXCHANGE_RATE, TODAY);
         PointWallet pointWallet = PointWallet.of(user, 0L);
 
         given(exchangeRateService.getLatestExchangeRate(any(Currency.class))).willReturn(exchangeRate);
