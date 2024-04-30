@@ -33,7 +33,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/auth/login",
                                 "/api/v1/flight-insurances/search",
-                                "/health-check"
+                                "/health-check",
+                                "/api/v1/flight-insurances/{id}"
                         )
                         .permitAll()
                         .anyRequest().authenticated()
