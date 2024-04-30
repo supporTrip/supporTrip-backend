@@ -1,6 +1,5 @@
 package com.supportrip.core.insurance.dto;
 
-import com.supportrip.core.insurance.domain.FlightInsurance;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -34,7 +33,7 @@ public class SearchFlightInsuranceResponse {
     public static SearchFlightInsuranceResponse toDTO(FilterAndCalPremiumResponse flightInsurance, List<Top3SpecialContractResponse> specialContracts, String planName, LocalDateTime departAt, LocalDateTime arrivalAt) {
         SearchFlightInsuranceResponse response = SearchFlightInsuranceResponse.builder()
                 .id(flightInsurance.getId())
-                .insuranceName(flightInsurance.getCompanyName())
+                .insuranceName(flightInsurance.getInsuranceName())
                 .premium(flightInsurance.getPremium())
                 .planName(planName)
                 .companyName(flightInsurance.getCompanyName())

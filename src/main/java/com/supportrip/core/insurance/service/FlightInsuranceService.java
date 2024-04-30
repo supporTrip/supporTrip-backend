@@ -11,6 +11,7 @@ import com.supportrip.core.insurance.repository.FlightInsuranceRepository;
 import com.supportrip.core.insurance.repository.InsuranceCompanyRepository;
 import com.supportrip.core.insurance.repository.InsuranceSubscriptionRepository;
 import com.supportrip.core.insurance.repository.SpecialContractRepository;
+import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.exception.UserNotFoundException;
 import com.supportrip.core.user.repository.UserRepository;
@@ -52,15 +53,23 @@ public class FlightInsuranceService {
                 request.getFlightDelay(),
                 request.getPassportLoss(), request.getFoodPoisoning());
 
-        List<FilterAndCalPremiumResponse> filterAndCalPremiumResponses = new ArrayList<>();
-        for (FlightInsurance filteredInsurance : filteredInsurances) {
-            int calPremium = calculatePremiumService.calculatePremium(age, period, request.getPlanName(), request.getGender(), filteredInsurance);
-            FilterAndCalPremiumResponse filterAndCalPremiumResponse = FilterAndCalPremiumResponse.of(filteredInsurance, calPremium, request.getDepartAt(), request.getArrivalAt());
-            filterAndCalPremiumResponses.add(filterAndCalPremiumResponse);
-        }
+        List<FilterAndCalPremiumResponse> filterAndCalPremiumResponses = caledInsurances(age, period, request.getPlanName(), request.getGender(), request.getDepartAt(), request.getArrivalAt(), filteredInsurances);
 
         //특약 상위3개 추가
         return addTop3SpecialContract(filterAndCalPremiumResponses, request.getPlanName(), request.getDepartAt(), request.getArrivalAt());
+    }
+
+    /**
+     * 보험료 계산해서 DTO에
+     */
+    public List<FilterAndCalPremiumResponse> caledInsurances(int age, int period, String planName, Gender gender, LocalDateTime departAt, LocalDateTime arrivalAt, List<FlightInsurance> filteredInsurances) {
+        List<FilterAndCalPremiumResponse> filterAndCalPremiumResponses = new ArrayList<>();
+        for (FlightInsurance filteredInsurance : filteredInsurances) {
+            int calPremium = calculatePremiumService.calculatePremium(age, period, planName, gender, filteredInsurance);
+            FilterAndCalPremiumResponse filterAndCalPremiumResponse = FilterAndCalPremiumResponse.of(filteredInsurance, calPremium, departAt, arrivalAt);
+            filterAndCalPremiumResponses.add(filterAndCalPremiumResponse);
+        }
+        return filterAndCalPremiumResponses;
     }
 
     /**
