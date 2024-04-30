@@ -75,17 +75,10 @@ class FlightInsuranceServiceTest {
                 SpecialContract.of(mockFlightInsurances.get(1), "휴대폰분실", 2000, 3000)
         );
 
-        List<FlightInsurance> mockCalPremium = Arrays.asList(
-                mockFlightInsurances.get(0)
-        );
-        List<FlightInsurance> mockCalExpected = Arrays.asList(
-                FlightInsurance.of(insuranceCompany1, "한화생명 해외여행자 보험", 4440, 15, 60, true, true, true)
-        );
+        FlightInsurance mockCalExpected = FlightInsurance.of(insuranceCompany1, "한화생명 해외여행자 보험", 4440, 15, 60, true, true, true);
 
         when(flightInsuranceRepository.findByAge(eq(25)))
                 .thenReturn(mockFlightInsurances);
-        when(calculatePremiumService.calculatePremium(eq(25), eq(4), eq("standard"), eq(Gender.MALE), eq(mockCalPremium)))
-                .thenReturn(mockCalExpected);
 
         SearchFlightInsuranceRequest request = SearchFlightInsuranceRequest.of(
                 LocalDateTime.of(2024, 4, 8, 10, 0),
