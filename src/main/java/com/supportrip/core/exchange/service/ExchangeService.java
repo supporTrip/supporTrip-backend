@@ -51,16 +51,20 @@ public class ExchangeService {
     private final ForeignCurrencyWalletRepository foreignCurrencyWalletRepository;
 
     @Transactional
-    public void exchange(ExchangeTrading exchangeTrading, Long amount) {
+    public void exchange(ExchangeTrading exchangeTrading, Long amountDividedByCurrencyUnit) {
+        if (amountDividedByCurrencyUnit <= 0) {
+            return;
+        }
+
         Currency targetCurrency = exchangeTrading.getTargetCurrency();
         User user = exchangeTrading.getUser();
 
         ExchangeRate latestExchangeRate = exchangeRateService.getLatestExchangeRate(targetCurrency);
-        long fromAmount = calculateAmountForExchange(amount, latestExchangeRate);
+        long fromAmount = calculateAmountForExchange(amountDividedByCurrencyUnit, latestExchangeRate);
 
         exchangeTrading.reduceAmount(fromAmount);
 
-        final long currencyAmount = amount * latestExchangeRate.getTargetCurrencyUnit();
+        final long currencyAmount = amountDividedByCurrencyUnit * latestExchangeRate.getTargetCurrencyUnit();
         ForeignCurrencyWallet foreignCurrencyWallet = foreignAccountService.getForeignCurrencyWallet(user, targetCurrency);
         foreignCurrencyWallet.deposit(currencyAmount);
 
