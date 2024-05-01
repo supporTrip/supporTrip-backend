@@ -55,7 +55,7 @@ public class TargetExchangeStrategyService implements ExchangeStrategyService {
     }
 
     private void exchangeAllAmount(ExchangeTrading exchangeTrading, ExchangeRate exchangeRate) {
-        long maxExchangeableAmount = exchangeTrading.getMaxExchangeableAmount(exchangeRate.getDealBaseRate());
+        long maxExchangeableAmount = exchangeTrading.getMaxExchangeableCurrencyAmount(exchangeRate.getDealBaseRate());
         exchangeService.exchange(exchangeTrading, maxExchangeableAmount);
     }
 

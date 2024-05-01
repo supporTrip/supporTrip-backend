@@ -56,11 +56,12 @@ public class ExchangeService {
 
         exchangeTrading.reduceAmount(fromAmount);
 
+        final long currencyAmount = amount * latestExchangeRate.getTargetCurrencyUnit();
         ForeignCurrencyWallet foreignCurrencyWallet = foreignAccountService.getForeignCurrencyWallet(user, targetCurrency);
-        foreignCurrencyWallet.deposit(amount);
+        foreignCurrencyWallet.deposit(currencyAmount);
 
         ForeignAccountTransaction foreignAccountTransaction = ForeignAccountTransaction.of(
-                amount,
+                currencyAmount,
                 latestExchangeRate.getDealBaseRate(),
                 foreignCurrencyWallet.getTotalAmount(),
                 foreignCurrencyWallet,
@@ -71,13 +72,13 @@ public class ExchangeService {
     }
 
     private static long calculateAmountForExchange(Long toAmount, ExchangeRate latestExchangeRate) {
-        return (long) ((toAmount / latestExchangeRate.getTargetCurrencyUnit()) * latestExchangeRate.getDealBaseRate());
+        return (long) (toAmount * latestExchangeRate.getDealBaseRate());
     }
 
     public List<ExchangeTradingResponse> getInProgressExchangeTradings(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if(foreignAccountRepository.findByUser(user).isEmpty()) {
+        if (foreignAccountRepository.findByUser(user).isEmpty()) {
             throw new ExchangeAccessDeniedException();
         }
 
@@ -99,7 +100,7 @@ public class ExchangeService {
     public Long createExchangeTrading(Long userId, CreateExchangeTradingRequest request) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if(foreignAccountRepository.findByUser(user).isEmpty()) {
+        if (foreignAccountRepository.findByUser(user).isEmpty()) {
             throw new ExchangeAccessDeniedException();
         }
 

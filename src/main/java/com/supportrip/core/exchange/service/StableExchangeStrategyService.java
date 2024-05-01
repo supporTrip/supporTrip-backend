@@ -36,7 +36,7 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
         ExchangeRate exchangeRate = exchangeRateService.getLatestExchangeRate(targetCurrency);
 
         if (exchangeTrading.isLastDate(today)) {
-            long maxExchangeableAmount = exchangeTrading.getMaxExchangeableAmount(exchangeRate.getDealBaseRate());
+            long maxExchangeableAmount = exchangeTrading.getMaxExchangeableCurrencyAmount(exchangeRate.getDealBaseRate());
             exchangeService.exchange(exchangeTrading, maxExchangeableAmount);
 
             List<ForeignAccountTransaction> foreignAccountTransactions =
@@ -74,7 +74,8 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
 
         long weight = calculateExchangeWeight(last3MonthExchangeRateAverage.getExchangeRate(), exchangeRate);
 
-        exchangeService.exchange(exchangeTrading, exchangeAmount + weight);
+        long targetCurrencyExchangeAmount = (long) ((exchangeAmount + weight) / exchangeRate.getDealBaseRate());
+        exchangeService.exchange(exchangeTrading, targetCurrencyExchangeAmount);
     }
 
     @Override
