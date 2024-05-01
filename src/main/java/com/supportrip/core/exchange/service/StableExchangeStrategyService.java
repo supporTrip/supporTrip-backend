@@ -13,6 +13,8 @@ import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserNotificationStatus;
 import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 import static com.supportrip.core.exchange.domain.PeriodUnit.THREE_MONTH;
 import static com.supportrip.core.exchange.domain.TradingStrategy.STABLE;
 
+@Service
 @RequiredArgsConstructor
 public class StableExchangeStrategyService implements ExchangeStrategyService {
     private final ExchangeService exchangeService;
@@ -31,6 +34,7 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
     private final UserNotificationStatusRepository userNotificationStatusRepository;
 
     @Override
+    @Transactional
     public void execute(ExchangeTrading exchangeTrading, LocalDate today) {
         Currency targetCurrency = exchangeTrading.getTargetCurrency();
         ExchangeRate exchangeRate = exchangeRateService.getLatestExchangeRate(targetCurrency);
