@@ -9,6 +9,7 @@ import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
+import com.supportrip.core.user.repository.UserCIRepository;
 import com.supportrip.core.user.repository.UserConsentStatusRepository;
 import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
@@ -77,10 +78,15 @@ class UserServiceTest {
     @Mock
     private EncryptService encryptService;
 
+    @Mock
+    private UserCIRepository userCIRepository;
+
     @Test
     @DisplayName("initialUser가 회원 가입하는 경우 회원 가입에 성공한다.")
     void signUpSuccess() {
         // given
+        final String ENCRYPT_PIN_NUMBER = "qwerqwerqwer";
+
         SignUpRequest request = SignUpRequest.of(NAME, EMAIL, PHONE_NUMBER, RAW_BIRTH_DAY, GENDER, PIN_NUMBER,
                 BANK_CODE, BANK_ACCOUNT_NUMBER, CONSENT_ABOVE_14, SERVICE_TERMS_CONSENT, CONSENT_PERSONAL_INFO,
                 null, null, OPEN_BANKING_AUTO_TRANSFER_CONSENT,
@@ -92,6 +98,7 @@ class UserServiceTest {
 
         given(userRepository.findById(anyLong())).willReturn(Optional.of(initialUser));
         given(bankRepository.findByCode(anyString())).willReturn(Optional.of(bank));
+        given(encryptService.encryptCredentials(anyString())).willReturn(ENCRYPT_PIN_NUMBER);
 
         // when
         User user = userService.signUp(USER_ID, request);
@@ -102,7 +109,7 @@ class UserServiceTest {
         assertThat(user.getPhoneNumber()).isEqualTo(PHONE_NUMBER);
         assertThat(user.getBirthDay()).isEqualTo(BIRTH_DAY);
         assertThat(user.getGender()).isEqualTo(GENDER);
-        assertThat(user.getPinNumber()).isEqualTo(PIN_NUMBER);
+        assertThat(user.getPinNumber()).isEqualTo(ENCRYPT_PIN_NUMBER);
     }
 
     @Test

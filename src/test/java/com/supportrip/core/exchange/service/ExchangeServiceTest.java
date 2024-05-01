@@ -56,7 +56,7 @@ class ExchangeServiceTest {
         final Currency JAPAN_CURRENCY = Currency.of("엔", "JPY", "￥");
 
         User user = User.userOf(NAME, EMAIL, GENDER, PHONE_NUMBER, BIRTH_DAY, PROFILE_IMAGE_URL);
-        ExchangeRate exchangeRate = ExchangeRate.of(null, JAPAN_CURRENCY, 100L, KOREA_CURRENCY, 1.0);
+        ExchangeRate exchangeRate = ExchangeRate.of(null, JAPAN_CURRENCY, 100L, KOREA_CURRENCY, 900.0);
         final LocalDate oneMonthLater = LocalDate.now().plusMonths(1);
         ExchangeTrading exchangeTrading =
                 ExchangeTrading.of(user, KOREA_CURRENCY, JAPAN_CURRENCY, exchangeRate, null, EXCHANGE_TRADING_NAME, TRADING_AMOUNT, TRADING_STRATEGY, null, oneMonthLater);
@@ -67,10 +67,10 @@ class ExchangeServiceTest {
         given(foreignAccountService.getForeignCurrencyWallet(any(User.class), any(Currency.class))).willReturn(foreignCurrencyWallet);
 
         // when
-        exchangeService.exchange(exchangeTrading, 200L);
+        exchangeService.exchange(exchangeTrading, 2L);
 
         // then
-        assertThat(exchangeTrading.getCurrentAmount()).isEqualTo(TRADING_AMOUNT - 2);
+        assertThat(exchangeTrading.getCurrentAmount()).isEqualTo(TRADING_AMOUNT - 1800);
         assertThat(foreignCurrencyWallet.getTotalAmount()).isEqualTo(200L);
 
         verify(foreignAccountTransactionRepository).save(any(ForeignAccountTransaction.class));
