@@ -33,18 +33,21 @@ public class ExchangeRateScheduler {
         List<ExchangeTrading> exchangeTradings = exchangeTradingRepository.findByStatus(IN_PROGRESS);
 
         log.info("{} ExchangeTradings proceed with currency exchange.", exchangeTradings.size());
-        exchangeTradings.forEach(exchangeTrading ->
-                exchangeStrategyManager.executeExchangeStrategy(exchangeTrading, today)
-        );
+        exchangeTradings.forEach(exchangeTrading -> executeAutoExchange(today, exchangeTrading));
     }
 
-    @Transactional
     public void dailyExchange(LocalDate today) {
         List<ExchangeTrading> exchangeTradings = exchangeTradingRepository.findByStatus(IN_PROGRESS);
 
         log.info("{} ExchangeTradings proceed with currency exchange.", exchangeTradings.size());
-        exchangeTradings.forEach(exchangeTrading ->
-                exchangeStrategyManager.executeExchangeStrategy(exchangeTrading, today)
-        );
+        exchangeTradings.forEach(exchangeTrading -> executeAutoExchange(today, exchangeTrading));
+    }
+
+    private void executeAutoExchange(LocalDate today, ExchangeTrading exchangeTrading) {
+        try {
+            exchangeStrategyManager.executeExchangeStrategy(exchangeTrading, today);
+        } catch (Exception exception) {
+            log.error("Exchange Exception: ", exception);
+        }
     }
 }
