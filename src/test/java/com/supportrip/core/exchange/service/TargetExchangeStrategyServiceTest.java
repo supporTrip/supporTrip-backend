@@ -77,7 +77,7 @@ class TargetExchangeStrategyServiceTest {
         verify(exchangeService).exchange(any(ExchangeTrading.class), exchangeAmountCaptor.capture());
 
         Long exchangeAmount = exchangeAmountCaptor.getValue();
-        assertThat(exchangeAmount).isEqualTo(11406L);
+        assertThat(exchangeAmount).isEqualTo((long) (TRADING_AMOUNT / TARGET_EXCHANGE_RATE));
     }
 
     @Test
@@ -138,7 +138,7 @@ class TargetExchangeStrategyServiceTest {
         verify(exchangeService).exchange(any(ExchangeTrading.class), exchangeAmountCaptor.capture());
 
         Long exchangeAmount = exchangeAmountCaptor.getValue();
-        assertThat(exchangeAmount).isEqualTo(MAX_EXCHANGEABLE_AMOUNT);
+        assertThat(exchangeAmount).isEqualTo((long) (MAX_EXCHANGEABLE_AMOUNT / NOT_REACHED_DEAL_BASE_RATE));
 
         assertThat(pointWallet.getTotalAmount()).isEqualTo(294L);
         assertThat(exchangeTrading.getStatus()).isEqualTo(COMPLETED);
