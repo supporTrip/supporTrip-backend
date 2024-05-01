@@ -53,7 +53,7 @@ public class FlightInsuranceService {
                 request.getFlightDelay(),
                 request.getPassportLoss(), request.getFoodPoisoning());
 
-        List<FilterAndCalPremiumResponse> filterAndCalPremiumResponses = caledInsurances(age, period, request.getPlanName(), request.getGender(), request.getDepartAt(), request.getArrivalAt(), filteredInsurances);
+        List<FilterAndCalPremiumResponse> filterAndCalPremiumResponses = calculatedInsurances(age, period, request.getPlanName(), request.getGender(), request.getDepartAt(), request.getArrivalAt(), filteredInsurances);
 
         //특약 상위3개 추가
         return addTop3SpecialContract(filterAndCalPremiumResponses, request.getPlanName(), request.getDepartAt(), request.getArrivalAt());
@@ -62,7 +62,7 @@ public class FlightInsuranceService {
     /**
      * 보험료 계산해서 DTO에
      */
-    public List<FilterAndCalPremiumResponse> caledInsurances(int age, int period, String planName, Gender gender, LocalDateTime departAt, LocalDateTime arrivalAt, List<FlightInsurance> filteredInsurances) {
+    public List<FilterAndCalPremiumResponse> calculatedInsurances(int age, int period, String planName, Gender gender, LocalDateTime departAt, LocalDateTime arrivalAt, List<FlightInsurance> filteredInsurances) {
         List<FilterAndCalPremiumResponse> filterAndCalPremiumResponses = new ArrayList<>();
         for (FlightInsurance filteredInsurance : filteredInsurances) {
             int calPremium = calculatePremiumService.calculatePremium(age, period, planName, gender, filteredInsurance);

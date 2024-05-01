@@ -66,7 +66,7 @@ public class InsuranceService {
         if(corporations.isEmpty()) {
             List<FlightInsurance> insurances = flightInsuranceRepository.findTop3ByOrderByPremiumAsc();
 
-            calInsus = flightInsuranceService.caledInsurances(age, period, "standard", user.getGender(), departAt, arrivalAt, insurances);
+            calInsus = flightInsuranceService.calculatedInsurances(age, period, "standard", user.getGender(), departAt, arrivalAt, insurances);
         }else {
             for(InsuranceCorporationResponse insuranceCorporationResponse : corporations){
                 List<InsuranceResponse> insurances = insuranceClientService.getInsured(userCI.getToken(), insuranceCorporationResponse.getOrg_code(), "14").getInsuranceList();
@@ -75,7 +75,7 @@ public class InsuranceService {
                         InsuranceCompany insuranceCompany = insuranceCompanyRepository.findByName(insuranceResponse.getCorporationName());
                         insuranceList.add(flightInsuranceRepository.findByInsuranceCompany(insuranceCompany));
                     }
-                calInsus = flightInsuranceService.caledInsurances(age, period, "standard", user.getGender(), departAt, arrivalAt, insuranceList);
+                calInsus = flightInsuranceService.calculatedInsurances(age, period, "standard", user.getGender(), departAt, arrivalAt, insuranceList);
             }
         }
 
