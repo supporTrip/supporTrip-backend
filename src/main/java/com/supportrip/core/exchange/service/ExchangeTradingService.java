@@ -41,11 +41,11 @@ public class ExchangeTradingService {
                 totalOriginAmount += foreignAccountTransaction.getAmount() * foreignAccountTransaction.getTargetExchangeRate();
             }
 
-            String targetAmount = totalTargetAmount.toString() + " " + targetCode;
+            String targetAmount = String.format("%,d",totalTargetAmount) + " " + targetCode;
 
             Double avgRate = totalOriginAmount / totalTargetAmount;
-            String targetAvg = avgRate.toString() + "원";
-            exchangeTransactionResponses.add(ExchangeTransactionResponse.of(transactionDate, name, tradingAmount, targetAmount, targetAvg));
+            String targetAvg = String.format("%,.2f", avgRate) + "원";
+            exchangeTransactionResponses.add(ExchangeTransactionResponse.of(transactionDate, name, String.format("%,d",tradingAmount)+"원", targetAmount, targetAvg));
         }
 
         return ExchangeTransactionListResponse.of(exchangeTransactionResponses);
