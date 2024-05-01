@@ -51,20 +51,25 @@ public class ExchangeService {
     private final ForeignCurrencyWalletRepository foreignCurrencyWalletRepository;
 
     @Transactional
-    public void exchange(ExchangeTrading exchangeTrading, Long amount) {
+    public void exchange(ExchangeTrading exchangeTrading, Long amountDividedByCurrencyUnit) {
+        if (amountDividedByCurrencyUnit <= 0) {
+            return;
+        }
+
         Currency targetCurrency = exchangeTrading.getTargetCurrency();
         User user = exchangeTrading.getUser();
 
         ExchangeRate latestExchangeRate = exchangeRateService.getLatestExchangeRate(targetCurrency);
-        long fromAmount = calculateAmountForExchange(amount, latestExchangeRate);
+        long fromAmount = calculateAmountForExchange(amountDividedByCurrencyUnit, latestExchangeRate);
 
         exchangeTrading.reduceAmount(fromAmount);
 
+        final long currencyAmount = amountDividedByCurrencyUnit * latestExchangeRate.getTargetCurrencyUnit();
         ForeignCurrencyWallet foreignCurrencyWallet = foreignAccountService.getForeignCurrencyWallet(user, targetCurrency);
-        foreignCurrencyWallet.deposit(amount);
+        foreignCurrencyWallet.deposit(currencyAmount);
 
         ForeignAccountTransaction foreignAccountTransaction = ForeignAccountTransaction.of(
-                amount,
+                currencyAmount,
                 latestExchangeRate.getDealBaseRate(),
                 foreignCurrencyWallet.getTotalAmount(),
                 foreignCurrencyWallet,
@@ -75,13 +80,13 @@ public class ExchangeService {
     }
 
     private static long calculateAmountForExchange(Long toAmount, ExchangeRate latestExchangeRate) {
-        return (long) ((toAmount / latestExchangeRate.getTargetCurrencyUnit()) * latestExchangeRate.getDealBaseRate());
+        return (long) (toAmount * latestExchangeRate.getDealBaseRate());
     }
 
     public List<ExchangeTradingResponse> getInProgressExchangeTradings(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if(foreignAccountRepository.findByUser(user).isEmpty()) {
+        if (foreignAccountRepository.findByUser(user).isEmpty()) {
             throw new ExchangeAccessDeniedException();
         }
 
@@ -103,7 +108,7 @@ public class ExchangeService {
     public Long createExchangeTrading(Long userId, CreateExchangeTradingRequest request) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if(foreignAccountRepository.findByUser(user).isEmpty()) {
+        if (foreignAccountRepository.findByUser(user).isEmpty()) {
             throw new ExchangeAccessDeniedException();
         }
 

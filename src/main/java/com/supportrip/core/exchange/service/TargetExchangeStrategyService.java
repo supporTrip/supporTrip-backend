@@ -10,11 +10,14 @@ import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserNotificationStatus;
 import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
 import static com.supportrip.core.exchange.domain.TradingStrategy.TARGET;
 
+@Service
 @RequiredArgsConstructor
 public class TargetExchangeStrategyService implements ExchangeStrategyService {
     private final ExchangeService exchangeService;
@@ -24,6 +27,7 @@ public class TargetExchangeStrategyService implements ExchangeStrategyService {
     private final UserNotificationStatusRepository userNotificationStatusRepository;
 
     @Override
+    @Transactional
     public void execute(ExchangeTrading exchangeTrading, LocalDate today) {
         Currency targetCurrency = exchangeTrading.getTargetCurrency();
         ExchangeRate exchangeRate = exchangeRateService.getLatestExchangeRate(targetCurrency);
@@ -32,14 +36,10 @@ public class TargetExchangeStrategyService implements ExchangeStrategyService {
             exchangeAllAmount(exchangeTrading, exchangeRate);
 
             PointWallet pointWallet = pointWalletService.getPointWallet(exchangeTrading.getUser());
-            pointWallet.increase(exchangeTrading.flushCurrentAmount());
+            pointWalletService.depositPoint(pointWallet, exchangeTrading.flushCurrentAmount());
             exchangeTrading.changeToComplete();
 
-            User user = exchangeTrading.getUser();
-            UserNotificationStatus userNotificationStatus = userNotificationStatusRepository.findByUser(user);
-            if (userNotificationStatus.getStatus()) {
-                smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
-            }
+            sendSmsToUser(exchangeTrading);
             return;
         }
 
@@ -54,8 +54,16 @@ public class TargetExchangeStrategyService implements ExchangeStrategyService {
         return TARGET.equals(exchangeTrading.getStrategy());
     }
 
+    private void sendSmsToUser(ExchangeTrading exchangeTrading) {
+        User user = exchangeTrading.getUser();
+        UserNotificationStatus userNotificationStatus = userNotificationStatusRepository.findByUser(user);
+        if (userNotificationStatus.getStatus()) {
+            smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
+        }
+    }
+
     private void exchangeAllAmount(ExchangeTrading exchangeTrading, ExchangeRate exchangeRate) {
-        long maxExchangeableAmount = exchangeTrading.getMaxExchangeableAmount(exchangeRate.getDealBaseRate());
+        long maxExchangeableAmount = exchangeTrading.getMaxExchangeableCurrencyAmount(exchangeRate.getDealBaseRate());
         exchangeService.exchange(exchangeTrading, maxExchangeableAmount);
     }
 

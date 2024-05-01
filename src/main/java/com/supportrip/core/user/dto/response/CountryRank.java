@@ -13,4 +13,5 @@ public class CountryRank {
     private int rank;
     private String countryName;
     private Long count;
+    private Long amount;
 }
