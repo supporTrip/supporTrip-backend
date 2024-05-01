@@ -6,6 +6,9 @@ import com.supportrip.core.common.SmsService;
 import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
+import com.supportrip.core.user.domain.User;
+import com.supportrip.core.user.domain.UserNotificationStatus;
+import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
@@ -18,6 +21,7 @@ public class TargetExchangeStrategyService implements ExchangeStrategyService {
     private final PointWalletService pointWalletService;
     private final ExchangeRateService exchangeRateService;
     private final SmsService smsService;
+    private final UserNotificationStatusRepository userNotificationStatusRepository;
 
     @Override
     public void execute(ExchangeTrading exchangeTrading, LocalDate today) {
@@ -31,7 +35,11 @@ public class TargetExchangeStrategyService implements ExchangeStrategyService {
             pointWallet.increase(exchangeTrading.flushCurrentAmount());
             exchangeTrading.changeToComplete();
 
-            smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
+            User user = exchangeTrading.getUser();
+            UserNotificationStatus userNotificationStatus = userNotificationStatusRepository.findByUser(user);
+            if (userNotificationStatus.getStatus()) {
+                smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
+            }
             return;
         }
 

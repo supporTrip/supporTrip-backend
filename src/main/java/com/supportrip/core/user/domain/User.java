@@ -116,10 +116,6 @@ public class User extends BaseEntity {
         return name == null;
     }
 
-    public boolean matchPinNumber(String pinNumber) {
-        return this.pinNumber.equals(pinNumber);
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }

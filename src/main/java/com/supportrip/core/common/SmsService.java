@@ -55,9 +55,9 @@ public class SmsService {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(phoneNumber);
 
-        if (!matcher.matches()) {
-            throw new IllegalArgumentException("Invalid sender number format.");
-        }
+//        if (!matcher.matches()) {
+//            throw new IllegalArgumentException("Invalid sender number format.");
+//        }
     }
 
     @NotNull
