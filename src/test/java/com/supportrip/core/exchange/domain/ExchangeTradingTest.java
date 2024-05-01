@@ -100,10 +100,10 @@ class ExchangeTradingTest {
         ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, TRADING_AMOUNT, null, null, null);
 
         // when
-        long maxExchangeableAmount = exchangeTrading.getMaxExchangeableAmount(EXCHANGE_RATE);
+        long maxExchangeableAmount = exchangeTrading.getMaxExchangeableCurrencyAmount(EXCHANGE_RATE);
 
         // then
-        assertThat(maxExchangeableAmount).isEqualTo(904);
+        assertThat(maxExchangeableAmount).isEqualTo(1);
     }
 
     @Test
@@ -113,7 +113,7 @@ class ExchangeTradingTest {
         ExchangeTrading exchangeTrading = ExchangeTrading.of(null, null, null, null, null, null, null, null, null, null);
 
         // expected
-        assertThatThrownBy(() -> exchangeTrading.getMaxExchangeableAmount(-1.0))
+        assertThatThrownBy(() -> exchangeTrading.getMaxExchangeableCurrencyAmount(-1.0))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

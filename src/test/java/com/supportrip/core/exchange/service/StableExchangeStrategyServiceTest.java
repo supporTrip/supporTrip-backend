@@ -92,7 +92,7 @@ class StableExchangeStrategyServiceTest {
         verify(exchangeService).exchange(any(ExchangeTrading.class), exchangeAmountCaptor.capture());
 
         Long exchangeAmount = exchangeAmountCaptor.getValue();
-        assertThat(exchangeAmount).isEqualTo((TRADING_AMOUNT / 2) - 5000L);
+        assertThat(exchangeAmount).isEqualTo(37L);
     }
 
     @Test
@@ -140,7 +140,7 @@ class StableExchangeStrategyServiceTest {
         // then
         verify(smsService).sendOne(anyString(), anyString());
         verify(exchangeService).exchange(any(ExchangeTrading.class), exchangeAmountCaptor.capture());
-        assertThat(exchangeAmountCaptor.getValue()).isEqualTo(MAX_EXCHANGEABLE_AMOUNT);
+        assertThat(exchangeAmountCaptor.getValue()).isEqualTo(1);
 
         final long ADDITIONAL_POINTS = 200L;
         assertThat(pointWallet.getTotalAmount()).isEqualTo(TRADING_AMOUNT - MAX_EXCHANGEABLE_AMOUNT + ADDITIONAL_POINTS);

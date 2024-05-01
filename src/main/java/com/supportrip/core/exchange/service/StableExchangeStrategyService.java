@@ -13,6 +13,8 @@ import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserNotificationStatus;
 import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 import static com.supportrip.core.exchange.domain.PeriodUnit.THREE_MONTH;
 import static com.supportrip.core.exchange.domain.TradingStrategy.STABLE;
 
+@Service
 @RequiredArgsConstructor
 public class StableExchangeStrategyService implements ExchangeStrategyService {
     private final ExchangeService exchangeService;
@@ -31,12 +34,13 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
     private final UserNotificationStatusRepository userNotificationStatusRepository;
 
     @Override
+    @Transactional
     public void execute(ExchangeTrading exchangeTrading, LocalDate today) {
         Currency targetCurrency = exchangeTrading.getTargetCurrency();
         ExchangeRate exchangeRate = exchangeRateService.getLatestExchangeRate(targetCurrency);
 
         if (exchangeTrading.isLastDate(today)) {
-            long maxExchangeableAmount = exchangeTrading.getMaxExchangeableAmount(exchangeRate.getDealBaseRate());
+            long maxExchangeableAmount = exchangeTrading.getMaxExchangeableCurrencyAmount(exchangeRate.getDealBaseRate());
             exchangeService.exchange(exchangeTrading, maxExchangeableAmount);
 
             List<ForeignAccountTransaction> foreignAccountTransactions =
@@ -55,14 +59,11 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
             long additionalPoint = calculateAdditionalPoint(realExchangingTotal, originalExchangingTotal);
 
             PointWallet pointWallet = pointWalletService.getPointWallet(exchangeTrading.getUser());
-            pointWallet.increase(exchangeTrading.flushCurrentAmount() + additionalPoint);
+            long pointToDeposit = exchangeTrading.flushCurrentAmount() + additionalPoint;
+            pointWalletService.depositPoint(pointWallet, pointToDeposit);
             exchangeTrading.changeToComplete();
 
-            User user = exchangeTrading.getUser();
-            UserNotificationStatus userNotificationStatus = userNotificationStatusRepository.findByUser(user);
-            if (userNotificationStatus.getStatus()) {
-                smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
-            }
+            sendSmsToUser(exchangeTrading);
             return;
         }
 
@@ -74,12 +75,21 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
 
         long weight = calculateExchangeWeight(last3MonthExchangeRateAverage.getExchangeRate(), exchangeRate);
 
-        exchangeService.exchange(exchangeTrading, exchangeAmount + weight);
+        long targetCurrencyExchangeAmount = (long) ((exchangeAmount + weight) / exchangeRate.getDealBaseRate());
+        exchangeService.exchange(exchangeTrading, targetCurrencyExchangeAmount);
     }
 
     @Override
     public boolean canApply(ExchangeTrading exchangeTrading) {
         return STABLE.equals(exchangeTrading.getStrategy());
+    }
+
+    private void sendSmsToUser(ExchangeTrading exchangeTrading) {
+        User user = exchangeTrading.getUser();
+        UserNotificationStatus userNotificationStatus = userNotificationStatusRepository.findByUser(user);
+        if (userNotificationStatus.getStatus()) {
+            smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
+        }
     }
 
     private static long getRealExchangingTotal(List<ForeignAccountTransaction> foreignAccountTransactions,
