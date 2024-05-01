@@ -35,6 +35,9 @@ public class ExchangeTradingService {
             Double totalOriginAmount = 0d;
             for(ForeignAccountTransaction foreignAccountTransaction : foreignAccountTransactions) {
                 totalTargetAmount += foreignAccountTransaction.getAmount();
+                if (foreignAccountTransaction.getTargetExchangeRate() == null) {
+                    continue;
+                }
                 totalOriginAmount += foreignAccountTransaction.getAmount() * foreignAccountTransaction.getTargetExchangeRate();
             }
 
