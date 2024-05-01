@@ -129,12 +129,11 @@ public class ExchangeTrading extends BaseEntity {
         return this.currentAmount / remainDays;
     }
 
-    public long getMaxExchangeableAmount(double dealBaseRate) {
+    public long getMaxExchangeableCurrencyAmount(double dealBaseRate) {
         if (dealBaseRate <= 0.0) {
             throw new IllegalArgumentException("잘못된 환율 정보입니다.");
         }
-        long quotient = (long) (this.currentAmount / dealBaseRate);
-        return (long) (quotient * dealBaseRate);
+        return (long) (this.currentAmount / dealBaseRate);
     }
 
     public long flushCurrentAmount() {

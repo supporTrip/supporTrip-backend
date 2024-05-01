@@ -7,6 +7,8 @@ import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
 import com.supportrip.core.exchange.domain.ExchangeTrading;
 import com.supportrip.core.user.domain.User;
+import com.supportrip.core.user.domain.UserNotificationStatus;
+import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +47,9 @@ class TargetExchangeStrategyServiceTest {
     @Mock
     private SmsService smsService;
 
+    @Mock
+    private UserNotificationStatusRepository userNotificationStatusRepository;
+
     @Captor
     private ArgumentCaptor<Long> exchangeAmountCaptor;
 
@@ -72,7 +77,7 @@ class TargetExchangeStrategyServiceTest {
         verify(exchangeService).exchange(any(ExchangeTrading.class), exchangeAmountCaptor.capture());
 
         Long exchangeAmount = exchangeAmountCaptor.getValue();
-        assertThat(exchangeAmount).isEqualTo(11406L);
+        assertThat(exchangeAmount).isEqualTo((long) (TRADING_AMOUNT / TARGET_EXCHANGE_RATE));
     }
 
     @Test
@@ -113,9 +118,11 @@ class TargetExchangeStrategyServiceTest {
         ExchangeTrading exchangeTrading =
                 ExchangeTrading.of(user, null, JAPAN_CURRENCY, null, null, null, TRADING_AMOUNT, TARGET, TARGET_EXCHANGE_RATE, TODAY);
         PointWallet pointWallet = PointWallet.of(user, 0L);
+        UserNotificationStatus userNotificationStatus = UserNotificationStatus.of(user, true);
 
         given(exchangeRateService.getLatestExchangeRate(any(Currency.class))).willReturn(exchangeRate);
         given(pointWalletService.getPointWallet(any(User.class))).willReturn(pointWallet);
+        given(userNotificationStatusRepository.findByUser(any(User.class))).willReturn(userNotificationStatus);
 
         final long MAX_EXCHANGEABLE_AMOUNT = 12006L;
         doAnswer(invocation -> {
@@ -131,7 +138,7 @@ class TargetExchangeStrategyServiceTest {
         verify(exchangeService).exchange(any(ExchangeTrading.class), exchangeAmountCaptor.capture());
 
         Long exchangeAmount = exchangeAmountCaptor.getValue();
-        assertThat(exchangeAmount).isEqualTo(MAX_EXCHANGEABLE_AMOUNT);
+        assertThat(exchangeAmount).isEqualTo((long) (MAX_EXCHANGEABLE_AMOUNT / NOT_REACHED_DEAL_BASE_RATE));
 
         assertThat(pointWallet.getTotalAmount()).isEqualTo(294L);
         assertThat(exchangeTrading.getStatus()).isEqualTo(COMPLETED);

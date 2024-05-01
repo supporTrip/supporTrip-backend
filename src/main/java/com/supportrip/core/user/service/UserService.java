@@ -13,20 +13,17 @@ import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.common.EncryptService;
 import com.supportrip.core.common.SimpleIdResponse;
 import com.supportrip.core.user.domain.*;
-import com.supportrip.core.user.domain.Gender;
-import com.supportrip.core.user.domain.User;
-import com.supportrip.core.user.domain.UserConsentStatus;
-import com.supportrip.core.user.domain.UserNotificationStatus;
 import com.supportrip.core.user.dto.admin.AdminUserDetailResponse;
+import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdateRequest;
 import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdatedResponse;
 import com.supportrip.core.user.dto.admin.AdminUserResponse;
-import com.supportrip.core.user.dto.admin.AdminUserEnabledUpdateRequest;
 import com.supportrip.core.user.dto.request.SignUpRequest;
 import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
 import com.supportrip.core.user.exception.AlreadySignedUpUserException;
 import com.supportrip.core.user.exception.UserNotFoundException;
 import com.supportrip.core.user.exception.UserNotificationStatusNotFoundException;
+import com.supportrip.core.user.repository.UserCIRepository;
 import com.supportrip.core.user.repository.UserConsentStatusRepository;
 import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import com.supportrip.core.user.repository.UserRepository;
@@ -50,7 +47,7 @@ public class UserService {
     private final UserNotificationStatusRepository userNotificationStatusRepository;
     private final PointWalletService pointWalletService;
     private final EncryptService encryptService;
-
+    private final UserCIRepository userCIRepository;
 
     @Transactional
     public User signUp(Long userId, SignUpRequest request) {
@@ -60,13 +57,15 @@ public class UserService {
             throw new AlreadySignedUpUserException();
         }
 
+        String encryptedPinNumber = encryptService.encryptCredentials(request.getPinNumber());
+
         user.fillInitialUserInfo(
                 request.getName(),
                 request.getEmail(),
                 request.getGender(),
                 request.getPhoneNumber(),
                 request.getBirthDay(),
-                request.getPinNumber()
+                encryptedPinNumber
         );
 
         Bank bank = bankRepository.findByCode(request.getBank()).orElseThrow(BankNotFoundException::new);
@@ -96,6 +95,7 @@ public class UserService {
 
         String token = encryptService.encryptPhoneNum(request.getPhoneNumber());
         UserCI userCI = UserCI.of(user, token);
+        userCIRepository.save(userCI);
 
         return user;
     }
@@ -132,8 +132,8 @@ public class UserService {
             user.setPhoneNumber(request.getPhoneNumber());
         }
 
-        if (request.getBankAccounts()!=null ) {
-            if(request.getBankAccounts().getAccountNum() != null && request.getBankAccounts().getBankCode() != null){
+        if (request.getBankAccounts() != null) {
+            if (request.getBankAccounts().getAccountNum() != null && request.getBankAccounts().getBankCode() != null) {
                 BankRequest bankRequest = request.getBankAccounts();
                 Bank bank = bankRepository.findByCode(bankRequest.getBankCode()).orElseThrow(BankNotFoundException::new);
                 linkedAccount.setBank(bank);
@@ -147,7 +147,7 @@ public class UserService {
         }
 
         if (request.getReceiveStatus() != null) {
-            if(request.getReceiveStatus().equals("true"))
+            if (request.getReceiveStatus().equals("true"))
                 userNotificationStatus.setStatus(true);
             else
                 userNotificationStatus.setStatus(false);
@@ -162,15 +162,15 @@ public class UserService {
 
         List<PointTransactionResponse> pointTransactionRespons = new ArrayList<>();
 
-        for(PointTransaction pointTransaction : pointTransactions){
+        for (PointTransaction pointTransaction : pointTransactions) {
             String transactionDate = pointTransaction.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
             String detail = "";
             String type = "";
-            if(pointTransaction.getType() == PointTransactionType.DEPOSIT){
+            if (pointTransaction.getType() == PointTransactionType.DEPOSIT) {
                 detail = "포인트 입금";
                 type = "+";
             }
-            if(pointTransaction.getType() == PointTransactionType.WITHDRAWAL){
+            if (pointTransaction.getType() == PointTransactionType.WITHDRAWAL) {
                 detail = "포인트 출금";
                 type = "-";
             }
@@ -184,7 +184,7 @@ public class UserService {
 
     public boolean verifyPinNumber(Long userId, String pinNumber) {
         User user = getUser(userId);
-        return user.matchPinNumber(pinNumber);
+        return encryptService.matchCredentials(user.getPinNumber(), pinNumber);
     }
 
     /**
@@ -196,8 +196,10 @@ public class UserService {
         List<AdminUserResponse> adminUserResponses = new ArrayList<>();
         List<User> users = userRepository.findAll();
         for (User user : users) {
-            AdminUserResponse response = AdminUserResponse.of(user);
-            adminUserResponses.add(response);
+            if (user.getEmail() != null) {
+                AdminUserResponse response = AdminUserResponse.of(user);
+                adminUserResponses.add(response);
+            }
         }
         return adminUserResponses;
     }

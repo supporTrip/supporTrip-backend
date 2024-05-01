@@ -2,7 +2,6 @@ package com.supportrip.core.account.service;
 
 import com.supportrip.core.account.domain.LinkedAccount;
 import com.supportrip.core.account.domain.PointTransaction;
-import com.supportrip.core.account.domain.PointTransactionType;
 import com.supportrip.core.account.domain.PointWallet;
 import com.supportrip.core.account.exception.LinkedAccountNotFoundException;
 import com.supportrip.core.account.exception.PointWalletNotFoundException;
@@ -18,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.supportrip.core.account.domain.PointTransactionType.DEPOSIT;
+import static com.supportrip.core.account.domain.PointTransactionType.WITHDRAWAL;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +45,10 @@ public class PointWalletService {
 
     @Transactional
     public void withdrawPoint(User user, Long point) {
+        if (point <= 0) {
+            return;
+        }
+
         PointWallet pointWallet = getPointWallet(user);
 
         Long totalAmount = pointWallet.getTotalAmount();
@@ -54,6 +60,15 @@ public class PointWalletService {
         LinkedAccount linkedAccount = linkedAccountRepository.findByUser(user).orElseThrow(LinkedAccountNotFoundException::new);
 
         pointWallet.reduce(point);
-        pointTransactionRepository.save(PointTransaction.of(pointWallet,linkedAccount,point, PointTransactionType.WITHDRAWAL,pointBalance));
+        pointTransactionRepository.save(PointTransaction.of(pointWallet, linkedAccount, point, WITHDRAWAL, pointBalance));
+    }
+
+    @Transactional
+    public void depositPoint(PointWallet pointWallet, Long point) {
+        pointWallet.increase(point);
+
+        PointTransaction pointTransaction =
+                PointTransaction.of(pointWallet, null, point, DEPOSIT, pointWallet.getTotalAmount());
+        pointTransactionRepository.save(pointTransaction);
     }
 }

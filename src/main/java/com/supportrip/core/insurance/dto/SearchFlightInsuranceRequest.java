@@ -2,10 +2,11 @@ package com.supportrip.core.insurance.dto;
 
 import com.supportrip.core.user.domain.Gender;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
+import javax.swing.*;
+import java.beans.ConstructorProperties;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -28,13 +29,14 @@ public class SearchFlightInsuranceRequest {
     private Boolean passportLoss;
     private Boolean foodPoisoning;
 
+    @ConstructorProperties({"departAt", "arrivalAt", "birthDay", "gender", "planName", "flightDelay", "passportLoss", "foodPoisoning"})
     @Builder(access = AccessLevel.PRIVATE)
     public SearchFlightInsuranceRequest(LocalDateTime departAt, LocalDateTime arrivalAt, LocalDate birthDay, Gender gender, String planName, Boolean flightDelay, Boolean passportLoss, Boolean foodPoisoning) {
         this.departAt = departAt;
         this.arrivalAt = arrivalAt;
         this.birthDay = birthDay;
         this.gender = gender;
-        this.planName = planName == null ? "standard" : planName;
+        this.planName = planName.equals("") ? "standard" : planName;
         this.flightDelay = flightDelay == null ? Boolean.FALSE : flightDelay;
         this.passportLoss = passportLoss == null ? Boolean.FALSE : passportLoss;
         this.foodPoisoning = foodPoisoning == null ? Boolean.FALSE : foodPoisoning;
