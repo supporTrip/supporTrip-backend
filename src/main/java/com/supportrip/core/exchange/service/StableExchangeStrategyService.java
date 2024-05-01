@@ -59,14 +59,11 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
             long additionalPoint = calculateAdditionalPoint(realExchangingTotal, originalExchangingTotal);
 
             PointWallet pointWallet = pointWalletService.getPointWallet(exchangeTrading.getUser());
-            pointWallet.increase(exchangeTrading.flushCurrentAmount() + additionalPoint);
+            long pointToDeposit = exchangeTrading.flushCurrentAmount() + additionalPoint;
+            pointWalletService.depositPoint(pointWallet, pointToDeposit);
             exchangeTrading.changeToComplete();
 
-            User user = exchangeTrading.getUser();
-            UserNotificationStatus userNotificationStatus = userNotificationStatusRepository.findByUser(user);
-            if (userNotificationStatus.getStatus()) {
-                smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
-            }
+            sendSmsToUser(exchangeTrading);
             return;
         }
 
@@ -85,6 +82,14 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
     @Override
     public boolean canApply(ExchangeTrading exchangeTrading) {
         return STABLE.equals(exchangeTrading.getStrategy());
+    }
+
+    private void sendSmsToUser(ExchangeTrading exchangeTrading) {
+        User user = exchangeTrading.getUser();
+        UserNotificationStatus userNotificationStatus = userNotificationStatusRepository.findByUser(user);
+        if (userNotificationStatus.getStatus()) {
+            smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
+        }
     }
 
     private static long getRealExchangingTotal(List<ForeignAccountTransaction> foreignAccountTransactions,

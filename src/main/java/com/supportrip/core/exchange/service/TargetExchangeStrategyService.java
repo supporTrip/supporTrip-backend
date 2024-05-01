@@ -36,14 +36,10 @@ public class TargetExchangeStrategyService implements ExchangeStrategyService {
             exchangeAllAmount(exchangeTrading, exchangeRate);
 
             PointWallet pointWallet = pointWalletService.getPointWallet(exchangeTrading.getUser());
-            pointWallet.increase(exchangeTrading.flushCurrentAmount());
+            pointWalletService.depositPoint(pointWallet, exchangeTrading.flushCurrentAmount());
             exchangeTrading.changeToComplete();
 
-            User user = exchangeTrading.getUser();
-            UserNotificationStatus userNotificationStatus = userNotificationStatusRepository.findByUser(user);
-            if (userNotificationStatus.getStatus()) {
-                smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
-            }
+            sendSmsToUser(exchangeTrading);
             return;
         }
 
@@ -56,6 +52,14 @@ public class TargetExchangeStrategyService implements ExchangeStrategyService {
     @Override
     public boolean canApply(ExchangeTrading exchangeTrading) {
         return TARGET.equals(exchangeTrading.getStrategy());
+    }
+
+    private void sendSmsToUser(ExchangeTrading exchangeTrading) {
+        User user = exchangeTrading.getUser();
+        UserNotificationStatus userNotificationStatus = userNotificationStatusRepository.findByUser(user);
+        if (userNotificationStatus.getStatus()) {
+            smsService.sendOne(makeSmsMessage(exchangeTrading), exchangeTrading.getUser().getSmsPhoneNumber());
+        }
     }
 
     private void exchangeAllAmount(ExchangeTrading exchangeTrading, ExchangeRate exchangeRate) {
