@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 class AccountServiceTest {
@@ -96,7 +95,7 @@ class AccountServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(foreignAccountRepository.findByUser(any())).thenReturn(Optional.of(foreignAccount));
-        when(foreignCurrencyWalletRepository.findByForeignAccountAndTotalAmountGreaterThan(any(), anyDouble()))
+        when(foreignCurrencyWalletRepository.findByForeignAccountAndTotalAmountGreaterThan(any(), anyLong()))
                 .thenReturn(walletList);
         when(countryRepository.findByCurrency(any(Currency.class))).thenReturn(country);
 

@@ -71,7 +71,7 @@ public class AccountService {
 
         ForeignAccount foreignAccount = optionalForeignAccount.get();
 
-        List<ForeignCurrencyWallet> foreignCurrencyWallets = foreignCurrencyWalletRepository.findByForeignAccountAndTotalAmountGreaterThan(foreignAccount, 0.0);
+        List<ForeignCurrencyWallet> foreignCurrencyWallets = foreignCurrencyWalletRepository.findByForeignAccountAndTotalAmountGreaterThan(foreignAccount, -1L);
 
         if (foreignCurrencyWallets.isEmpty())
             return ForeignAccountInfoListResponse.of(true, null);

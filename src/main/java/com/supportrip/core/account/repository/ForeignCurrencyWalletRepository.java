@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ForeignCurrencyWalletRepository extends JpaRepository<ForeignCurrencyWallet, Long> {
-    List<ForeignCurrencyWallet> findByForeignAccountAndTotalAmountGreaterThan(ForeignAccount foreignAccount, Double amount);
+    List<ForeignCurrencyWallet> findByForeignAccountAndTotalAmountGreaterThan(ForeignAccount foreignAccount, Long amount);
 
     List<ForeignCurrencyWallet> findByForeignAccount(ForeignAccount foreignAccount);
 
