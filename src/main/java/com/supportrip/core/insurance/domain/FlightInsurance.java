@@ -41,10 +41,6 @@ public class FlightInsurance {
     @Column(name = "food_poisoning", nullable = false)
     private boolean foodPoisoning;
 
-    public void setPremium(int premium) {
-        this.premium = premium;
-    }
-
     @Builder(access = AccessLevel.PRIVATE)
     private FlightInsurance(Long id, InsuranceCompany insuranceCompany, String name, int premium, int minJoinAge, int maxJoinAge, boolean flightDelay, boolean passportLoss, boolean foodPoisoning) {
         this.id = id;

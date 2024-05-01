@@ -6,9 +6,6 @@ import com.supportrip.core.user.domain.Gender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class FlightInsuranceCalculatePremiumServiceTest {
@@ -25,15 +22,12 @@ class FlightInsuranceCalculatePremiumServiceTest {
         String planName = "standard";
 
         InsuranceCompany insuranceCompany = InsuranceCompany.from("한화생명");
-        List<FlightInsurance> flightInsurances = Arrays.asList(
-                FlightInsurance.of(insuranceCompany, "한화생명 해외여행자 보험", 1000, 15, 60, true, true, true)
-
-        );
+        FlightInsurance flightInsurance = FlightInsurance.of(insuranceCompany, "한화생명 해외여행자 보험", 1000, 15, 60, true, true, true);
 
         //when
-        List<FlightInsurance> result = calculatePremiumService.calculatePremium(age, period, planName, gender, flightInsurances);
+        int premium = calculatePremiumService.calculatePremium(age, period, planName, gender, flightInsurance);
 
         //then
-        assertEquals(5190, result.get(0).getPremium());
+        assertEquals(5190, premium);
     }
 }

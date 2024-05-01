@@ -11,6 +11,7 @@ import com.supportrip.core.insurance.repository.FlightInsuranceRepository;
 import com.supportrip.core.insurance.repository.InsuranceCompanyRepository;
 import com.supportrip.core.insurance.repository.InsuranceSubscriptionRepository;
 import com.supportrip.core.insurance.repository.SpecialContractRepository;
+import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.exception.UserNotFoundException;
 import com.supportrip.core.user.repository.UserRepository;
@@ -52,20 +53,32 @@ public class FlightInsuranceService {
                 request.getFlightDelay(),
                 request.getPassportLoss(), request.getFoodPoisoning());
 
-        //보험료 계산
-        List<FlightInsurance> flightInsurances = calculatePremiumService.calculatePremium(age, period, request.getPlanName(), request.getGender(), filteredInsurances);
+        List<FilterAndCalPremiumResponse> filterAndCalPremiumResponses = calculatedInsurances(age, period, request.getPlanName(), request.getGender(), request.getDepartAt(), request.getArrivalAt(), filteredInsurances);
 
         //특약 상위3개 추가
-        return addTop3SpecialContract(flightInsurances, request.getPlanName(), request.getDepartAt(), request.getArrivalAt());
+        return addTop3SpecialContract(filterAndCalPremiumResponses, request.getPlanName(), request.getDepartAt(), request.getArrivalAt());
+    }
+
+    /**
+     * 보험료 계산해서 DTO에
+     */
+    public List<FilterAndCalPremiumResponse> calculatedInsurances(int age, int period, String planName, Gender gender, LocalDateTime departAt, LocalDateTime arrivalAt, List<FlightInsurance> filteredInsurances) {
+        List<FilterAndCalPremiumResponse> filterAndCalPremiumResponses = new ArrayList<>();
+        for (FlightInsurance filteredInsurance : filteredInsurances) {
+            int calPremium = calculatePremiumService.calculatePremium(age, period, planName, gender, filteredInsurance);
+            FilterAndCalPremiumResponse filterAndCalPremiumResponse = FilterAndCalPremiumResponse.of(filteredInsurance, calPremium, departAt, arrivalAt);
+            filterAndCalPremiumResponses.add(filterAndCalPremiumResponse);
+        }
+        return filterAndCalPremiumResponses;
     }
 
     /**
      * 여행자 보험 상품에 특약 상위3개 리스트로 추가
      */
-    private List<SearchFlightInsuranceResponse> addTop3SpecialContract(List<FlightInsurance> flightInsurances, String planName, LocalDateTime departAt, LocalDateTime arrivalAt) {
+    private List<SearchFlightInsuranceResponse> addTop3SpecialContract(List<FilterAndCalPremiumResponse> flightInsurances, String planName, LocalDateTime departAt, LocalDateTime arrivalAt) {
         List<SearchFlightInsuranceResponse> searchFlightInsuranceResponses = new ArrayList<>();
 
-        for (FlightInsurance flightInsurance : flightInsurances) {
+        for (FilterAndCalPremiumResponse flightInsurance : flightInsurances) {
             List<SpecialContract> findSpecialContracts = specialContractRepository.findByFlightInsuranceId(flightInsurance.getId(), PageRequest.of(0, 3));
             List<Top3SpecialContractResponse> contractTop3Responses = new ArrayList<>();
             for (SpecialContract findSpecialContract : findSpecialContracts) {
