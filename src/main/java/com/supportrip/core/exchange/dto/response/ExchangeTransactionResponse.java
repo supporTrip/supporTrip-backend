@@ -8,13 +8,13 @@ import lombok.Getter;
 public class ExchangeTransactionResponse {
     private final String transactionDate;
     private final String name;
-    private final Long tradingAmount;
+    private final String tradingAmount;
     private final String targetAmount;
     private final String targetAvg;
 
     @Builder(access = AccessLevel.PRIVATE)
 
-    public ExchangeTransactionResponse(String transactionDate, String name, Long tradingAmount, String targetAmount, String targetAvg) {
+    public ExchangeTransactionResponse(String transactionDate, String name, String tradingAmount, String targetAmount, String targetAvg) {
         this.transactionDate = transactionDate;
         this.name = name;
         this.tradingAmount = tradingAmount;
@@ -22,7 +22,7 @@ public class ExchangeTransactionResponse {
         this.targetAvg = targetAvg;
     }
 
-    public static ExchangeTransactionResponse of(String transactionDate, String name, Long tradingAmount, String targetAmount, String targetAvg){
+    public static ExchangeTransactionResponse of(String transactionDate, String name, String tradingAmount, String targetAmount, String targetAvg){
         return ExchangeTransactionResponse.builder()
                 .transactionDate(transactionDate)
                 .name(name)
