@@ -37,4 +37,14 @@ public class ExchangeRateScheduler {
                 exchangeStrategyManager.executeExchangeStrategy(exchangeTrading, today)
         );
     }
+
+    @Transactional
+    public void dailyExchange(LocalDate today) {
+        List<ExchangeTrading> exchangeTradings = exchangeTradingRepository.findByStatus(IN_PROGRESS);
+
+        log.info("{} ExchangeTradings proceed with currency exchange.", exchangeTradings.size());
+        exchangeTradings.forEach(exchangeTrading ->
+                exchangeStrategyManager.executeExchangeStrategy(exchangeTrading, today)
+        );
+    }
 }
