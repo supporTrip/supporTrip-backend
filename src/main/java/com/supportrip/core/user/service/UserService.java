@@ -196,8 +196,10 @@ public class UserService {
         List<AdminUserResponse> adminUserResponses = new ArrayList<>();
         List<User> users = userRepository.findAll();
         for (User user : users) {
-            AdminUserResponse response = AdminUserResponse.of(user);
-            adminUserResponses.add(response);
+            if (user.getEmail() != null) {
+                AdminUserResponse response = AdminUserResponse.of(user);
+                adminUserResponses.add(response);
+            }
         }
         return adminUserResponses;
     }
