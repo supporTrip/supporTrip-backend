@@ -42,7 +42,7 @@ public enum ErrorInfo {
     PHONE_VERIFICATION_NOT_FOUND(NOT_FOUND, "404-11", "해당 휴대폰 인증 정보를 찾을 수 없습니다."),
     USER_NOTIFICATION_STATUS_NOT_FOUND(NOT_FOUND, "404-12", "해당 유저의 알람 설정 상태를 찾을 수 없습니다."),
     COUNTRY_NOT_FOUND(NOT_FOUND, "404-13", "해당 국가 정보를 찾을 수 없습니다."),
-
+    FOREIGN_CURRENCY_WALLET_NOT_FOUND(NOT_FOUND, "404-15", "해당 외화 계좌에 대한 외화 지갑을 찾을 수 없습니다."),
 
     // 500
     UNHANDLED_ERROR(INTERNAL_SERVER_ERROR, "500-01", "알 수 없는 오류가 발생했습니다. 관리자에게 연락해주세요."),

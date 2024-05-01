@@ -1,9 +1,12 @@
 package com.supportrip.core.exchange.service;
 
+import com.supportrip.core.account.domain.ForeignAccount;
 import com.supportrip.core.account.domain.ForeignAccountTransaction;
 import com.supportrip.core.account.domain.ForeignCurrencyWallet;
+import com.supportrip.core.account.exception.ForeignAccountNotFoundException;
 import com.supportrip.core.account.repository.ForeignAccountRepository;
 import com.supportrip.core.account.repository.ForeignAccountTransactionRepository;
+import com.supportrip.core.account.repository.ForeignCurrencyWalletRepository;
 import com.supportrip.core.account.service.ForeignAccountService;
 import com.supportrip.core.account.service.LinkedAccountService;
 import com.supportrip.core.account.service.PointWalletService;
@@ -45,6 +48,7 @@ public class ExchangeService {
     private final ExchangeRateRepository exchangeRateRepository;
     private final LinkedAccountService linkedAccountService;
     private final PointWalletService pointWalletService;
+    private final ForeignCurrencyWalletRepository foreignCurrencyWalletRepository;
 
     @Transactional
     public void exchange(ExchangeTrading exchangeTrading, Long amount) {
@@ -103,8 +107,6 @@ public class ExchangeService {
             throw new ExchangeAccessDeniedException();
         }
 
-        linkedAccountService.withdrawMoney(user, request.getTradingAmount());
-
         pointWalletService.withdrawPoint(user, request.getPoint());
 
         Country country = countryRepository.findById(request.getCountryId()).orElseThrow(CountryNotFoundException::new);
@@ -127,6 +129,23 @@ public class ExchangeService {
                         request.getCompleteDate()
                 )
         );
+
+        linkedAccountService.withdrawMoney(user, request.getTradingAmount());
+
+        ForeignAccount foreignAccount = foreignAccountRepository.findByUser(user).orElseThrow(ForeignAccountNotFoundException::new);
+        Currency krw = currencyRepository.findByCode("KRW").orElseThrow(CurrencyNotFoundException::new);
+        ForeignCurrencyWallet foreignCurrencyWallet = foreignCurrencyWalletRepository.findByForeignAccountAndCurrency(foreignAccount, krw).orElseThrow();
+        foreignCurrencyWallet.deposit(request.getTradingAmount());
+
+        ForeignAccountTransaction foreignAccountTransaction = ForeignAccountTransaction.of(
+                request.getTradingAmount(),
+                null,
+                foreignCurrencyWallet.getTotalAmount(),
+                foreignCurrencyWallet,
+                newExchangeTrading
+        );
+
+        foreignAccountTransactionRepository.save(foreignAccountTransaction);
 
         return newExchangeTrading.getId();
     }
