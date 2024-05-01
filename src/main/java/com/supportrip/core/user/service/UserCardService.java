@@ -1,6 +1,10 @@
 package com.supportrip.core.user.service;
 
+import com.supportrip.core.exchange.domain.Currency;
+import com.supportrip.core.exchange.domain.ExchangeRate;
+import com.supportrip.core.exchange.exception.ExchangeRateNotFoundException;
 import com.supportrip.core.exchange.repository.CountryRepository;
+import com.supportrip.core.exchange.repository.ExchangeRateRepository;
 import com.supportrip.core.feign.service.CardClientService;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserCI;
@@ -21,6 +25,7 @@ public class UserCardService {
     private final CardClientService cardClientService;
     private final UserRepository userRepository;
     private final UserCIRepository userCIRepository;
+    private final ExchangeRateRepository exchangeRateRepository;
     private final CountryRepository countryRepository;
 
     public OverseasListResponse getOverseasList(Long userId, LocalDate fromDate, LocalDate toDate) {
@@ -44,7 +49,11 @@ public class UserCardService {
                 .sorted(Comparator.comparing(UserCardApproval::getApprovedAt).reversed())
                 .map((approval) -> {
                     String code = approval.getCountryCode();
-                    return OverSeasHistory.of(countryRepository.findByCode(code).getName(), LocalDate.from(approval.getApprovedAt()));
+                    return OverSeasHistory.of(countryRepository.findByCode(code).getName(),
+                            approval.getApprovedAt(),
+                            approval.getApprovedAmt(),
+                            approval.getCurrencyCode()
+                    );
                 })
                 .toList();
 
@@ -56,8 +65,12 @@ public class UserCardService {
                 .flatMap(approvalResponse -> approvalResponse.getCardResponseList().stream())
                 .collect(Collectors.groupingBy(UserCardApproval::getCountryCode, Collectors.counting()));
 
-        Map<String, Long> sortedCountsByCountryCode = countsByCountryCode.entrySet().stream()
-                .sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey()))
+        Map<String, Double> amountsByCountryCode = approvalsPerCard.stream()
+                .flatMap(approvalResponse -> approvalResponse.getCardResponseList().stream())
+                .collect(Collectors.groupingBy(UserCardApproval::getCountryCode, Collectors.summingDouble(UserCardApproval::getApprovedAmt)));
+
+        Map<String, Double> sortedAmountsByCountryCode = amountsByCountryCode.entrySet().stream()
+                .sorted(Map.Entry.<String, Double>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey()))
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
@@ -68,14 +81,19 @@ public class UserCardService {
         List<CountryRank> countryRanks = new ArrayList<>();
 
         int rank = 1;
-        for (Map.Entry<String, Long> entry : sortedCountsByCountryCode.entrySet()) {
+        for (Map.Entry<String, Double> entry : sortedAmountsByCountryCode.entrySet()) {
             String code = entry.getKey();
-            Long count = entry.getValue();
+            Double amount = entry.getValue();
+
+            Currency currency = countryRepository.findByCode(code).getCurrency();
+            ExchangeRate currentExchangeRate = exchangeRateRepository.findLatestExchange(currency).orElseThrow(ExchangeRateNotFoundException::new);
+            Long amountToKrw = (long) (amount * currentExchangeRate.getDealBaseRate()) / currentExchangeRate.getTargetCurrencyUnit();
 
             countryRanks.add(CountryRank.builder()
                         .countryName(countryRepository.findByCode(code).getName())
                         .rank(rank++)
-                        .count(count)
+                        .count(countsByCountryCode.get(code))
+                            .amount(amountToKrw)
                         .build()
             );
         }
