@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ExchangeRateServiceTest {
@@ -27,6 +28,9 @@ class ExchangeRateServiceTest {
 
     @Mock
     private ExchangeRateRepository exchangeRateRepository;
+
+    @Mock
+    private ExchangeRateService.ExchangeRateInnerService exchangeRateInnerService;
 
     @Test
     @DisplayName("특정 통화에 대한 최신 환율 정보를 1개 조회한다.")
@@ -52,7 +56,7 @@ class ExchangeRateServiceTest {
     }
 
     @Test
-    @DisplayName("특정 통화에 대한 최신 환율 정보가 이전 환율 정보라면 예외가 발생한다.")
+    @DisplayName("특정 통화에 대한 최신 환율 정보가 이전 환율 정보라면 환율 정보를 가져와 저장한 후 다시 시도하여 같다면 예외가 발생한다.")
     void getOutdatedExchangeRateFail() {
         // given
         final Currency KOREA_CURRENCY = Currency.of("원", "KRW", "₩");
@@ -67,5 +71,7 @@ class ExchangeRateServiceTest {
         // expected
         assertThatThrownBy(() -> exchangeRateService.getLatestExchangeRate(JAPAN_CURRENCY))
                 .isInstanceOf(OutdatedExchangeRateException.class);
+
+        verify(exchangeRateInnerService).fetchAndStoreExchangeRate(any(LocalDate.class));
     }
 }
