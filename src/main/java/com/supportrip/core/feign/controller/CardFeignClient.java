@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 
-@FeignClient(value = "card-service", url = "http://localhost:8081/v2/card")
+@FeignClient(value = "card-service", url = "${mydata.api.card}")
 public interface CardFeignClient {
     @GetMapping("/cards")
     UserCardListResponse getCardList(@RequestParam(value = "token") String token);
