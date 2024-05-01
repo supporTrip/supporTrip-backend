@@ -4,6 +4,7 @@ import com.supportrip.core.exchange.domain.Currency;
 import com.supportrip.core.exchange.domain.ExchangeRate;
 import com.supportrip.core.exchange.dto.response.CurrentExchangeRateResponse;
 import com.supportrip.core.exchange.exception.CurrencyNotFoundException;
+import com.supportrip.core.exchange.exception.ExchangeRateDataFetchException;
 import com.supportrip.core.exchange.exception.ExchangeRateNotFoundException;
 import com.supportrip.core.exchange.exception.OutdatedExchangeRateException;
 import com.supportrip.core.exchange.repository.CurrencyRepository;
@@ -66,7 +67,7 @@ public class ExchangeRateService {
             List<KoreaExImExchangeRateResponse> responses = exchangeRateClient.fetchExchangeRate(searchDate);
 
             if (responses.isEmpty()) {
-                throw new IllegalStateException("오늘은 수출입은행으로부터 환율 정보를 가져올 수 없는 일자입니다. 비영업일이거나 영업 시간 이전일 수 있습니다.");
+                throw new ExchangeRateDataFetchException();
             }
 
             List<ExchangeRate> exchangeRates = responses.stream()

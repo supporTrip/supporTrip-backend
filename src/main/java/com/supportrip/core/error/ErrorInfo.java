@@ -43,11 +43,12 @@ public enum ErrorInfo {
     USER_NOTIFICATION_STATUS_NOT_FOUND(NOT_FOUND, "404-12", "해당 유저의 알람 설정 상태를 찾을 수 없습니다."),
     COUNTRY_NOT_FOUND(NOT_FOUND, "404-13", "해당 국가 정보를 찾을 수 없습니다."),
 
-
     // 500
     UNHANDLED_ERROR(INTERNAL_SERVER_ERROR, "500-01", "알 수 없는 오류가 발생했습니다. 관리자에게 연락해주세요."),
     KAKAO_SERVER_ERROR(INTERNAL_SERVER_ERROR, "500-02", "카카오 서버로부터 인증 정보를 가져오지 못했습니다."),
-    OUTDATED_EXCHANGE_RATE(INTERNAL_SERVER_ERROR, "500-03", "이전 환율 정보로 인해 거래를 진행할 수 없습니다.");
+    OUTDATED_EXCHANGE_RATE(INTERNAL_SERVER_ERROR, "500-03", "이전 환율 정보로 인해 거래를 진행할 수 없습니다."),
+    EXCHANGE_RATE_DATA_FETCH(INTERNAL_SERVER_ERROR, "500-04", "오늘은 수출입은행으로부터 환율 정보를 가져올 수 없는 일자입니다. 비영업일이거나 영업 시간 이전일 수 있습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String errorCode;
