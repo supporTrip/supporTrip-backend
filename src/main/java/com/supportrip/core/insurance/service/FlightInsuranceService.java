@@ -1,5 +1,6 @@
 package com.supportrip.core.insurance.service;
 
+import com.supportrip.core.feign.service.InsuranceClientService;
 import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.insurance.domain.InsuranceCompany;
 import com.supportrip.core.insurance.domain.InsuranceSubscription;
@@ -14,6 +15,7 @@ import com.supportrip.core.insurance.repository.SpecialContractRepository;
 import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.exception.UserNotFoundException;
+import com.supportrip.core.user.repository.UserCIRepository;
 import com.supportrip.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +38,8 @@ public class FlightInsuranceService {
     private final UserRepository userRepository;
     private final InsuranceSubscriptionRepository subscriptionRepository;
     private final InsuranceCompanyRepository insuranceCompanyRepository;
+    private final InsuranceClientService insuranceClientService;
+    private final UserCIRepository userCIRepository;
 
     /**
      * 필터링 검색
@@ -205,6 +209,11 @@ public class FlightInsuranceService {
                 request.getCoverageDetailsTermsContent(), request.getConsentPersonalInfo());
 
         subscriptionRepository.save(insuranceSubscription);
+
+        String token = userCIRepository.findByUser(user).getToken();
+        SendInsuranceRequest sendInsuranceRequest = SendInsuranceRequest.of(flightInsurance.getInsuranceCompany().getName(), flightInsurance.getName(), Integer.toUnsignedLong(request.getTotalPremium()), LocalDate.now());
+
+        insuranceClientService.sendInsuredTransaction(token, sendInsuranceRequest);
 
         return insuranceSubscription;
     }
