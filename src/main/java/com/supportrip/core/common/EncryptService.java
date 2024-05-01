@@ -2,6 +2,7 @@ package com.supportrip.core.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;
@@ -12,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class EncryptService {
 
     private final AesBytesEncryptor encryptor;
+    private final PasswordEncoder passwordEncoder;
 
     public String encryptPhoneNum(String phoneNum) {
         byte[] encrypt = encryptor.encrypt(phoneNum.getBytes(StandardCharsets.UTF_8));
@@ -26,7 +28,7 @@ public class EncryptService {
 
     public String byteArrayToString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
-        for (byte abyte :bytes){
+        for (byte abyte : bytes) {
             sb.append(abyte);
             sb.append(" ");
         }
@@ -40,5 +42,13 @@ public class EncryptService {
             buffer.put((byte) Integer.parseInt(s));
         }
         return buffer.array();
+    }
+
+    public String encryptCredentials(String credentials) {
+        return passwordEncoder.encode(credentials);
+    }
+
+    public boolean matchCredentials(String encryptedCredentials, String rawCredentials) {
+        return passwordEncoder.matches(rawCredentials, encryptedCredentials);
     }
 }

@@ -8,6 +8,8 @@ import com.supportrip.core.account.service.PointWalletService;
 import com.supportrip.core.common.SmsService;
 import com.supportrip.core.exchange.domain.*;
 import com.supportrip.core.user.domain.User;
+import com.supportrip.core.user.domain.UserNotificationStatus;
+import com.supportrip.core.user.repository.UserNotificationStatusRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,6 +53,9 @@ class StableExchangeStrategyServiceTest {
 
     @Mock
     private SmsService smsService;
+
+    @Mock
+    private UserNotificationStatusRepository userNotificationStatusRepository;
 
     @Captor
     private ArgumentCaptor<Long> exchangeAmountCaptor;
@@ -107,6 +112,7 @@ class StableExchangeStrategyServiceTest {
         ExchangeTrading exchangeTrading = ExchangeTrading.of(user, null, JAPAN_CURRENCY, startingExchangeRate,
                 null, null, TRADING_AMOUNT, null, null, TODAY);
         PointWallet pointWallet = PointWallet.of(null, 0L);
+        UserNotificationStatus userNotificationStatus = UserNotificationStatus.of(user, true);
 
         given(exchangeRateService.getLatestExchangeRate(any(Currency.class))).willReturn(exchangeRate);
 
@@ -120,6 +126,7 @@ class StableExchangeStrategyServiceTest {
                         )
                 );
         given(pointWalletService.getPointWallet(any(User.class))).willReturn(pointWallet);
+        given(userNotificationStatusRepository.findByUser(any(User.class))).willReturn(userNotificationStatus);
 
         final long MAX_EXCHANGEABLE_AMOUNT = 1200L;
         doAnswer(invocation -> {

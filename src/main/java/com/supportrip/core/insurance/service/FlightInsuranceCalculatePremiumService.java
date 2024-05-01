@@ -4,36 +4,32 @@ import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.user.domain.Gender;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class FlightInsuranceCalculatePremiumService {
 
     /**
      * 여행기간, 성별, 플랜마다 보험료 책정
      */
-    public List<FlightInsurance> calculatePremium(int age, int period, String planName, Gender gender, List<FlightInsurance> filteredInsurances) {
-        for (FlightInsurance flightInsurance : filteredInsurances) {
-            int premium = flightInsurance.getPremium();
+    public int calculatePremium(int age, int period, String planName, Gender gender, FlightInsurance flightInsurance) {
 
-            if (age < 15) {
-                premium *= 0.7;
-            } else if (age >= 70) {
-                premium *= 1.5;
-            }
+        int calPremium = flightInsurance.getPremium();
 
-            if (planName.equals("advanced")) {
-                premium *= 1.5;
-            }
-
-            if (gender == Gender.FEMALE) {
-                premium += 750;
-            }
-            premium += period * 860;
-
-            flightInsurance.setPremium(premium);
+        if (age < 15) {
+            calPremium *= 0.7;
+        } else if (age >= 70) {
+            calPremium *= 1.5;
         }
 
-        return filteredInsurances;
+        if (planName.equals("advanced")) {
+            calPremium *= 1.5;
+        }
+
+        if (gender == Gender.FEMALE) {
+            calPremium += 750;
+        }
+        calPremium += period * 860;
+
+
+        return calPremium;
     }
 }
