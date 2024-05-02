@@ -3,6 +3,8 @@ package com.supportrip.core.feign.service;
 import com.supportrip.core.feign.controller.InsuranceFeignClient;
 import com.supportrip.core.insurance.dto.InsuranceCorporationListResponse;
 import com.supportrip.core.insurance.dto.InsuranceListResponse;
+import com.supportrip.core.insurance.dto.SendInsuranceRequest;
+import com.supportrip.core.insurance.dto.SendInsuranceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +19,9 @@ public class InsuranceClientService {
 
     public InsuranceCorporationListResponse getInsuredCorporation(String token) {
         return insuranceFeignClient.getInsuredCorporation(token);
+    }
+
+    public SendInsuranceResponse sendInsuredTransaction(String token, SendInsuranceRequest request){
+        return insuranceFeignClient.sendInsuredTransaction(token, request);
     }
 }
