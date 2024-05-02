@@ -38,7 +38,7 @@ public class AdminUserController {
         return userService.userEnabledUpdate(oidcUser.getUserId(), request);
     }
 
-    @GetMapping("/api/v1/users/{userId}/logs")
+    @GetMapping("/api/v1/admin/users/{userId}/logs")
     public UserLogListResponse getUserLog(@AuthenticationPrincipal OidcUser oidcUser) {
         List<UserLog> userLogs = userLogService.getUserLogs(oidcUser.getUserId());
         return UserLogListResponse.from(userLogs);
