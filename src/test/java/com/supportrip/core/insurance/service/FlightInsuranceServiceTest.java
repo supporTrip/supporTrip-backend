@@ -1,5 +1,6 @@
 package com.supportrip.core.insurance.service;
 
+import com.supportrip.core.feign.service.InsuranceClientService;
 import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.insurance.domain.InsuranceCompany;
 import com.supportrip.core.insurance.domain.InsuranceSubscription;
@@ -12,6 +13,8 @@ import com.supportrip.core.insurance.repository.InsuranceSubscriptionRepository;
 import com.supportrip.core.insurance.repository.SpecialContractRepository;
 import com.supportrip.core.user.domain.Gender;
 import com.supportrip.core.user.domain.User;
+import com.supportrip.core.user.domain.UserCI;
+import com.supportrip.core.user.repository.UserCIRepository;
 import com.supportrip.core.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,6 +50,12 @@ class FlightInsuranceServiceTest {
 
     @Mock
     private SpecialContractRepository specialContractRepository;
+
+    @Mock
+    private UserCIRepository userCIRepository;
+
+    @Mock
+    private InsuranceClientService insuranceClientService;
 
     @InjectMocks //의존성 주입
     private FlightInsuranceService flightInsuranceService;
@@ -100,7 +109,6 @@ class FlightInsuranceServiceTest {
     @Test
     @DisplayName("보험신청이력 생성 테스트")
     void insuranceSubscription() {
-// Given
         Long userId = 1L;
         User user = User.initialUserOf("profile_img");
         SubscriptionRequest request = SubscriptionRequest.of(
@@ -112,8 +120,10 @@ class FlightInsuranceServiceTest {
                 true // 개인정보 동의 설정
         );
 
+        InsuranceCompany name = InsuranceCompany.from("삼성생명");
+
         FlightInsurance flightInsurance = FlightInsurance.of(
-                null,
+                name,
                 "해외여행자 보험",
                 3000,
                 15,
@@ -125,6 +135,7 @@ class FlightInsuranceServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(flightInsuranceRepository.findById(request.getFlightInsuranceId())).thenReturn(Optional.of(flightInsurance));
+        when(userCIRepository.findByUser(user)).thenReturn(UserCI.of(user, "1234"));
 
         // When
         InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(userId, request);
