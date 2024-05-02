@@ -39,8 +39,8 @@ public class AdminUserController {
     }
 
     @GetMapping("/api/v1/admin/users/{userId}/logs")
-    public UserLogListResponse getUserLog(@AuthenticationPrincipal OidcUser oidcUser) {
-        List<UserLog> userLogs = userLogService.getUserLogs(oidcUser.getUserId());
+    public UserLogListResponse getUserLog(@PathVariable Long userId) {
+        List<UserLog> userLogs = userLogService.getUserLogs(userId);
         return UserLogListResponse.from(userLogs);
     }
 }
