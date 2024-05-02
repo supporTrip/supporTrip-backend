@@ -8,6 +8,7 @@ import com.supportrip.core.exchange.repository.ExchangeRateRepository;
 import com.supportrip.core.feign.service.CardClientService;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.domain.UserCI;
+import com.supportrip.core.user.domain.UserCardApprovalStatus;
 import com.supportrip.core.user.dto.response.*;
 import com.supportrip.core.user.exception.UserNotFoundException;
 import com.supportrip.core.user.repository.UserCIRepository;
@@ -52,7 +53,8 @@ public class UserCardService {
                     return OverSeasHistory.of(countryRepository.findByCode(code).getName(),
                             approval.getApprovedAt(),
                             approval.getApprovedAmt(),
-                            approval.getCurrencyCode()
+                            approval.getCurrencyCode(),
+                            UserCardApprovalStatus.findByCode(approval.getStatus()).getValue()
                     );
                 })
                 .toList();
@@ -63,14 +65,20 @@ public class UserCardService {
     private List<CountryRank> calculateRanking(List<UserCardApprovalListResponse> approvalsPerCard) {
         Map<String, Long> countsByCountryCode = approvalsPerCard.stream()
                 .flatMap(approvalResponse -> approvalResponse.getCardResponseList().stream())
+                .filter(approval ->"01".equals(approval.getStatus()))
                 .collect(Collectors.groupingBy(UserCardApproval::getCountryCode, Collectors.counting()));
 
-        Map<String, Double> amountsByCountryCode = approvalsPerCard.stream()
+        Map<String, Long> amountsByCountryCode = approvalsPerCard.stream()
                 .flatMap(approvalResponse -> approvalResponse.getCardResponseList().stream())
-                .collect(Collectors.groupingBy(UserCardApproval::getCountryCode, Collectors.summingDouble(UserCardApproval::getApprovedAmt)));
+                .filter(approval -> "01".equals(approval.getStatus()))
+                .collect(Collectors.groupingBy(UserCardApproval::getCountryCode, Collectors.summingLong(approval -> {
+                    Currency currency = countryRepository.findByCode(approval.getCountryCode()).getCurrency();
+                    ExchangeRate currentExchangeRate = exchangeRateRepository.findLatestExchange(currency).orElseThrow(ExchangeRateNotFoundException::new);
+                    return ((long) (approval.getApprovedAmt() * currentExchangeRate.getDealBaseRate()) / currentExchangeRate.getTargetCurrencyUnit());
+                })));
 
-        Map<String, Double> sortedAmountsByCountryCode = amountsByCountryCode.entrySet().stream()
-                .sorted(Map.Entry.<String, Double>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey()))
+        Map<String, Long> sortedAmountsByCountryCode = amountsByCountryCode.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey()))
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
@@ -81,21 +89,11 @@ public class UserCardService {
         List<CountryRank> countryRanks = new ArrayList<>();
 
         int rank = 1;
-        for (Map.Entry<String, Double> entry : sortedAmountsByCountryCode.entrySet()) {
+        for (Map.Entry<String, Long> entry : sortedAmountsByCountryCode.entrySet()) {
             String code = entry.getKey();
-            Double amount = entry.getValue();
+            Long amountToKrw = entry.getValue();
 
-            Currency currency = countryRepository.findByCode(code).getCurrency();
-            ExchangeRate currentExchangeRate = exchangeRateRepository.findLatestExchange(currency).orElseThrow(ExchangeRateNotFoundException::new);
-            Long amountToKrw = (long) (amount * currentExchangeRate.getDealBaseRate()) / currentExchangeRate.getTargetCurrencyUnit();
-
-            countryRanks.add(CountryRank.builder()
-                        .countryName(countryRepository.findByCode(code).getName())
-                        .rank(rank++)
-                        .count(countsByCountryCode.get(code))
-                            .amount(amountToKrw)
-                        .build()
-            );
+            countryRanks.add(CountryRank.of(rank++, countryRepository.findByCode(code).getName(), countsByCountryCode.get(code),amountToKrw));
         }
 
         return countryRanks;
