@@ -3,6 +3,7 @@ package com.supportrip.core.auth.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.auth.dto.AuthPayload;
+import com.supportrip.core.auth.exception.DisabledOrLockedAuthenticationException;
 import com.supportrip.core.auth.jwt.JwtProvider;
 import com.supportrip.core.auth.jwt.JwtUtil;
 import com.supportrip.core.auth.jwt.exception.ExpiredTokenException;
@@ -54,6 +55,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         } catch (ExpiredTokenException exception) {
             sendError((HttpServletResponse) response, exception);
             return;
+        } catch (DisabledOrLockedAuthenticationException exception) {
+            log.info("Login Fail Exception: ", exception);
+            sendError((HttpServletResponse) response, exception);
+            return;
         }
 
         chain.doFilter(request, response);
@@ -62,6 +67,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private Authentication getAuthentication(AuthPayload authPayload) {
         Long userId = authPayload.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(LogLevel.ERROR));
+
+        if (!user.isEnabled() || user.isLocked()) {
+            throw new DisabledOrLockedAuthenticationException();
+        }
+
         OidcUser oidcUser = OidcUser.from(user);
         return new OidcKakaoAuthenticationToken(oidcUser);
     }
