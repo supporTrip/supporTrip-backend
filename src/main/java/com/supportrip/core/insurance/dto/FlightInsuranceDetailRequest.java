@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 
 @Getter
@@ -24,6 +25,7 @@ public class FlightInsuranceDetailRequest {
     @NotNull(message = "가입 종료 날짜를 입력되지 않았습니다.")
     private LocalDateTime coverageEndAt;
 
+    @ConstructorProperties({"premium", "planName", "coverageStartAt", "coverageEndAt"})
     @Builder(access = AccessLevel.PRIVATE)
     private FlightInsuranceDetailRequest(int premium, String planName, LocalDateTime coverageStartAt, LocalDateTime coverageEndAt) {
         this.premium = premium;
