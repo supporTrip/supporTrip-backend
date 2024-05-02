@@ -88,6 +88,7 @@ public class User extends BaseEntity {
                 .birthDay(birthDay)
                 .role(role)
                 .profileImageUrl(profileImageUrl)
+                .enabled(true)
                 .build();
     }
 
