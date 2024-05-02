@@ -63,26 +63,44 @@ public class InsuranceService {
         int age = flightInsuranceService.calculateAge(user.getBirthDay());
         int period = flightInsuranceService.calculatePeriod(departAt, arrivalAt);
         List<FilterAndCalPremiumResponse> calInsus = new ArrayList<>();
-        if(corporations.isEmpty()) {
-            List<FlightInsurance> insurances = flightInsuranceRepository.findTop3ByOrderByPremiumAsc();
 
-            calInsus = flightInsuranceService.calculatedInsurances(age, period, "standard", user.getGender(), departAt, arrivalAt, insurances);
-        }else {
-            for(InsuranceCorporationResponse insuranceCorporationResponse : corporations){
-                List<InsuranceResponse> insurances = insuranceClientService.getInsured(userCI.getToken(), insuranceCorporationResponse.getOrg_code(), "14").getInsuranceList();
-                List<FlightInsurance> insuranceList = new ArrayList<>();
-                    for(InsuranceResponse insuranceResponse : insurances){
-                        InsuranceCompany insuranceCompany = insuranceCompanyRepository.findByName(insuranceResponse.getCorporationName());
-                        insuranceList.add(flightInsuranceRepository.findByInsuranceCompany(insuranceCompany));
-                    }
-                calInsus = flightInsuranceService.calculatedInsurances(age, period, "standard", user.getGender(), departAt, arrivalAt, insuranceList);
-            }
-        }
+        // 보험 추천할 리스트 가져오기
+        List<FlightInsurance> insurances = getInsurances(corporations, userCI.getToken());
+
+        // 입력된 정보에 맞게 보험금 계산
+        calInsus = flightInsuranceService.calculatedInsurances(age, period, "standard", user.getGender(), departAt, arrivalAt, insurances);
 
         for (FilterAndCalPremiumResponse insurance : calInsus) {
             recomandInsuranceResponseList.add(RecomandInsuranceResponse.of(insurance.getCompanyName(), insurance.getInsuranceName(), insurance.getPremium()));
         }
         return RecomandInsuranceListResponse.of(recomandInsuranceResponseList);
+    }
+
+    public List<FlightInsurance> getInsurances(List<InsuranceCorporationResponse> corporations, String token){
+        List<FlightInsurance> insurances = new ArrayList<>();
+        if(corporations.isEmpty()) {
+            insurances = flightInsuranceRepository.findTop3ByOrderByPremiumAsc();
+        } else {
+            for (InsuranceCorporationResponse insuranceCorporationResponse : corporations) {
+                List<InsuranceResponse> insurancesFromAPI = insuranceClientService.getInsured(token, insuranceCorporationResponse.getOrg_code(), "14").getInsuranceList();
+                for (InsuranceResponse insuranceResponse : insurancesFromAPI) {
+                    InsuranceCompany insuranceCompany = insuranceCompanyRepository.findByName(insuranceResponse.getCorporationName());
+                    insurances.add(flightInsuranceRepository.findByInsuranceCompany(insuranceCompany));
+                }
+            }
+        }
+
+        if (insurances.size() >= 3) {
+            insurances = insurances.subList(0, 3);
+        } else {
+            List<FlightInsurance> otherInsurances = flightInsuranceRepository.findTop3ByOrderByPremiumAsc();
+            for (FlightInsurance insurance : insurances) {
+                otherInsurances.remove(insurance);
+            }
+            insurances.addAll(otherInsurances.subList(0, Math.min(3 - insurances.size(), otherInsurances.size())));
+        }
+
+        return insurances;
     }
 
     public List<InsuranceCorporationResponse> getCorporations(UserCI userCI){
