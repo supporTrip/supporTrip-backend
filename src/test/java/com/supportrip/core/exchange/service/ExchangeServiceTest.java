@@ -1,15 +1,17 @@
 package com.supportrip.core.exchange.service;
 
-import com.supportrip.core.account.domain.ForeignAccountTransaction;
-import com.supportrip.core.account.domain.ForeignCurrencyWallet;
-import com.supportrip.core.account.repository.ForeignAccountTransactionRepository;
-import com.supportrip.core.account.service.ForeignAccountService;
-import com.supportrip.core.exchange.domain.Currency;
-import com.supportrip.core.exchange.domain.ExchangeRate;
-import com.supportrip.core.exchange.domain.ExchangeTrading;
-import com.supportrip.core.exchange.domain.TradingStrategy;
-import com.supportrip.core.user.domain.Gender;
-import com.supportrip.core.user.domain.User;
+import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransaction;
+import com.supportrip.core.system.core.account.internal.domain.ForeignCurrencyWallet;
+import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransactionRepository;
+import com.supportrip.core.system.core.account.internal.application.ForeignAccountService;
+import com.supportrip.core.system.core.exchange.internal.domain.Currency;
+import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRate;
+import com.supportrip.core.system.core.exchange.internal.domain.ExchangeTrading;
+import com.supportrip.core.system.core.exchange.internal.domain.TradingStrategy;
+import com.supportrip.core.system.core.exchange.internal.application.ExchangeRateService;
+import com.supportrip.core.system.core.exchange.internal.application.ExchangeService;
+import com.supportrip.core.system.core.user.internal.domain.Gender;
+import com.supportrip.core.system.core.user.internal.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

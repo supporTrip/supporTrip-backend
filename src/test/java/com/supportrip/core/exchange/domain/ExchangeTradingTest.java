@@ -1,7 +1,9 @@
 package com.supportrip.core.exchange.domain;
 
-import com.supportrip.core.exchange.exception.AlreadyCompletedTradingException;
-import com.supportrip.core.exchange.exception.NotEnoughTradingAmountException;
+import com.supportrip.core.system.core.exchange.internal.domain.ExchangeTrading;
+import com.supportrip.core.system.core.exchange.internal.domain.TradingStatus;
+import com.supportrip.core.context.error.exception.badrequest.AlreadyCompletedTradingException;
+import com.supportrip.core.context.error.exception.badrequest.NotEnoughTradingAmountException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

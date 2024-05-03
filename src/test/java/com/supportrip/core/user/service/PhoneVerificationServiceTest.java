@@ -1,9 +1,12 @@
 package com.supportrip.core.user.service;
 
-import com.supportrip.core.user.domain.PhoneVerification;
-import com.supportrip.core.user.domain.User;
-import com.supportrip.core.user.exception.AlreadyVerifiedException;
-import com.supportrip.core.user.repository.PhoneVerificationRepository;
+import com.supportrip.core.system.core.user.internal.domain.PhoneVerification;
+import com.supportrip.core.system.core.user.internal.domain.User;
+import com.supportrip.core.context.error.exception.badrequest.AlreadyVerifiedException;
+import com.supportrip.core.system.core.user.internal.domain.PhoneVerificationRepository;
+import com.supportrip.core.system.core.user.internal.application.PhoneVerificationService;
+import com.supportrip.core.system.core.user.internal.application.UserService;
+import com.supportrip.core.system.core.user.internal.application.VerificationCodeGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
