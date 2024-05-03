@@ -90,7 +90,7 @@ public class ExchangeService {
             throw new ExchangeAccessDeniedException();
         }
 
-        return exchangeTradingRepository.findByUserAndStatus(user, TradingStatus.IN_PROGRESS).stream()
+        return exchangeTradingRepository.findByUserAndStatusOrderByDdayAsc(user, TradingStatus.IN_PROGRESS).stream()
                 .map((et) -> {
                     Country baseCountry = countryRepository.findByCurrency(et.getBaseCurrency());
                     Country targetCountry = countryRepository.findByCurrency(et.getTargetCurrency());
