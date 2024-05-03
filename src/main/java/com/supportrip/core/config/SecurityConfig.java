@@ -1,6 +1,7 @@
 package com.supportrip.core.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.supportrip.core.auth.domain.Role;
 import com.supportrip.core.auth.filter.Http401AuthenticationEntryPoint;
 import com.supportrip.core.auth.filter.Http403AccessDeniedHandler;
 import com.supportrip.core.auth.filter.JwtAuthenticationFilter;
@@ -36,9 +37,13 @@ public class SecurityConfig {
                                 "/api/v1/auth/login",
                                 "/api/v1/flight-insurances/search",
                                 "/health-check",
-                                "/api/v1/flight-insurances/{id}"
+                                "/api/v1/flight-insurances/*"
                         )
                         .permitAll()
+                        .requestMatchers(
+                                "/api/v1/admin/**",
+                                "/api/v1/exchange/daily"
+                        ).hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)

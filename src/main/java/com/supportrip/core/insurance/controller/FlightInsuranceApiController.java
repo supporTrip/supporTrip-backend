@@ -2,12 +2,11 @@ package com.supportrip.core.insurance.controller;
 
 import com.supportrip.core.auth.domain.OidcUser;
 import com.supportrip.core.common.SimpleIdResponse;
-import com.supportrip.core.insurance.domain.FlightInsurance;
 import com.supportrip.core.insurance.domain.InsuranceSubscription;
 import com.supportrip.core.insurance.dto.*;
 import com.supportrip.core.insurance.service.FlightInsuranceService;
-import com.supportrip.core.log.service.UserLogService;
 import com.supportrip.core.insurance.service.InsuranceService;
+import com.supportrip.core.log.service.UserLogService;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.service.UserService;
 import jakarta.validation.Valid;
@@ -74,39 +73,10 @@ public class FlightInsuranceApiController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/api/v1/admin/flight-insurances")
-    public List<AdminFlightInsuranceResponse> adminSearch(@AuthenticationPrincipal OidcUser oidcUser) {
-        return flightInsuranceService.findFlightInsurances(oidcUser.getUserId());
-    }
-
-    @GetMapping("/api/v1/admin/flight-insurances/{id}")
-    public AdminFlightInsuranceResponse details(@AuthenticationPrincipal OidcUser oidcUser,
-                                                @PathVariable("id") Long flightInsuranceId) {
-        return flightInsuranceService.findInsurance(oidcUser.getUserId(), flightInsuranceId);
-    }
-
-    @PostMapping("/api/v1/admin/flight-insurances")
-    public SimpleIdResponse createFlightInsurance(@AuthenticationPrincipal OidcUser oidcUser,
-                                                  @Valid @RequestBody AdminFlightInsuranceRequest request) {
-        FlightInsurance flightInsurance = flightInsuranceService.create(oidcUser.getUserId(), request);
-        return SimpleIdResponse.from(flightInsurance.getId());
-    }
-
-    @PutMapping("/api/v1/admin/flight-insurances")
-    public AdminFlightInsuranceResponse update(@AuthenticationPrincipal OidcUser oidcUser,
-                                               @Valid @RequestBody AdminFlightInsuranceRequest request) {
-        return flightInsuranceService.update(oidcUser.getUserId(), request);
-    }
-
-    @DeleteMapping("/api/v1/admin/flight-insurances/{id}")
-    public void delete(@PathVariable("id") Long flightInsuranceId, @AuthenticationPrincipal OidcUser oidcUser) {
-        flightInsuranceService.delete(oidcUser.getUserId(), flightInsuranceId);
-    }
-
     @GetMapping("/api/v1/flight-insurances/recomands")
     public RecomandInsuranceListResponse getRecomandInsuranceList(@AuthenticationPrincipal OidcUser oidcUser,
                                                                   @RequestParam(name = "departAt") LocalDateTime departAt,
-                                                                  @RequestParam(name = "arrivalAt") LocalDateTime arrivalAt){
+                                                                  @RequestParam(name = "arrivalAt") LocalDateTime arrivalAt) {
         User user = userService.getUser(oidcUser.getUserId());
         return insuranceService.getRecomandInsuranceList(user, departAt, arrivalAt);
     }

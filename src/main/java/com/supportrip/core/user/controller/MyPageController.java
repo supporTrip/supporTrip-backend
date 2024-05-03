@@ -11,10 +11,14 @@ import com.supportrip.core.log.service.UserLogService;
 import com.supportrip.core.user.domain.User;
 import com.supportrip.core.user.dto.request.UserModifiyRequest;
 import com.supportrip.core.user.dto.response.MyPageProfileResponse;
+import com.supportrip.core.user.dto.response.OverseasListResponse;
+import com.supportrip.core.user.service.UserCardService;
 import com.supportrip.core.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ public class MyPageController {
     private final ExchangeTradingService exchangeTradingService;
     private final InsuranceService insuranceService;
     private final UserLogService userLogService;
+    private final UserCardService userCardService;
 
     @GetMapping
     public MyPageProfileResponse getUserProfile(@AuthenticationPrincipal OidcUser oidcUser) {
@@ -64,5 +69,12 @@ public class MyPageController {
     public InsuranceListResponse getInsuranceList(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
         return insuranceService.getInsuranceList(user);
+    }
+
+    @GetMapping("/overseas")
+    public OverseasListResponse getOverseasList(@AuthenticationPrincipal OidcUser oidcUser,
+                                                @RequestParam(value = "from_date") LocalDate fromDate,
+                                                @RequestParam(value = "to_date") LocalDate toDate) {
+        return userCardService.getOverseasList(oidcUser.getUserId(), fromDate, toDate);
     }
 }

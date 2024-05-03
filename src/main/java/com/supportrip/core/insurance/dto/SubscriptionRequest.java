@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 
 @Getter
@@ -33,6 +34,7 @@ public class SubscriptionRequest {
     @NotNull(message = "개인정보 수집 및 이용 동의 여부가 존재하지 않습니다.")
     private Boolean consentPersonalInfo;
 
+    @ConstructorProperties({"flightInsuranceId", "coverageStartAt", "coverageEndAt", "totalPremium", "coverageDetailsTermsContent", "consentPersonalInfo"})
     @Builder(access = AccessLevel.PRIVATE)
     private SubscriptionRequest(Long flightInsuranceId, LocalDateTime coverageStartAt, LocalDateTime coverageEndAt, int totalPremium, Boolean coverageDetailsTermsContent, Boolean consentPersonalInfo) {
         this.flightInsuranceId = flightInsuranceId;

@@ -23,6 +23,7 @@ public enum ErrorInfo {
     OAUTH2_PROCSSING_ERROR(UNAUTHORIZED, "401-02", "소셜 로그인을 진행하던 중 에러가 발생했습니다."),
     EXPIRED_TOKEN(UNAUTHORIZED, "401-03", "만료된 토큰입니다."),
     INVALID_TOKEN_TYPE(UNAUTHORIZED, "401-04", "식별되지 않는 토큰입니다."),
+    DISABLED_OR_LOCKED_AUTHENTICATION(UNAUTHORIZED, "401-05", "차단되었거나 잠긴 계정입니다. 관리자에게 연락해주세요."),
 
     // 403
     ACCESS_DENIED(FORBIDDEN, "403-01", "권한이 없어 해당 요청을 처리할 수 없습니다."),
