@@ -30,13 +30,14 @@ public class ExchangeRateScheduler {
         LocalDate today = LocalDate.now();
         exchangeRateService.fetchAndStoreExchangeRate(today);
 
-        List<ExchangeTrading> exchangeTradings = exchangeTradingRepository.findByStatus(IN_PROGRESS);
-
-        log.info("{} ExchangeTradings proceed with currency exchange.", exchangeTradings.size());
-        exchangeTradings.forEach(exchangeTrading -> executeAutoExchange(today, exchangeTrading));
+        findAndExecuteAutoExchangeInProgress(today);
     }
 
     public void dailyExchange(LocalDate today) {
+        findAndExecuteAutoExchangeInProgress(today);
+    }
+
+    private void findAndExecuteAutoExchangeInProgress(LocalDate today) {
         List<ExchangeTrading> exchangeTradings = exchangeTradingRepository.findByStatus(IN_PROGRESS);
 
         log.info("{} ExchangeTradings proceed with currency exchange.", exchangeTradings.size());

@@ -40,7 +40,10 @@ public class UserCardService {
                 .map((card) -> cardClientService.getCardApprovalList(card.getCardId(), userCI.getToken(), fromDate, toDate))
                 .toList();
 
-        List<CountryRank> ranking = calculateRanking(approvalsPerCard);
+        List<CountryRankingResult> countryRankingResults = calculateRanking(approvalsPerCard);
+        List<CountryRank> ranking = countryRankingResults.stream()
+                .map(CountryRank::from)
+                .toList();
 
         List<UserCardApproval> userCardApprovals = approvalsPerCard.stream()
                 .flatMap(approvalResponse -> approvalResponse.getCardResponseList().stream())
@@ -62,10 +65,23 @@ public class UserCardService {
         return OverseasListResponse.of(ranking, overSeasHistories);
     }
 
-    private List<CountryRank> calculateRanking(List<UserCardApprovalListResponse> approvalsPerCard) {
+    public List<CountryRankingResult> getCountryRankingResult(User user, LocalDate fromDate, LocalDate toDate) {
+        UserCI userCI = userCIRepository.findByUser(user);
+
+        UserCardListResponse userCards = cardClientService.getCardList(userCI.getToken());
+
+        List<UserCardApprovalListResponse> approvalsPerCard = userCards.getCardResponseList()
+                .stream()
+                .map((card) -> cardClientService.getCardApprovalList(card.getCardId(), userCI.getToken(), fromDate, toDate))
+                .toList();
+
+        return calculateRanking(approvalsPerCard);
+    }
+
+    private List<CountryRankingResult> calculateRanking(List<UserCardApprovalListResponse> approvalsPerCard) {
         Map<String, Long> countsByCountryCode = approvalsPerCard.stream()
                 .flatMap(approvalResponse -> approvalResponse.getCardResponseList().stream())
-                .filter(approval ->"01".equals(approval.getStatus()))
+                .filter(approval -> "01".equals(approval.getStatus()))
                 .collect(Collectors.groupingBy(UserCardApproval::getCountryCode, Collectors.counting()));
 
         Map<String, Long> amountsByCountryCode = approvalsPerCard.stream()
@@ -86,14 +102,18 @@ public class UserCardService {
                         LinkedHashMap::new
                 ));
 
-        List<CountryRank> countryRanks = new ArrayList<>();
+        return convertToCountryRanking(sortedAmountsByCountryCode, countsByCountryCode);
+    }
+
+    private List<CountryRankingResult> convertToCountryRanking(Map<String, Long> sortedAmountsByCountryCode, Map<String, Long> countsByCountryCode) {
+        List<CountryRankingResult> countryRanks = new ArrayList<>();
 
         int rank = 1;
         for (Map.Entry<String, Long> entry : sortedAmountsByCountryCode.entrySet()) {
             String code = entry.getKey();
             Long amountToKrw = entry.getValue();
 
-            countryRanks.add(CountryRank.of(rank++, countryRepository.findByCode(code).getName(), countsByCountryCode.get(code),amountToKrw));
+            countryRanks.add(CountryRankingResult.of(rank++, countryRepository.findByCode(code), countsByCountryCode.get(code), amountToKrw));
         }
 
         return countryRanks;

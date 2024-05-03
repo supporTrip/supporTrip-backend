@@ -1,6 +1,9 @@
 package com.supportrip.core.user.dto.response;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
@@ -25,5 +28,14 @@ public class CountryRank {
                 .count(count)
                 .amount(amount)
                 .build();
+    }
+
+    public static CountryRank from(CountryRankingResult countryRankingResult) {
+        return of(
+                countryRankingResult.getRank(),
+                countryRankingResult.getCountry().getName(),
+                countryRankingResult.getCount(),
+                countryRankingResult.getAmount()
+        );
     }
 }
