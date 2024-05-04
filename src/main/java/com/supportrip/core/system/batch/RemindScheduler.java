@@ -69,12 +69,16 @@ public class RemindScheduler {
     }
 
     private String makeMessage(String name, List<Currency> lowCostCurrencies) {
-        String currencyNames = lowCostCurrencies.stream()
-                .map(Currency::getName)
-                .collect(Collectors.joining(", "));
+        String currencyNames = joinCurrencyNames(lowCostCurrencies);
 
         return String.format("[서포트립] %s님이 이전에 자주 결제하신 %s(이)가 현재 3개월 평균 환율보다 저렴해요. " +
                 "서포트립을 통해 자동으로 환전되는 편리한 경험을 즐겨보세요!", name, currencyNames);
+    }
+
+    private static String joinCurrencyNames(List<Currency> lowCostCurrencies) {
+        return lowCostCurrencies.stream()
+                .map(Currency::getName)
+                .collect(Collectors.joining(", "));
     }
 
     @NotNull

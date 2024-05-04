@@ -14,10 +14,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BatchExecuteController {
     private final ExchangeScheduler exchangeScheduler;
+    private final RemindScheduler remindScheduler;
 
     @PostMapping("/api/v1/exchange/daily")
     public void executeExchange(@RequestBody Map<String, LocalDate> request) {
         LocalDate today = request.get("today");
         exchangeScheduler.dailyExchange(today);
+    }
+
+    @PostMapping("/api/v1/users/remind")
+    public void sendRemindSmsToUserWithMyData() {
+        remindScheduler.remindLowCostCurrencyToUser();
     }
 }
