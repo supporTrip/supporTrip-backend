@@ -18,7 +18,7 @@ import static com.supportrip.core.system.core.exchange.internal.domain.TradingSt
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ExchangeRateScheduler {
+public class ExchangeScheduler {
     private final ExchangeTradingRepository exchangeTradingRepository;
     private final ExchangeStrategyManager exchangeStrategyManager;
     private final ExchangeRateService.ExchangeRateInnerService exchangeRateService;
