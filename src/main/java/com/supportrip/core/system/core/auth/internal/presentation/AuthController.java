@@ -1,9 +1,9 @@
 package com.supportrip.core.system.core.auth.internal.presentation;
 
+import com.supportrip.core.system.core.auth.internal.application.AuthService;
 import com.supportrip.core.system.core.auth.internal.domain.OidcUser;
 import com.supportrip.core.system.core.auth.internal.presentation.response.LoginResponse;
 import com.supportrip.core.system.core.auth.internal.presentation.response.RegenerateAccessTokenResponse;
-import com.supportrip.core.system.core.auth.internal.application.AuthService;
 import com.supportrip.core.system.core.userlog.internal.application.UserLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

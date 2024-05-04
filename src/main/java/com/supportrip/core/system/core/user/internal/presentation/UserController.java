@@ -1,25 +1,24 @@
 package com.supportrip.core.system.core.user.internal.presentation;
 
-import com.supportrip.core.system.core.account.internal.domain.PointWallet;
-import com.supportrip.core.system.core.account.internal.application.PointWalletService;
-import com.supportrip.core.system.core.auth.internal.domain.OidcUser;
-import com.supportrip.core.system.common.internal.SimpleIdResponse;
 import com.supportrip.core.system.common.external.SmsService;
+import com.supportrip.core.system.common.internal.SimpleIdResponse;
+import com.supportrip.core.system.core.account.internal.application.PointWalletService;
+import com.supportrip.core.system.core.account.internal.domain.PointWallet;
+import com.supportrip.core.system.core.auth.internal.domain.OidcUser;
 import com.supportrip.core.system.core.insurance.internal.presentation.response.UserInfoResponse;
-import com.supportrip.core.system.core.user.internal.presentation.request.PinNumberVerificationRequest;
-import com.supportrip.core.system.core.user.internal.presentation.request.SignUpRequest;
-import com.supportrip.core.system.core.user.internal.presentation.response.CurrentUserPointResponse;
+import com.supportrip.core.system.core.user.internal.application.PhoneVerificationService;
+import com.supportrip.core.system.core.user.internal.application.UserService;
 import com.supportrip.core.system.core.user.internal.domain.PhoneVerification;
 import com.supportrip.core.system.core.user.internal.domain.User;
-import com.supportrip.core.system.core.user.internal.application.PhoneVerificationService;
-import com.supportrip.core.system.core.userlog.internal.application.UserLogService;
 import com.supportrip.core.system.core.user.internal.presentation.request.InitiatePhoneVerificationRequest;
+import com.supportrip.core.system.core.user.internal.presentation.request.PinNumberVerificationRequest;
+import com.supportrip.core.system.core.user.internal.presentation.request.SignUpRequest;
 import com.supportrip.core.system.core.user.internal.presentation.request.VerifyPhoneVerificationCodeRequest;
+import com.supportrip.core.system.core.user.internal.presentation.response.CurrentUserPointResponse;
 import com.supportrip.core.system.core.user.internal.presentation.response.PinNumberVerificationResponse;
-import com.supportrip.core.system.core.user.internal.application.UserService;
+import com.supportrip.core.system.core.userlog.internal.application.UserLogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,9 +43,9 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/users")
-    public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
+    public UserInfoResponse getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
         User user = userService.getUser(oidcUser.getUserId());
-        return ResponseEntity.ok(UserInfoResponse.of(user.getName(), user.getGender(), user.getBirthDay()));
+        return UserInfoResponse.from(user);
     }
 
     @PutMapping("/api/v1/users/phone-verification")
