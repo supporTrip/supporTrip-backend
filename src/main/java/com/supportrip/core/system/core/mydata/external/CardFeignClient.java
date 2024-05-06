@@ -1,5 +1,6 @@
 package com.supportrip.core.system.core.mydata.external;
 
+import com.supportrip.core.context.config.FeignClientConfig;
 import com.supportrip.core.system.core.mydata.external.response.UserCardApprovalListResponse;
 import com.supportrip.core.system.core.mydata.external.response.UserCardListResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -18,7 +19,6 @@ public interface CardFeignClient {
     @GetMapping("/cards/{card_id}/approval-overseas")
     UserCardApprovalListResponse getCardApprovalList(@PathVariable("card_id") Long cardId,
                                                      @RequestParam(value = "token") String token,
-                                                     @RequestParam(value="from_date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-                                                     @RequestParam(value="to_date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate);
-
+                                                     @RequestParam(value = "from_date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+                                                     @RequestParam(value = "to_date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate);
 }

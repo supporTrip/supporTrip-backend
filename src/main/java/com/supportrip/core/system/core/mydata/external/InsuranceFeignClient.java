@@ -1,8 +1,8 @@
 package com.supportrip.core.system.core.mydata.external;
 
+import com.supportrip.core.system.core.insurance.internal.presentation.request.SendInsuranceRequest;
 import com.supportrip.core.system.core.insurance.internal.presentation.response.InsuranceCorporationListResponse;
 import com.supportrip.core.system.core.insurance.internal.presentation.response.InsuranceListResponse;
-import com.supportrip.core.system.core.insurance.internal.presentation.request.SendInsuranceRequest;
 import com.supportrip.core.system.core.insurance.internal.presentation.response.SendInsuranceResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,5 +22,6 @@ public interface InsuranceFeignClient {
     InsuranceCorporationListResponse getInsuredCorporation(@RequestParam(value = "token") String token);
 
     @PostMapping("insured")
-    SendInsuranceResponse sendInsuredTransaction(@RequestParam(value = "token")String token, @RequestBody SendInsuranceRequest request);
+    SendInsuranceResponse sendInsuredTransaction(@RequestParam(value = "token") String token,
+                                                 @RequestBody SendInsuranceRequest request);
 }
