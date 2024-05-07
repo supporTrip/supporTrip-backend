@@ -118,15 +118,15 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
 
     private static long calculateExchangeWeight(double exchangeRateAverage, ExchangeRate exchangeRate, long exchangeAmount) {
         double dealBaseRate = exchangeRate.getDealBaseRate();
-        double differenceRate = calculateDifferenceRateInRange(exchangeRateAverage, exchangeAmount, dealBaseRate);
+        double differenceRate = calculateDifferenceRateInRange(exchangeRateAverage, dealBaseRate);
 
         return (long) (differenceRate * exchangeAmount);
     }
 
-    private static double calculateDifferenceRateInRange(double exchangeRateAverage, long exchangeAmount, double dealBaseRate) {
+    private static double calculateDifferenceRateInRange(double exchangeRateAverage, double dealBaseRate) {
         final int MAX_AVAILABLE_RATE_RANGE = 20;
 
-        double differenceRate = (exchangeRateAverage - dealBaseRate) / exchangeAmount;
+        double differenceRate = (exchangeRateAverage - dealBaseRate) / exchangeRateAverage;
         if (differenceRate > MAX_AVAILABLE_RATE_RANGE) {
             return MAX_AVAILABLE_RATE_RANGE;
         } else if (differenceRate < -MAX_AVAILABLE_RATE_RANGE) {
