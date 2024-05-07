@@ -1,16 +1,14 @@
 package com.supportrip.core.system.core.exchange.internal.application;
 
+import com.supportrip.core.context.error.exception.internalservererror.OutdatedExchangeRateException;
 import com.supportrip.core.system.core.exchange.internal.domain.Currency;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRate;
-import com.supportrip.core.context.error.exception.internalservererror.OutdatedExchangeRateException;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRateRepository;
-import com.supportrip.core.system.core.exchange.internal.application.ExchangeRateService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -21,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@ExtendWith(MockitoExtension.class)
+@MockitoSettings
 class ExchangeRateServiceTest {
 
     @InjectMocks

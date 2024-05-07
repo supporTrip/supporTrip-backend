@@ -1,29 +1,16 @@
 package com.supportrip.core.system.core.insurance.internal.application;
 
-import com.supportrip.core.system.core.mydata.external.InsuranceClient;
-import com.supportrip.core.system.core.insurance.internal.domain.FlightInsurance;
-import com.supportrip.core.system.core.insurance.internal.domain.InsuranceCompany;
-import com.supportrip.core.system.core.insurance.internal.domain.InsuranceSubscription;
-import com.supportrip.core.system.core.insurance.internal.domain.SpecialContract;
+import com.supportrip.core.system.core.insurance.internal.domain.*;
 import com.supportrip.core.system.core.insurance.internal.presentation.request.SearchFlightInsuranceRequest;
-import com.supportrip.core.system.core.insurance.internal.presentation.response.SearchFlightInsuranceResponse;
 import com.supportrip.core.system.core.insurance.internal.presentation.request.SubscriptionRequest;
-import com.supportrip.core.system.core.insurance.internal.domain.FlightInsuranceRepository;
-import com.supportrip.core.system.core.insurance.internal.domain.InsuranceSubscriptionRepository;
-import com.supportrip.core.system.core.insurance.internal.domain.SpecialContractRepository;
-import com.supportrip.core.system.core.insurance.internal.application.FlightInsuranceCalculatePremiumService;
-import com.supportrip.core.system.core.insurance.internal.application.FlightInsuranceService;
-import com.supportrip.core.system.core.user.internal.domain.Gender;
-import com.supportrip.core.system.core.user.internal.domain.User;
-import com.supportrip.core.system.core.user.internal.domain.UserCI;
-import com.supportrip.core.system.core.user.internal.domain.UserCIRepository;
-import com.supportrip.core.system.core.user.internal.domain.UserRepository;
+import com.supportrip.core.system.core.insurance.internal.presentation.response.SearchFlightInsuranceResponse;
+import com.supportrip.core.system.core.mydata.external.InsuranceClient;
+import com.supportrip.core.system.core.user.internal.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,11 +18,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@MockitoSettings
 class FlightInsuranceServiceTest {
 
     @Mock //목객체 생성

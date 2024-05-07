@@ -1,18 +1,14 @@
 package com.supportrip.core.system.core.user.internal.application;
 
-import com.supportrip.core.system.core.user.internal.domain.PhoneVerification;
-import com.supportrip.core.system.core.user.internal.domain.User;
 import com.supportrip.core.context.error.exception.badrequest.AlreadyVerifiedException;
+import com.supportrip.core.system.core.user.internal.domain.PhoneVerification;
 import com.supportrip.core.system.core.user.internal.domain.PhoneVerificationRepository;
-import com.supportrip.core.system.core.user.internal.application.PhoneVerificationService;
-import com.supportrip.core.system.core.user.internal.application.UserService;
-import com.supportrip.core.system.core.user.internal.application.VerificationCodeGenerator;
+import com.supportrip.core.system.core.user.internal.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
@@ -25,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@ExtendWith(MockitoExtension.class)
+@MockitoSettings
 class PhoneVerificationServiceTest {
 
     @InjectMocks

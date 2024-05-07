@@ -4,13 +4,11 @@ import com.supportrip.core.system.core.exchange.internal.domain.Currency;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRate;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRateRangeStatistics;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRateRepository;
-import com.supportrip.core.system.core.exchange.internal.application.ExchangeRateStatisticsService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-@ExtendWith(MockitoExtension.class)
+@MockitoSettings
 class ExchangeRateStatisticsServiceTest {
 
     @InjectMocks

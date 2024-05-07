@@ -1,23 +1,20 @@
 package com.supportrip.core.system.core.exchange.internal.application;
 
-import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransaction;
-import com.supportrip.core.system.core.account.internal.domain.ForeignCurrencyWallet;
-import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransactionRepository;
 import com.supportrip.core.system.core.account.internal.application.ForeignAccountService;
+import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransaction;
+import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransactionRepository;
+import com.supportrip.core.system.core.account.internal.domain.ForeignCurrencyWallet;
 import com.supportrip.core.system.core.exchange.internal.domain.Currency;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRate;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeTrading;
 import com.supportrip.core.system.core.exchange.internal.domain.TradingStrategy;
-import com.supportrip.core.system.core.exchange.internal.application.ExchangeRateService;
-import com.supportrip.core.system.core.exchange.internal.application.ExchangeService;
 import com.supportrip.core.system.core.user.internal.domain.Gender;
 import com.supportrip.core.system.core.user.internal.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 
 import java.time.LocalDate;
 
@@ -26,7 +23,7 @@ import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@ExtendWith(MockitoExtension.class)
+@MockitoSettings
 class ExchangeServiceTest {
     private static final String NAME = "가나다";
     private static final String EMAIL = "aaaaa@gmail.com";

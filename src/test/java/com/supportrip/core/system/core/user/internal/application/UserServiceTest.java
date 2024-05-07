@@ -1,25 +1,18 @@
 package com.supportrip.core.system.core.user.internal.application;
 
+import com.supportrip.core.context.error.exception.badrequest.AlreadySignedUpUserException;
+import com.supportrip.core.system.common.internal.EncryptService;
 import com.supportrip.core.system.core.account.internal.domain.Bank;
 import com.supportrip.core.system.core.account.internal.domain.BankRepository;
 import com.supportrip.core.system.core.account.internal.domain.LinkedAccountRepository;
 import com.supportrip.core.system.core.account.internal.domain.PointWalletRepository;
-import com.supportrip.core.system.common.internal.EncryptService;
-import com.supportrip.core.system.core.user.internal.domain.Gender;
-import com.supportrip.core.system.core.user.internal.domain.User;
+import com.supportrip.core.system.core.user.internal.domain.*;
 import com.supportrip.core.system.core.user.internal.presentation.request.SignUpRequest;
-import com.supportrip.core.context.error.exception.badrequest.AlreadySignedUpUserException;
-import com.supportrip.core.system.core.user.internal.domain.UserCIRepository;
-import com.supportrip.core.system.core.user.internal.domain.UserConsentStatusRepository;
-import com.supportrip.core.system.core.user.internal.domain.UserNotificationStatusRepository;
-import com.supportrip.core.system.core.user.internal.domain.UserRepository;
-import com.supportrip.core.system.core.user.internal.application.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -30,7 +23,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-@ExtendWith(MockitoExtension.class)
+@MockitoSettings
 class UserServiceTest {
     private static final Long USER_ID = 1L;
     private static final String NAME = "가나다";

@@ -12,12 +12,11 @@ import com.supportrip.core.system.core.user.internal.domain.UserNotificationStat
 import com.supportrip.core.system.core.user.internal.domain.UserNotificationStatusRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -30,7 +29,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.Mockito.doAnswer;
 
-@ExtendWith(MockitoExtension.class)
+@MockitoSettings
 class StableExchangeStrategyServiceTest {
 
     @InjectMocks
