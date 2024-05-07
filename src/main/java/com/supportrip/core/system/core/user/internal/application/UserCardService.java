@@ -9,7 +9,7 @@ import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRateRepo
 import com.supportrip.core.system.core.mydata.external.response.UserCardApproval;
 import com.supportrip.core.system.core.mydata.external.response.UserCardApprovalListResponse;
 import com.supportrip.core.system.core.mydata.external.response.UserCardListResponse;
-import com.supportrip.core.system.core.mydata.internal.application.CardClientService;
+import com.supportrip.core.system.core.mydata.external.MyDataCardClient;
 import com.supportrip.core.system.core.user.internal.domain.*;
 import com.supportrip.core.system.core.user.internal.presentation.response.CountryRank;
 import com.supportrip.core.system.core.user.internal.presentation.response.CountryRankingResult;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class UserCardService {
-    private final CardClientService cardClientService;
+    private final MyDataCardClient myDataCardClient;
     private final UserRepository userRepository;
     private final UserCIRepository userCIRepository;
     private final ExchangeRateRepository exchangeRateRepository;
@@ -35,11 +35,11 @@ public class UserCardService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         UserCI userCI = userCIRepository.findByUser(user);
 
-        UserCardListResponse userCards = cardClientService.getCardList(userCI.getToken());
+        UserCardListResponse userCards = myDataCardClient.getCardList(userCI.getToken());
 
         List<UserCardApprovalListResponse> approvalsPerCard = userCards.getCardResponseList()
                 .stream()
-                .map((card) -> cardClientService.getCardApprovalList(card.getCardId(), userCI.getToken(), fromDate, toDate))
+                .map((card) -> myDataCardClient.getCardApprovalList(card.getCardId(), userCI.getToken(), fromDate, toDate))
                 .toList();
 
         List<CountryRankingResult> countryRankingResults = calculateRanking(approvalsPerCard);
@@ -70,11 +70,11 @@ public class UserCardService {
     public List<CountryRankingResult> getCountryRankingResult(User user, LocalDate fromDate, LocalDate toDate) {
         UserCI userCI = userCIRepository.findByUser(user);
 
-        UserCardListResponse userCards = cardClientService.getCardList(userCI.getToken());
+        UserCardListResponse userCards = myDataCardClient.getCardList(userCI.getToken());
 
         List<UserCardApprovalListResponse> approvalsPerCard = userCards.getCardResponseList()
                 .stream()
-                .map((card) -> cardClientService.getCardApprovalList(card.getCardId(), userCI.getToken(), fromDate, toDate))
+                .map((card) -> myDataCardClient.getCardApprovalList(card.getCardId(), userCI.getToken(), fromDate, toDate))
                 .toList();
 
         return calculateRanking(approvalsPerCard);

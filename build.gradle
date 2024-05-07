@@ -42,6 +42,10 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    implementation "io.github.resilience4j:resilience4j-circuitbreaker"
+    implementation "io.github.resilience4j:resilience4j-ratelimiter"
+    implementation "io.github.resilience4j:resilience4j-retry"
 }
 
 ext {
