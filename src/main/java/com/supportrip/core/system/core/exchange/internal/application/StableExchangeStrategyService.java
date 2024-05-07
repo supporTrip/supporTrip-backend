@@ -1,10 +1,10 @@
 package com.supportrip.core.system.core.exchange.internal.application;
 
-import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransaction;
-import com.supportrip.core.system.core.account.internal.domain.PointWallet;
+import com.supportrip.core.system.common.external.SmsService;
 import com.supportrip.core.system.core.account.internal.application.ForeignAccountService;
 import com.supportrip.core.system.core.account.internal.application.PointWalletService;
-import com.supportrip.core.system.common.external.SmsService;
+import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransaction;
+import com.supportrip.core.system.core.account.internal.domain.PointWallet;
 import com.supportrip.core.system.core.exchange.internal.domain.Currency;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRate;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRateRangeStatistics;
@@ -73,7 +73,7 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
         ExchangeRateRangeStatistics last3MonthExchangeRateAverage =
                 exchangeRateStatisticsService.getExchangeRateAverage(targetCurrency, THREE_MONTH);
 
-        long weight = calculateExchangeWeight(last3MonthExchangeRateAverage.getExchangeRate(), exchangeRate);
+        long weight = calculateExchangeWeight(last3MonthExchangeRateAverage.getExchangeRate(), exchangeRate, exchangeAmount);
 
         long targetCurrencyExchangeAmount = (long) ((exchangeAmount + weight) / exchangeRate.getDealBaseRate());
         exchangeService.exchange(exchangeTrading, targetCurrencyExchangeAmount);
@@ -116,11 +116,22 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
         return 0L;
     }
 
-    private static long calculateExchangeWeight(double exchangeRateAverage, ExchangeRate exchangeRate) {
-        // TODO: 가중치에 대한 로직 고민
-        final long weight = 100;
-        double difference = exchangeRateAverage - exchangeRate.getDealBaseRate();
-        return (long) (difference * weight);
+    private static long calculateExchangeWeight(double exchangeRateAverage, ExchangeRate exchangeRate, long exchangeAmount) {
+        double differenceRate = calculateDifferenceRateInRange(exchangeRateAverage, exchangeAmount, exchangeRate.getDealBaseRate());
+
+        return (long) (differenceRate * exchangeAmount);
+    }
+
+    private static double calculateDifferenceRateInRange(double exchangeRateAverage, long exchangeAmount, double dealBaseRate) {
+        final int MAX_AVAILABLE_RATE_RANGE = 20;
+
+        double differenceRate = (exchangeRateAverage - dealBaseRate) / exchangeAmount;
+        if (differenceRate > MAX_AVAILABLE_RATE_RANGE) {
+            return MAX_AVAILABLE_RATE_RANGE;
+        } else if (differenceRate < -MAX_AVAILABLE_RATE_RANGE) {
+            return -MAX_AVAILABLE_RATE_RANGE;
+        }
+        return differenceRate;
     }
 
     private String makeSmsMessage(ExchangeTrading exchangeTrading) {
