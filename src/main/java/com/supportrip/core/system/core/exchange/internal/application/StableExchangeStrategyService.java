@@ -117,7 +117,8 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
     }
 
     private static long calculateExchangeWeight(double exchangeRateAverage, ExchangeRate exchangeRate, long exchangeAmount) {
-        double differenceRate = calculateDifferenceRateInRange(exchangeRateAverage, exchangeAmount, exchangeRate.getDealBaseRate());
+        double dealBaseRate = exchangeRate.getDealBaseRate();
+        double differenceRate = calculateDifferenceRateInRange(exchangeRateAverage, exchangeAmount, dealBaseRate);
 
         return (long) (differenceRate * exchangeAmount);
     }
