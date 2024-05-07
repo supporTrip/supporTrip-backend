@@ -1,6 +1,6 @@
 package com.supportrip.core.insurance.service;
 
-import com.supportrip.core.system.core.mydata.internal.application.InsuranceClientService;
+import com.supportrip.core.system.core.mydata.external.InsuranceClient;
 import com.supportrip.core.system.core.insurance.internal.domain.FlightInsurance;
 import com.supportrip.core.system.core.insurance.internal.domain.InsuranceCompany;
 import com.supportrip.core.system.core.insurance.internal.domain.InsuranceSubscription;
@@ -57,7 +57,7 @@ class FlightInsuranceServiceTest {
     private UserCIRepository userCIRepository;
 
     @Mock
-    private InsuranceClientService insuranceClientService;
+    private InsuranceClient insuranceClient;
 
     @InjectMocks //의존성 주입
     private FlightInsuranceService flightInsuranceService;

@@ -5,7 +5,7 @@ import com.supportrip.core.system.core.insurance.internal.domain.FlightInsurance
 import com.supportrip.core.system.core.insurance.internal.domain.InsuranceCompany;
 import com.supportrip.core.system.core.insurance.internal.domain.InsuranceCompanyRepository;
 import com.supportrip.core.system.core.insurance.internal.presentation.response.*;
-import com.supportrip.core.system.core.mydata.internal.application.InsuranceClientService;
+import com.supportrip.core.system.core.mydata.external.InsuranceClient;
 import com.supportrip.core.system.core.user.internal.domain.User;
 import com.supportrip.core.system.core.user.internal.domain.UserCI;
 import com.supportrip.core.system.core.user.internal.domain.UserCIRepository;
@@ -21,7 +21,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class InsuranceService {
     private final UserCIRepository userCIRepository;
-    private final InsuranceClientService insuranceClientService;
+    private final InsuranceClient insuranceClient;
     private final FlightInsuranceRepository flightInsuranceRepository;
     private final InsuranceCompanyRepository insuranceCompanyRepository;
     private final FlightInsuranceCalculatePremiumService flightInsuranceCalculatePremiumService;
@@ -34,7 +34,7 @@ public class InsuranceService {
         List<InsuranceResponse> insuranceResponses = new ArrayList<>();
 
         for (InsuranceCorporationResponse insuranceCorporationResponse : corporations) {
-            List<InsuranceResponse> insurances = insuranceClientService.getInsured(userCI.getToken(), insuranceCorporationResponse.getOrg_code(), "14").getInsuranceList();
+            List<InsuranceResponse> insurances = insuranceClient.getInsured(userCI.getToken(), insuranceCorporationResponse.getOrg_code(), "14").getInsuranceList();
             insuranceResponses.addAll(insurances);
         }
 
@@ -83,7 +83,7 @@ public class InsuranceService {
             insurances = flightInsuranceRepository.findTop3ByOrderByPremiumAsc();
         } else {
             for (InsuranceCorporationResponse insuranceCorporationResponse : corporations) {
-                List<InsuranceResponse> insurancesFromAPI = insuranceClientService.getInsured(token, insuranceCorporationResponse.getOrg_code(), "14").getInsuranceList();
+                List<InsuranceResponse> insurancesFromAPI = insuranceClient.getInsured(token, insuranceCorporationResponse.getOrg_code(), "14").getInsuranceList();
                 for (InsuranceResponse insuranceResponse : insurancesFromAPI) {
                     InsuranceCompany insuranceCompany = insuranceCompanyRepository.findByName(insuranceResponse.getCorporationName());
                     insurances.add(flightInsuranceRepository.findByInsuranceCompany(insuranceCompany));
@@ -105,7 +105,7 @@ public class InsuranceService {
     }
 
     public List<InsuranceCorporationResponse> getCorporations(UserCI userCI) {
-        InsuranceCorporationListResponse corporationList = insuranceClientService.getInsuredCorporation(userCI.getToken());
+        InsuranceCorporationListResponse corporationList = insuranceClient.getInsuredCorporation(userCI.getToken());
 
         return corporationList.getCorporationList();
     }

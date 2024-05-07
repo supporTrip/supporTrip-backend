@@ -1,6 +1,5 @@
 package com.supportrip.core.system.core.mydata.external;
 
-import com.supportrip.core.context.config.FeignClientConfig;
 import com.supportrip.core.system.core.mydata.external.response.UserCardApprovalListResponse;
 import com.supportrip.core.system.core.mydata.external.response.UserCardListResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 
 @FeignClient(value = "card-service", url = "${mydata.api.card}")
-public interface CardFeignClient {
+public interface MyDataCardAPI {
     @GetMapping("/cards")
     UserCardListResponse getCardList(@RequestParam(value = "token") String token);
 

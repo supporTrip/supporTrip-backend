@@ -1,13 +1,10 @@
 package com.supportrip.core.context.config;
 
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.SlidingWindowType;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
-import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
-import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
 import io.github.resilience4j.retry.RetryRegistry;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -19,10 +16,8 @@ import java.time.Duration;
 @Configuration
 @EnableFeignClients(basePackages = "com.supportrip.core")
 public class FeignClientConfig {
-    private static final String CLIENT_NAME = "myData";
-
     @Bean
-    public CircuitBreaker circuitBreaker() {
+    public CircuitBreakerRegistry circuitBreakerRegistry() {
         return CircuitBreakerRegistry.custom()
                 .withCircuitBreakerConfig(
                         CircuitBreakerConfig.custom()
@@ -31,12 +26,11 @@ public class FeignClientConfig {
                                 .waitDurationInOpenState(Duration.ofMinutes(1))
                                 .build()
                 )
-                .build()
-                .circuitBreaker(CLIENT_NAME);
+                .build();
     }
 
     @Bean
-    public RateLimiter rateLimiter() {
+    public RateLimiterRegistry rateLimiterRegistry() {
         return RateLimiterRegistry.custom()
                 .withRateLimiterConfig(
                         RateLimiterConfig.custom()
@@ -45,12 +39,11 @@ public class FeignClientConfig {
                                 .timeoutDuration(Duration.ofMillis(700))
                                 .build()
                 )
-                .build()
-                .rateLimiter(CLIENT_NAME);
+                .build();
     }
 
     @Bean
-    public Retry retry() {
+    public RetryRegistry retryRegistry() {
         return RetryRegistry.custom()
                 .withRetryConfig(
                         RetryConfig.custom()
@@ -58,7 +51,6 @@ public class FeignClientConfig {
                                 .waitDuration(Duration.ofMillis(2500))
                                 .build()
                 )
-                .build()
-                .retry(CLIENT_NAME);
+                .build();
     }
 }

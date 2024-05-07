@@ -6,7 +6,7 @@ import com.supportrip.core.context.error.exception.notfound.UserNotFoundExceptio
 import com.supportrip.core.system.core.insurance.internal.domain.*;
 import com.supportrip.core.system.core.insurance.internal.presentation.request.*;
 import com.supportrip.core.system.core.insurance.internal.presentation.response.*;
-import com.supportrip.core.system.core.mydata.internal.application.InsuranceClientService;
+import com.supportrip.core.system.core.mydata.external.InsuranceClient;
 import com.supportrip.core.system.core.user.internal.domain.Gender;
 import com.supportrip.core.system.core.user.internal.domain.User;
 import com.supportrip.core.system.core.user.internal.domain.UserCIRepository;
@@ -32,7 +32,7 @@ public class FlightInsuranceService {
     private final UserRepository userRepository;
     private final InsuranceSubscriptionRepository subscriptionRepository;
     private final InsuranceCompanyRepository insuranceCompanyRepository;
-    private final InsuranceClientService insuranceClientService;
+    private final InsuranceClient insuranceClient;
     private final UserCIRepository userCIRepository;
 
     /**
@@ -207,7 +207,7 @@ public class FlightInsuranceService {
         String token = userCIRepository.findByUser(user).getToken();
         SendInsuranceRequest sendInsuranceRequest = SendInsuranceRequest.of(flightInsurance.getInsuranceCompany().getName(), flightInsurance.getName(), Integer.toUnsignedLong(request.getTotalPremium()), LocalDate.now());
 
-        insuranceClientService.sendInsuredTransaction(token, sendInsuranceRequest);
+        insuranceClient.sendInsuredTransaction(token, sendInsuranceRequest);
 
         return insuranceSubscription;
     }
