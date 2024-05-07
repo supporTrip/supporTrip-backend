@@ -1,8 +1,9 @@
 package com.supportrip.core.insurance.service;
 
-import com.supportrip.core.insurance.domain.FlightInsurance;
-import com.supportrip.core.insurance.domain.InsuranceCompany;
-import com.supportrip.core.user.domain.Gender;
+import com.supportrip.core.system.core.insurance.internal.domain.FlightInsurance;
+import com.supportrip.core.system.core.insurance.internal.domain.InsuranceCompany;
+import com.supportrip.core.system.core.insurance.internal.application.FlightInsuranceCalculatePremiumService;
+import com.supportrip.core.system.core.user.internal.domain.Gender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

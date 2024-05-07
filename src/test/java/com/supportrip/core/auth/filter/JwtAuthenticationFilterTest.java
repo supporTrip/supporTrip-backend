@@ -1,9 +1,10 @@
 package com.supportrip.core.auth.filter;
 
-import com.supportrip.core.auth.dto.AuthPayload;
-import com.supportrip.core.auth.jwt.JwtProvider;
-import com.supportrip.core.user.domain.User;
-import com.supportrip.core.user.repository.UserRepository;
+import com.supportrip.core.system.core.auth.internal.domain.AuthPayload;
+import com.supportrip.core.system.core.auth.internal.presentation.JwtAuthenticationFilter;
+import com.supportrip.core.system.core.auth.internal.application.JwtProvider;
+import com.supportrip.core.system.core.user.internal.domain.User;
+import com.supportrip.core.system.core.user.internal.domain.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,9 +1,10 @@
 package com.supportrip.core.exchange.service;
 
-import com.supportrip.core.exchange.domain.Currency;
-import com.supportrip.core.exchange.domain.ExchangeRate;
-import com.supportrip.core.exchange.exception.OutdatedExchangeRateException;
-import com.supportrip.core.exchange.repository.ExchangeRateRepository;
+import com.supportrip.core.system.core.exchange.internal.domain.Currency;
+import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRate;
+import com.supportrip.core.context.error.exception.internalservererror.OutdatedExchangeRateException;
+import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRateRepository;
+import com.supportrip.core.system.core.exchange.internal.application.ExchangeRateService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

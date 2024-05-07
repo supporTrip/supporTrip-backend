@@ -1,7 +1,9 @@
 package com.supportrip.core.auth.kakao;
 
-import com.supportrip.core.auth.dto.KakaoPublicKeyResponse;
-import com.supportrip.core.auth.exception.OAuth2ProcessingException;
+import com.supportrip.core.context.error.exception.unauthorized.OAuth2ProcessingException;
+import com.supportrip.core.system.core.auth.external.kakao.KakaoAuthAPI;
+import com.supportrip.core.system.core.auth.external.kakao.response.KakaoPublicKeyResponse;
+import com.supportrip.core.system.core.auth.internal.application.KakaoPublicKeyManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

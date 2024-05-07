@@ -1,10 +1,11 @@
 package com.supportrip.core.auth.jwt;
 
-import com.supportrip.core.auth.dto.AuthPayload;
-import com.supportrip.core.auth.dto.OidcIdTokenPayload;
-import com.supportrip.core.auth.jwt.exception.ExpiredTokenException;
-import com.supportrip.core.auth.jwt.exception.InvalidTokenTypeException;
-import com.supportrip.core.auth.kakao.KakaoPublicKeyManager;
+import com.supportrip.core.context.error.exception.unauthorized.ExpiredTokenException;
+import com.supportrip.core.context.error.exception.unauthorized.InvalidTokenTypeException;
+import com.supportrip.core.system.core.auth.internal.application.JwtProvider;
+import com.supportrip.core.system.core.auth.internal.application.KakaoPublicKeyManager;
+import com.supportrip.core.system.core.auth.internal.domain.AuthPayload;
+import com.supportrip.core.system.core.auth.internal.domain.OidcIdTokenPayload;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;

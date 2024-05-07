@@ -1,14 +1,17 @@
 package com.supportrip.core.exchange.service;
 
-import com.supportrip.core.account.domain.PointWallet;
-import com.supportrip.core.account.service.PointWalletService;
-import com.supportrip.core.common.SmsService;
-import com.supportrip.core.exchange.domain.Currency;
-import com.supportrip.core.exchange.domain.ExchangeRate;
-import com.supportrip.core.exchange.domain.ExchangeTrading;
-import com.supportrip.core.user.domain.User;
-import com.supportrip.core.user.domain.UserNotificationStatus;
-import com.supportrip.core.user.repository.UserNotificationStatusRepository;
+import com.supportrip.core.system.core.account.internal.domain.PointWallet;
+import com.supportrip.core.system.core.account.internal.application.PointWalletService;
+import com.supportrip.core.system.common.external.SmsService;
+import com.supportrip.core.system.core.exchange.internal.domain.Currency;
+import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRate;
+import com.supportrip.core.system.core.exchange.internal.domain.ExchangeTrading;
+import com.supportrip.core.system.core.exchange.internal.application.ExchangeRateService;
+import com.supportrip.core.system.core.exchange.internal.application.ExchangeService;
+import com.supportrip.core.system.core.exchange.internal.application.TargetExchangeStrategyService;
+import com.supportrip.core.system.core.user.internal.domain.User;
+import com.supportrip.core.system.core.user.internal.domain.UserNotificationStatus;
+import com.supportrip.core.system.core.user.internal.domain.UserNotificationStatusRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,8 +24,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 
-import static com.supportrip.core.exchange.domain.TradingStatus.COMPLETED;
-import static com.supportrip.core.exchange.domain.TradingStrategy.TARGET;
+import static com.supportrip.core.system.core.exchange.internal.domain.TradingStatus.COMPLETED;
+import static com.supportrip.core.system.core.exchange.internal.domain.TradingStrategy.TARGET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.any;

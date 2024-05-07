@@ -1,6 +1,7 @@
 package com.supportrip.core.user.domain;
 
-import com.supportrip.core.user.exception.PhoneVerificationFailException;
+import com.supportrip.core.system.core.user.internal.domain.PhoneVerification;
+import com.supportrip.core.context.error.exception.badrequest.PhoneVerificationFailException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
