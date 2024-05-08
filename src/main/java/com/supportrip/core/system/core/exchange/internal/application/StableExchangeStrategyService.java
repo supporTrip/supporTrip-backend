@@ -124,7 +124,7 @@ public class StableExchangeStrategyService implements ExchangeStrategyService {
     }
 
     private static double calculateDifferenceRateInRange(double exchangeRateAverage, double dealBaseRate) {
-        final int MAX_AVAILABLE_RATE_RANGE = 20;
+        final double MAX_AVAILABLE_RATE_RANGE = 0.2;
 
         double differenceRate = (exchangeRateAverage - dealBaseRate) / exchangeRateAverage;
         if (differenceRate > MAX_AVAILABLE_RATE_RANGE) {
