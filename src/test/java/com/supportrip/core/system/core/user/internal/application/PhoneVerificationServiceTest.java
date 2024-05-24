@@ -17,7 +17,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -26,9 +25,6 @@ class PhoneVerificationServiceTest {
 
     @InjectMocks
     private PhoneVerificationService phoneVerificationService;
-
-    @Mock
-    private UserService userService;
 
     @Mock
     private PhoneVerificationRepository phoneVerificationRepository;
@@ -40,17 +36,15 @@ class PhoneVerificationServiceTest {
     @DisplayName("처음 휴대폰 인증을 진행하는 경우 PhoneVerification 객체를 새로 생성해 DB에 저장후 반환한다.")
     void createPhoneVerification() {
         // given
-        final Long USER_ID = 1L;
         final String VERIFICATION_CODE = "123123";
         final LocalDateTime NOW = LocalDateTime.now();
         User user = User.userOf(null, null, null, null, null, null);
 
-        given(userService.getUser(anyLong())).willReturn(user);
         given(phoneVerificationRepository.findByUser(any(User.class))).willReturn(Optional.empty());
         given(verificationCodeGenerator.generate()).willReturn(VERIFICATION_CODE);
 
         // when
-        PhoneVerification phoneVerification = phoneVerificationService.createOrRenewPhoneVerification(USER_ID, NOW);
+        PhoneVerification phoneVerification = phoneVerificationService.createOrRenewPhoneVerification(user, NOW);
 
         // then
         verify(phoneVerificationRepository).save(any(PhoneVerification.class));
@@ -63,7 +57,6 @@ class PhoneVerificationServiceTest {
     @DisplayName("이전에 휴대폰 인증을 진행한 적이 있는 경우 PhoneVerification을 갱신한 후 반환한다.")
     void renewPhoneVerification() {
         // given
-        final Long USER_ID = 1L;
         final String VERIFICATION_CODE = "123123";
         final String BEFORE_VERIFICATION_CODE = "111111";
         final LocalDateTime NOW = LocalDateTime.now();
@@ -71,12 +64,11 @@ class PhoneVerificationServiceTest {
         User user = User.userOf(null, null, null, null, null, null);
         PhoneVerification phoneVerification = PhoneVerification.of(user, BEFORE_VERIFICATION_CODE, BEFORE_EXPIRES_IN);
 
-        given(userService.getUser(anyLong())).willReturn(user);
         given(phoneVerificationRepository.findByUser(any(User.class))).willReturn(Optional.of(phoneVerification));
         given(verificationCodeGenerator.generate()).willReturn(VERIFICATION_CODE);
 
         // when
-        PhoneVerification renewPhoneVerification = phoneVerificationService.createOrRenewPhoneVerification(USER_ID, NOW);
+        PhoneVerification renewPhoneVerification = phoneVerificationService.createOrRenewPhoneVerification(user, NOW);
 
         // then
         assertThat(renewPhoneVerification.getCode()).isEqualTo(VERIFICATION_CODE);
@@ -87,18 +79,16 @@ class PhoneVerificationServiceTest {
     @DisplayName("휴대폰 인증이 완료되지 않은 경우 유효한 요청을 보내면 휴대폰 인증에 성공한다.")
     void verifyCodeSuccess() {
         // given
-        final Long USER_ID = 1L;
         final String VERIFICATION_CODE = "123123";
         final LocalDateTime NOW = LocalDateTime.now();
         final LocalDateTime EXPIRES_IN = NOW.plusMinutes(2);
         User user = User.userOf(null, null, null, null, null, null);
         PhoneVerification phoneVerification = PhoneVerification.of(user, VERIFICATION_CODE, EXPIRES_IN);
 
-        given(userService.getUser(anyLong())).willReturn(user);
         given(phoneVerificationRepository.findByUser(any(User.class))).willReturn(Optional.of(phoneVerification));
 
         // when
-        phoneVerificationService.verifyCode(USER_ID, VERIFICATION_CODE);
+        phoneVerificationService.verifyCode(user, VERIFICATION_CODE);
 
         // then
         assertThat(phoneVerification.getVerifiedAt()).isNotNull();
@@ -108,7 +98,6 @@ class PhoneVerificationServiceTest {
     @DisplayName("이미 휴대폰 인증이 완료된 경우 예외가 발생한다.")
     void verifyCodeFail() {
         // given
-        final Long USER_ID = 1L;
         final String VERIFICATION_CODE = "123123";
         final LocalDateTime NOW = LocalDateTime.now();
         final LocalDateTime EXPIRES_IN = NOW.plusMinutes(2);
@@ -117,11 +106,10 @@ class PhoneVerificationServiceTest {
 
         ReflectionTestUtils.setField(phoneVerification, "verifiedAt", NOW);
 
-        given(userService.getUser(anyLong())).willReturn(user);
         given(phoneVerificationRepository.findByUser(any(User.class))).willReturn(Optional.of(phoneVerification));
 
         // expected
-        assertThatThrownBy(() -> phoneVerificationService.verifyCode(USER_ID, VERIFICATION_CODE))
+        assertThatThrownBy(() -> phoneVerificationService.verifyCode(user, VERIFICATION_CODE))
                 .isInstanceOf(AlreadyVerifiedException.class);
     }
 }

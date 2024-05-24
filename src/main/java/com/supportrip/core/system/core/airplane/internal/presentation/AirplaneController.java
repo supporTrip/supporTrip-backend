@@ -23,11 +23,8 @@ public class AirplaneController {
     public CertificatePnrNumberResponse certificatePnrNumber(@AuthenticationPrincipal OidcUser oidcUser,
                                                              @RequestBody CertificatePnrNumberRequest request) {
         CertificatePnrNumberResponse response = airplaneService.certificatePnrNumber(request);
-        userLogService.appendUserLog(
-                oidcUser.getUserId(),
-                "User[ID=" + oidcUser.getUserId() + "] authenticated flight ticket with PNR number."
-        );
+        Long userId = oidcUser.getUser().getId();
+        userLogService.appendUserLog(userId, "User[ID=" + userId + "] authenticated flight ticket with PNR number.");
         return response;
     }
-
 }

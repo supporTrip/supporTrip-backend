@@ -1,9 +1,9 @@
 package com.supportrip.core.system.core.account.internal.presentation;
 
+import com.supportrip.core.system.core.account.internal.application.AccountService;
 import com.supportrip.core.system.core.account.internal.presentation.request.GenerateForeignAccountRequest;
 import com.supportrip.core.system.core.account.internal.presentation.response.ForeignAccountInfoListResponse;
 import com.supportrip.core.system.core.account.internal.presentation.response.GenerateForeignAccountResponse;
-import com.supportrip.core.system.core.account.internal.application.AccountService;
 import com.supportrip.core.system.core.auth.internal.domain.OidcUser;
 import com.supportrip.core.system.core.userlog.internal.application.UserLogService;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,14 @@ public class AccountController {
     @PostMapping("/foreign")
     public GenerateForeignAccountResponse generateForeignAccount(@AuthenticationPrincipal OidcUser oidcUser,
                                                                  @RequestBody GenerateForeignAccountRequest request) {
-        Long userId = oidcUser.getUserId();
-        GenerateForeignAccountResponse response = accountService.generateForeignAccount(userId, request);
+        Long userId = oidcUser.getUser().getId();
+        GenerateForeignAccountResponse response = accountService.generateForeignAccount(oidcUser.getUser(), request);
         userLogService.appendUserLog(userId, "User[ID=" + userId + "] has created a new foreign currency account.");
         return response;
     }
 
     @GetMapping("/details")
     public ForeignAccountInfoListResponse getForeignAccountInfo(@AuthenticationPrincipal OidcUser oidcUser) {
-        return accountService.getForeignAccountInfo(oidcUser.getUserId());
+        return accountService.getForeignAccountInfo(oidcUser.getUser());
     }
 }

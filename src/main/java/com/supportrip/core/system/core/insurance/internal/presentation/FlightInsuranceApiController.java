@@ -28,7 +28,6 @@ import java.util.List;
 public class FlightInsuranceApiController {
     private final FlightInsuranceService flightInsuranceService;
     private final UserLogService userLogService;
-    private final UserService userService;
     private final InsuranceService insuranceService;
 
     @GetMapping("/api/v1/flight-insurances/search")
@@ -39,10 +38,8 @@ public class FlightInsuranceApiController {
         if (oidcUser == null) {
             userLogService.appendAnonymousUserLog("Anonymous User searched with " + request);
         } else {
-            userLogService.appendUserLog(
-                    oidcUser.getUserId(),
-                    "User[ID=" + oidcUser.getUserId() + "] searched with " + request
-            );
+            Long userId = oidcUser.getUser().getId();
+            userLogService.appendUserLog(userId, "User[ID=" + userId + "] searched with " + request);
         }
 
         return ResponseEntity.ok(flightInsurances);
@@ -57,10 +54,8 @@ public class FlightInsuranceApiController {
         if (oidcUser == null) {
             userLogService.appendAnonymousUserLog("Anonymous User searched with " + request);
         } else {
-            userLogService.appendUserLog(
-                    oidcUser.getUserId(),
-                    "User[ID=" + oidcUser.getUserId() + "] looked up FlightInsurance[ID=" + flightInsuranceId + "]"
-            );
+            Long userId = oidcUser.getUser().getId();
+            userLogService.appendUserLog(userId, "User[ID=" + userId + "] looked up FlightInsurance[ID=" + flightInsuranceId + "]");
         }
 
         return ResponseEntity.ok(flightInsuranceDetail);
@@ -69,8 +64,8 @@ public class FlightInsuranceApiController {
     @PostMapping("/api/v1/flight-insurance-subscriptions")
     public ResponseEntity<SimpleIdResponse> insuranceSubscription(@AuthenticationPrincipal OidcUser oidcUser,
                                                                   @Valid @RequestBody SubscriptionRequest request) {
-        Long userId = oidcUser.getUserId();
-        InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(userId, request);
+        InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(oidcUser.getUser(), request);
+        Long userId = oidcUser.getUser().getId();
         userLogService.appendUserLog(userId,
                 "User[ID=" + userId + "] subscribe FlightInsurance[ID=" + request.getFlightInsuranceId() + "]");
 
@@ -82,7 +77,6 @@ public class FlightInsuranceApiController {
     public RecomandInsuranceListResponse getRecomandInsuranceList(@AuthenticationPrincipal OidcUser oidcUser,
                                                                   @RequestParam(name = "departAt") LocalDateTime departAt,
                                                                   @RequestParam(name = "arrivalAt") LocalDateTime arrivalAt) {
-        User user = userService.getUser(oidcUser.getUserId());
-        return insuranceService.getRecomandInsuranceList(user, departAt, arrivalAt);
+        return insuranceService.getRecomandInsuranceList(oidcUser.getUser(), departAt, arrivalAt);
     }
 }

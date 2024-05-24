@@ -1,18 +1,10 @@
 package com.supportrip.core.system.core.account.internal.application;
 
-import com.supportrip.core.system.core.account.internal.domain.LinkedAccount;
-import com.supportrip.core.system.core.account.internal.domain.PointTransaction;
-import com.supportrip.core.system.core.account.internal.domain.PointWallet;
+import com.supportrip.core.context.error.exception.badrequest.NotEnoughPointException;
 import com.supportrip.core.context.error.exception.notfound.LinkedAccountNotFoundException;
 import com.supportrip.core.context.error.exception.notfound.PointWalletNotFoundException;
-import com.supportrip.core.system.core.account.internal.domain.PointTransactionRepository;
-import com.supportrip.core.system.core.account.internal.domain.LinkedAccountRepository;
-import com.supportrip.core.system.core.account.internal.domain.PointWalletRepository;
-import com.supportrip.core.context.error.exception.badrequest.NotEnoughPointException;
-import com.supportrip.core.system.core.account.internal.domain.PointTransactionType;
+import com.supportrip.core.system.core.account.internal.domain.*;
 import com.supportrip.core.system.core.user.internal.domain.User;
-import com.supportrip.core.context.error.exception.notfound.UserNotFoundException;
-import com.supportrip.core.system.core.user.internal.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,15 +14,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PointWalletService {
-    private final UserRepository userRepository;
     private final PointWalletRepository pointWalletRepository;
     private final PointTransactionRepository pointTransactionRepository;
     private final LinkedAccountRepository linkedAccountRepository;
-
-    public PointWallet getPointWallet(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        return getPointWallet(user);
-    }
 
     public PointWallet getPointWallet(User user) {
         return pointWalletRepository.findByUser(user).orElseThrow(PointWalletNotFoundException::new);

@@ -32,7 +32,7 @@ public class AuthController {
 
     @GetMapping("/api/v1/auth/logout")
     public void logout(@AuthenticationPrincipal OidcUser oidcUser) {
-        Long userId = oidcUser.getUserId();
+        Long userId = oidcUser.getUser().getId();
         authService.logout(userId);
         userLogService.appendUserLog(userId, "User[ID=" + userId + "]  logged out successfully.");
     }

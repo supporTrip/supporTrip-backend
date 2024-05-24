@@ -2,7 +2,6 @@ package com.supportrip.core.system.core.insurance.internal.application;
 
 import com.supportrip.core.context.error.exception.notfound.NotFoundFlightInsuranceException;
 import com.supportrip.core.context.error.exception.notfound.NotFoundInsuranceCompanyException;
-import com.supportrip.core.context.error.exception.notfound.UserNotFoundException;
 import com.supportrip.core.system.core.insurance.internal.domain.*;
 import com.supportrip.core.system.core.insurance.internal.presentation.request.*;
 import com.supportrip.core.system.core.insurance.internal.presentation.response.*;
@@ -10,7 +9,6 @@ import com.supportrip.core.system.core.mydata.external.InsuranceClient;
 import com.supportrip.core.system.core.user.internal.domain.Gender;
 import com.supportrip.core.system.core.user.internal.domain.User;
 import com.supportrip.core.system.core.user.internal.domain.UserCIRepository;
-import com.supportrip.core.system.core.user.internal.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,7 +27,6 @@ public class FlightInsuranceService {
     private final FlightInsuranceRepository flightInsuranceRepository;
     private final FlightInsuranceCalculatePremiumService calculatePremiumService;
     private final SpecialContractRepository specialContractRepository;
-    private final UserRepository userRepository;
     private final InsuranceSubscriptionRepository subscriptionRepository;
     private final InsuranceCompanyRepository insuranceCompanyRepository;
     private final InsuranceClient insuranceClient;
@@ -192,9 +189,7 @@ public class FlightInsuranceService {
      * 보험 신청이력 저장
      */
     @Transactional
-    public InsuranceSubscription insuranceSubscription(Long userId, SubscriptionRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public InsuranceSubscription insuranceSubscription(User user, SubscriptionRequest request) {
         FlightInsurance flightInsurance = flightInsuranceRepository.findById(request.getFlightInsuranceId())
                 .orElseThrow(NotFoundFlightInsuranceException::new);
 
@@ -215,9 +210,7 @@ public class FlightInsuranceService {
     /**
      * 관리자 보험 전체조회
      */
-    public List<AdminFlightInsuranceResponse> findFlightInsurances(Long userId) {
-        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public List<AdminFlightInsuranceResponse> findFlightInsurances() {
         List<FlightInsurance> flightInsurances = flightInsuranceRepository.findAll();
         List<AdminFlightInsuranceResponse> responses = new ArrayList<>();
         for (FlightInsurance flightInsurance : flightInsurances) {
@@ -237,9 +230,7 @@ public class FlightInsuranceService {
      * 관리자 보험사, 보험상품, 특약 생성
      */
     @Transactional
-    public FlightInsurance create(Long userId, AdminFlightInsuranceRequest request) {
-        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public FlightInsurance create(AdminFlightInsuranceRequest request) {
         InsuranceCompany company = InsuranceCompany.create(request.getInsuranceCompany().getName(), request.getInsuranceCompany().getLogoImageUrl(), request.getInsuranceCompany().getInsuranceCompanyUrl());
         InsuranceCompany insuranceCompany = insuranceCompanyRepository.save(company);
 
@@ -260,8 +251,7 @@ public class FlightInsuranceService {
      * 관리자 보험사, 보험상품, 특약 수정
      */
     @Transactional
-    public AdminFlightInsuranceResponse update(Long userId, AdminFlightInsuranceRequest request) {
-        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public AdminFlightInsuranceResponse update(AdminFlightInsuranceRequest request) {
         InsuranceCompany insuranceCompany = insuranceCompanyRepository.findById(request.getInsuranceCompany().getId()).orElseThrow(NotFoundInsuranceCompanyException::new);
         FlightInsurance flightInsurance = flightInsuranceRepository.findById(request.getId()).orElseThrow(NotFoundFlightInsuranceException::new);
 
@@ -293,9 +283,7 @@ public class FlightInsuranceService {
      * 보험상품 삭제(연관된 특약도 전부 제거)
      */
     @Transactional
-    public void delete(Long userId, Long flightInsuranceId) {
-        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public void delete(Long flightInsuranceId) {
         FlightInsurance flightInsurance = flightInsuranceRepository.findById(flightInsuranceId).orElseThrow(NotFoundFlightInsuranceException::new);
         List<SpecialContract> specialContracts = specialContractRepository.findByFlightInsuranceId(flightInsuranceId);
         for (SpecialContract specialContract : specialContracts) {
@@ -309,9 +297,7 @@ public class FlightInsuranceService {
     /**
      * 관리자 특정 보험 조회
      */
-    public AdminFlightInsuranceResponse findInsurance(Long userId, Long flightInsuranceId) {
-        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public AdminFlightInsuranceResponse findInsurance(Long flightInsuranceId) {
         FlightInsurance flightInsurance = flightInsuranceRepository.findById(flightInsuranceId).orElseThrow(NotFoundFlightInsuranceException::new);
         List<SpecialContract> specialContracts = specialContractRepository.findByFlightInsuranceId(flightInsuranceId);
 

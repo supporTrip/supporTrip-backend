@@ -1,26 +1,17 @@
 package com.supportrip.core.system.core.account.internal.application;
 
-import com.supportrip.core.system.core.account.internal.domain.Bank;
-import com.supportrip.core.system.core.account.internal.domain.ForeignAccount;
-import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransaction;
-import com.supportrip.core.system.core.account.internal.domain.ForeignCurrencyWallet;
+import com.supportrip.core.context.error.exception.badrequest.ForeignAccountDuplicateException;
+import com.supportrip.core.system.core.account.internal.domain.*;
 import com.supportrip.core.system.core.account.internal.presentation.request.GenerateForeignAccountRequest;
 import com.supportrip.core.system.core.account.internal.presentation.response.ForeignAccountInfoListResponse;
 import com.supportrip.core.system.core.account.internal.presentation.response.ForeignAccountInfoResponse;
 import com.supportrip.core.system.core.account.internal.presentation.response.ForeignAccountTransactionDetailResponse;
 import com.supportrip.core.system.core.account.internal.presentation.response.GenerateForeignAccountResponse;
-import com.supportrip.core.context.error.exception.badrequest.ForeignAccountDuplicateException;
-import com.supportrip.core.system.core.account.internal.domain.ForeignAccountRepository;
-import com.supportrip.core.system.core.account.internal.domain.ForeignAccountTransactionRepository;
-import com.supportrip.core.system.core.account.internal.domain.ForeignCurrencyWalletRepository;
-import com.supportrip.core.system.core.account.internal.domain.BankRepository;
 import com.supportrip.core.system.core.exchange.internal.domain.Country;
-import com.supportrip.core.system.core.exchange.internal.domain.Currency;
 import com.supportrip.core.system.core.exchange.internal.domain.CountryRepository;
+import com.supportrip.core.system.core.exchange.internal.domain.Currency;
 import com.supportrip.core.system.core.exchange.internal.domain.CurrencyRepository;
 import com.supportrip.core.system.core.user.internal.domain.User;
-import com.supportrip.core.context.error.exception.notfound.UserNotFoundException;
-import com.supportrip.core.system.core.user.internal.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +22,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AccountService {
-    private final UserRepository userRepository;
     private final BankRepository bankRepository;
     private final ForeignAccountRepository foreignAccountRepository;
     private final ForeignCurrencyWalletRepository foreignCurrencyWalletRepository;
@@ -39,10 +29,7 @@ public class AccountService {
     private final CurrencyRepository currencyRepository;
     private final CountryRepository countryRepository;
 
-    public GenerateForeignAccountResponse generateForeignAccount(Long userId, GenerateForeignAccountRequest generateForeignAccountRequest) {
-
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public GenerateForeignAccountResponse generateForeignAccount(User user, GenerateForeignAccountRequest generateForeignAccountRequest) {
         if (foreignAccountRepository.findByUser(user).isPresent())
             throw new ForeignAccountDuplicateException();
 
@@ -60,10 +47,7 @@ public class AccountService {
         return GenerateForeignAccountResponse.of(foreignAccount.getId());
     }
 
-    public ForeignAccountInfoListResponse getForeignAccountInfo(Long userId) {
-
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public ForeignAccountInfoListResponse getForeignAccountInfo(User user) {
         Optional<ForeignAccount> optionalForeignAccount = foreignAccountRepository.findByUser(user);
         if (optionalForeignAccount.isEmpty()) {
             return ForeignAccountInfoListResponse.of(false, null);
