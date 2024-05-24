@@ -43,9 +43,9 @@ public class KoreaExImExchangeRateClient {
 
     @NotNull
     private List<KoreaExImExchangeRateResponse> fetchExchangeRateFromKoreaExIm(LocalDate searchDate) {
-        String searchdate = searchDate != null ? DateTimeFormatter.ISO_LOCAL_DATE.format(searchDate) : null;
+        String date = searchDate != null ? DateTimeFormatter.ISO_LOCAL_DATE.format(searchDate) : null;
 
-        List<KoreaExImExchangeRateResponse> response = koreaExImExchangeRateAPI.fetchExchangeRate(authKey, data, searchdate);
+        List<KoreaExImExchangeRateResponse> response = koreaExImExchangeRateAPI.fetchExchangeRate(authKey, data, date);
         log.info("Fetched {} exchange rates from koreaExIm at {}", response.size(), LocalDateTime.now());
         return response;
     }
