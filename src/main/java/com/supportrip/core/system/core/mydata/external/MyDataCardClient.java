@@ -3,7 +3,6 @@ package com.supportrip.core.system.core.mydata.external;
 import com.supportrip.core.system.core.mydata.external.response.UserCardApprovalListResponse;
 import com.supportrip.core.system.core.mydata.external.response.UserCardListResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
-import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.github.resilience4j.retry.RetryRegistry;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +14,8 @@ public class MyDataCardClient extends MyDataClient {
 
     public MyDataCardClient(MyDataCardAPI myDataCardAPI,
                             CircuitBreakerRegistry circuitBreakerRegistry,
-                            RateLimiterRegistry rateLimiterRegistry,
                             RetryRegistry retryRegistry) {
-        super(circuitBreakerRegistry, rateLimiterRegistry, retryRegistry);
+        super(circuitBreakerRegistry, retryRegistry);
         this.myDataCardAPI = myDataCardAPI;
     }
 
