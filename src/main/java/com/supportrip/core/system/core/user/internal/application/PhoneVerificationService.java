@@ -1,10 +1,10 @@
 package com.supportrip.core.system.core.user.internal.application;
 
-import com.supportrip.core.system.core.user.internal.domain.PhoneVerificationRepository;
-import com.supportrip.core.system.core.user.internal.domain.PhoneVerification;
-import com.supportrip.core.system.core.user.internal.domain.User;
 import com.supportrip.core.context.error.exception.badrequest.AlreadyVerifiedException;
 import com.supportrip.core.context.error.exception.notfound.PhoneVerificationNotFoundException;
+import com.supportrip.core.system.core.user.internal.domain.PhoneVerification;
+import com.supportrip.core.system.core.user.internal.domain.PhoneVerificationRepository;
+import com.supportrip.core.system.core.user.internal.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +19,11 @@ import java.util.Optional;
 public class PhoneVerificationService {
     private static final TemporalAmount EXPIRE_DURATION = Duration.ofMinutes(2);
 
-    private final UserService userService;
     private final PhoneVerificationRepository phoneVerificationRepository;
     private final VerificationCodeGenerator verificationCodeGenerator;
 
     @Transactional
-    public PhoneVerification createOrRenewPhoneVerification(Long userId, LocalDateTime now) {
-        User user = userService.getUser(userId);
-
+    public PhoneVerification createOrRenewPhoneVerification(User user, LocalDateTime now) {
         Optional<PhoneVerification> phoneVerificationOptional = phoneVerificationRepository.findByUser(user);
         if (phoneVerificationOptional.isPresent()) {
             PhoneVerification phoneVerification = phoneVerificationOptional.get();
@@ -38,9 +35,7 @@ public class PhoneVerificationService {
     }
 
     @Transactional
-    public void verifyCode(Long userId, String code) {
-        User user = userService.getUser(userId);
-
+    public void verifyCode(User user, String code) {
         PhoneVerification phoneVerification = phoneVerificationRepository.findByUser(user)
                 .orElseThrow(PhoneVerificationNotFoundException::new);
 

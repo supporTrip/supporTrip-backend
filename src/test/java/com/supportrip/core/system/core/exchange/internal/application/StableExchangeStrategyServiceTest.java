@@ -91,7 +91,7 @@ class StableExchangeStrategyServiceTest {
         verify(exchangeService).exchange(any(ExchangeTrading.class), exchangeAmountCaptor.capture());
 
         Long exchangeAmount = exchangeAmountCaptor.getValue();
-        assertThat(exchangeAmount).isEqualTo(41L);
+        assertThat(exchangeAmount).isEqualTo(39L);
     }
 
     @Test

@@ -15,9 +15,8 @@ public class InsuranceClient extends MyDataClient {
 
     public InsuranceClient(MyDataInsuranceAPI myDataInsuranceAPI,
                            CircuitBreakerRegistry circuitBreakerRegistry,
-                           RateLimiterRegistry rateLimiterRegistry,
                            RetryRegistry retryRegistry) {
-        super(circuitBreakerRegistry, rateLimiterRegistry, retryRegistry);
+        super(circuitBreakerRegistry, retryRegistry);
         this.myDataInsuranceAPI = myDataInsuranceAPI;
     }
 

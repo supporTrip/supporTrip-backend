@@ -43,9 +43,7 @@ public class UserService {
     private final UserCIRepository userCIRepository;
 
     @Transactional
-    public User signUp(Long userId, SignUpRequest request) {
-        User user = getUser(userId);
-
+    public User signUp(User user, SignUpRequest request) {
         if (!user.isInitialUser()) {
             throw new AlreadySignedUpUserException();
         }
@@ -175,17 +173,14 @@ public class UserService {
         return PointTransactionListResponse.of(userTotalPoint, pointTransactionRespons);
     }
 
-    public boolean verifyPinNumber(Long userId, String pinNumber) {
-        User user = getUser(userId);
+    public boolean verifyPinNumber(User user, String pinNumber) {
         return encryptService.matchCredentials(user.getPinNumber(), pinNumber);
     }
 
     /**
      * 관리자 페이지 유저목록 조회
      */
-    public List<AdminUserResponse> getUsers(Long userId) {
-        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public List<AdminUserResponse> getUsers() {
         List<AdminUserResponse> adminUserResponses = new ArrayList<>();
         List<User> users = userRepository.findAll();
         for (User user : users) {
@@ -200,18 +195,14 @@ public class UserService {
     /**
      * 관리자 페이지 유저 세부정보 조회
      */
-    public AdminUserDetailResponse getUserInfo(Long userId, Long id) {
-        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public AdminUserDetailResponse getUserInfo(Long id) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         UserNotificationStatus status = userNotificationStatusRepository.findById(id).orElseThrow(UserNotificationStatusNotFoundException::new);
         return AdminUserDetailResponse.of(user, status.getStatus());
     }
 
     @Transactional
-    public AdminUserEnabledUpdatedResponse userEnabledUpdate(Long userId, AdminUserEnabledUpdateRequest request) {
-        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public AdminUserEnabledUpdatedResponse userEnabledUpdate(AdminUserEnabledUpdateRequest request) {
         User user = userRepository.findById(request.getId()).orElseThrow(UserNotFoundException::new);
         user.enabledUpdate(request.isEnabled());
         return AdminUserEnabledUpdatedResponse.of(user);

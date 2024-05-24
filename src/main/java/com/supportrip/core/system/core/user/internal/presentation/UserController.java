@@ -36,16 +36,15 @@ public class UserController {
     @PutMapping("/api/v1/users/signup")
     public SimpleIdResponse signUp(@Valid @RequestBody SignUpRequest request,
                                    @AuthenticationPrincipal OidcUser oidcUser) {
-        Long userId = oidcUser.getUserId();
-        User user = userService.signUp(userId, request);
+        User user = userService.signUp(oidcUser.getUser(), request);
+        Long userId = user.getId();
         userLogService.appendUserLog(userId, "Signup successful for the new user: [ID=" + userId + "]");
         return SimpleIdResponse.from(user.getId());
     }
 
     @GetMapping("/api/v1/users")
     public UserInfoResponse getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
-        User user = userService.getUser(oidcUser.getUserId());
-        return UserInfoResponse.from(user);
+        return UserInfoResponse.from(oidcUser.getUser());
     }
 
     @PutMapping("/api/v1/users/phone-verification")
@@ -53,26 +52,26 @@ public class UserController {
                                           @RequestBody @Valid InitiatePhoneVerificationRequest request) {
         LocalDateTime now = LocalDateTime.now();
         PhoneVerification phoneVerification =
-                phoneVerificationService.createOrRenewPhoneVerification(oidcUser.getUserId(), now);
+                phoneVerificationService.createOrRenewPhoneVerification(oidcUser.getUser(), now);
         smsService.sendOne(makePhoneVerificationMessage(phoneVerification.getCode()), request.getSmsPhoneNumber());
     }
 
     @PatchMapping("/api/v1/users/phone-verification")
     public void verifyPhoneVerificationCode(@AuthenticationPrincipal OidcUser oidcUser,
                                             @RequestBody @Valid VerifyPhoneVerificationCodeRequest request) {
-        phoneVerificationService.verifyCode(oidcUser.getUserId(), request.getCode());
+        phoneVerificationService.verifyCode(oidcUser.getUser(), request.getCode());
     }
 
     @PostMapping("/api/v1/users/pin-number/verification")
     public PinNumberVerificationResponse verifyPinNumber(@AuthenticationPrincipal OidcUser oidcUser,
                                                          @RequestBody @Valid PinNumberVerificationRequest request) {
-        boolean success = userService.verifyPinNumber(oidcUser.getUserId(), request.getPinNumber());
+        boolean success = userService.verifyPinNumber(oidcUser.getUser(), request.getPinNumber());
         return PinNumberVerificationResponse.from(success);
     }
 
     @GetMapping("/api/v1/users/point")
     public CurrentUserPointResponse getCurrentUserPoint(@AuthenticationPrincipal OidcUser oidcUser) {
-        PointWallet pointWallet = pointWalletService.getPointWallet(oidcUser.getUserId());
+        PointWallet pointWallet = pointWalletService.getPointWallet(oidcUser.getUser());
         return CurrentUserPointResponse.from(pointWallet);
     }
 

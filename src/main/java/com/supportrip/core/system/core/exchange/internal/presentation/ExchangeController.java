@@ -20,16 +20,15 @@ public class ExchangeController {
 
     @GetMapping("/in-progress")
     public InProgressExchangeTradingsResponse getInProgressExchangeTradings(@AuthenticationPrincipal OidcUser oidcUser) {
-        return InProgressExchangeTradingsResponse.of(exchangeService.getInProgressExchangeTradings(oidcUser.getUserId()));
+        return InProgressExchangeTradingsResponse.of(exchangeService.getInProgressExchangeTradings(oidcUser.getUser()));
     }
 
     @PostMapping("/create")
-    public SimpleIdResponse createExchangeTrading(@AuthenticationPrincipal OidcUser oidcUser, @RequestBody CreateExchangeTradingRequest request) {
-        Long exchangeTradingId = exchangeService.createExchangeTrading(oidcUser.getUserId(), request);
-        userLogService.appendUserLog(
-                oidcUser.getUserId(),
-                "User[ID=" + oidcUser.getUserId() + "] initiated new exchange trading[ID=" + exchangeTradingId + "]."
-        );
+    public SimpleIdResponse createExchangeTrading(@AuthenticationPrincipal OidcUser oidcUser,
+                                                  @RequestBody CreateExchangeTradingRequest request) {
+        Long exchangeTradingId = exchangeService.createExchangeTrading(oidcUser.getUser(), request);
+        Long userId = oidcUser.getUser().getId();
+        userLogService.appendUserLog(userId, "User[ID=" + userId + "] initiated new exchange trading[ID=" + exchangeTradingId + "].");
         return SimpleIdResponse.from(exchangeTradingId);
     }
 

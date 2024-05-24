@@ -30,25 +30,12 @@ public class FeignClientConfig {
     }
 
     @Bean
-    public RateLimiterRegistry rateLimiterRegistry() {
-        return RateLimiterRegistry.custom()
-                .withRateLimiterConfig(
-                        RateLimiterConfig.custom()
-                                .limitRefreshPeriod(Duration.ofSeconds(1))
-                                .limitForPeriod(1)
-                                .timeoutDuration(Duration.ofMillis(700))
-                                .build()
-                )
-                .build();
-    }
-
-    @Bean
     public RetryRegistry retryRegistry() {
         return RetryRegistry.custom()
                 .withRetryConfig(
                         RetryConfig.custom()
-                                .maxAttempts(3)
-                                .waitDuration(Duration.ofMillis(2500))
+                                .maxAttempts(2)
+                                .waitDuration(Duration.ofMillis(5000))
                                 .build()
                 )
                 .build();

@@ -19,13 +19,11 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @MockitoSettings
 class UserServiceTest {
-    private static final Long USER_ID = 1L;
     private static final String NAME = "가나다";
     private static final String EMAIL = "aaaaa@gmail.com";
     private static final String PHONE_NUMBER = "010-0000-0000";
@@ -51,8 +49,8 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @Mock
-    private UserRepository userRepository;
+//    @Mock
+//    private UserRepository userRepository;
 
     @Mock
     private UserConsentStatusRepository userConsentStatusRepository;
@@ -90,12 +88,11 @@ class UserServiceTest {
         User initialUser = User.initialUserOf(PROFILE_IMAGE_URL);
         Bank bank = Bank.of(BANK_NAME, BANK_CODE, BANK_IMAGE_URL);
 
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(initialUser));
         given(bankRepository.findByCode(anyString())).willReturn(Optional.of(bank));
         given(encryptService.encryptCredentials(anyString())).willReturn(ENCRYPT_PIN_NUMBER);
 
         // when
-        User user = userService.signUp(USER_ID, request);
+        User user = userService.signUp(initialUser, request);
 
         // then
         assertThat(user.getName()).isEqualTo(NAME);
@@ -113,10 +110,8 @@ class UserServiceTest {
         SignUpRequest request = SignUpRequest.of(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         User signedUpUser = User.userOf(NAME, EMAIL, GENDER, PHONE_NUMBER, BIRTH_DAY, PROFILE_IMAGE_URL);
 
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(signedUpUser));
-
         // expected
-        assertThatThrownBy(() -> userService.signUp(USER_ID, request))
+        assertThatThrownBy(() -> userService.signUp(signedUpUser, request))
                 .isInstanceOf(AlreadySignedUpUserException.class);
     }
 }

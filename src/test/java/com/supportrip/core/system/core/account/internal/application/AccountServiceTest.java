@@ -6,7 +6,6 @@ import com.supportrip.core.system.core.exchange.internal.domain.Country;
 import com.supportrip.core.system.core.exchange.internal.domain.CountryRepository;
 import com.supportrip.core.system.core.exchange.internal.domain.Currency;
 import com.supportrip.core.system.core.user.internal.domain.User;
-import com.supportrip.core.system.core.user.internal.domain.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,9 +29,6 @@ class AccountServiceTest {
     private AccountService accountService;
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
     private ForeignAccountRepository foreignAccountRepository;
 
     @Mock
@@ -48,12 +44,11 @@ class AccountServiceTest {
     @DisplayName("외화 계좌가 없을때 hasAccount가 false, accountInfo가 null로 반환된다.")
     void foreignAccountNotExist() {
         // Given
-        Long userId = 1L;
-        when(userRepository.findById(userId)).thenReturn(Optional.of(User.initialUserOf("profile_img")));
+        User user = User.initialUserOf("profile_img");
         when(foreignAccountRepository.findByUser(any())).thenReturn(Optional.empty());
 
         // When
-        ForeignAccountInfoListResponse response = accountService.getForeignAccountInfo(userId);
+        ForeignAccountInfoListResponse response = accountService.getForeignAccountInfo(user);
 
         // Then
         assertFalse(response.getHasAccount());
@@ -63,7 +58,6 @@ class AccountServiceTest {
     @Test
     @DisplayName("외화 계좌가 있을 때, 계좌 존재여부, 각 거래내역을 반환해야 한다")
     void getforeignAccountInfo() {
-        Long userId = 1L;
         User user = User.initialUserOf("profile_img");
         Bank bank = Bank.of("우리은행", "WOORI", "bank_img");
         ForeignAccount foreignAccount = ForeignAccount.of(user, bank, "1111");
@@ -86,14 +80,13 @@ class AccountServiceTest {
         when(foreignAccountTransactionRepository.findByForeignCurrencyWalletOrderByCreatedAtDesc(any()))
                 .thenReturn(transactions);
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(foreignAccountRepository.findByUser(any())).thenReturn(Optional.of(foreignAccount));
         when(foreignCurrencyWalletRepository.findByForeignAccountAndTotalAmountGreaterThan(any(), anyLong()))
                 .thenReturn(walletList);
         when(countryRepository.findByCurrency(any(Currency.class))).thenReturn(country);
 
         // When
-        ForeignAccountInfoListResponse response = accountService.getForeignAccountInfo(userId);
+        ForeignAccountInfoListResponse response = accountService.getForeignAccountInfo(user);
 
         // Then
         assertTrue(response.getHasAccount());

@@ -1,16 +1,18 @@
 package com.supportrip.core.system.core.user.internal.application;
 
 import com.supportrip.core.context.error.exception.notfound.ExchangeRateNotFoundException;
-import com.supportrip.core.context.error.exception.notfound.UserNotFoundException;
 import com.supportrip.core.system.core.exchange.internal.domain.CountryRepository;
 import com.supportrip.core.system.core.exchange.internal.domain.Currency;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRate;
 import com.supportrip.core.system.core.exchange.internal.domain.ExchangeRateRepository;
+import com.supportrip.core.system.core.mydata.external.MyDataCardClient;
 import com.supportrip.core.system.core.mydata.external.response.UserCardApproval;
 import com.supportrip.core.system.core.mydata.external.response.UserCardApprovalListResponse;
 import com.supportrip.core.system.core.mydata.external.response.UserCardListResponse;
-import com.supportrip.core.system.core.mydata.external.MyDataCardClient;
-import com.supportrip.core.system.core.user.internal.domain.*;
+import com.supportrip.core.system.core.user.internal.domain.User;
+import com.supportrip.core.system.core.user.internal.domain.UserCI;
+import com.supportrip.core.system.core.user.internal.domain.UserCIRepository;
+import com.supportrip.core.system.core.user.internal.domain.UserCardApprovalStatus;
 import com.supportrip.core.system.core.user.internal.presentation.response.CountryRank;
 import com.supportrip.core.system.core.user.internal.presentation.response.CountryRankingResult;
 import com.supportrip.core.system.core.user.internal.presentation.response.OverSeasHistory;
@@ -26,13 +28,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserCardService {
     private final MyDataCardClient myDataCardClient;
-    private final UserRepository userRepository;
     private final UserCIRepository userCIRepository;
     private final ExchangeRateRepository exchangeRateRepository;
     private final CountryRepository countryRepository;
 
-    public OverseasListResponse getOverseasList(Long userId, LocalDate fromDate, LocalDate toDate) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public OverseasListResponse getOverseasList(User user, LocalDate fromDate, LocalDate toDate) {
         UserCI userCI = userCIRepository.findByUser(user);
 
         UserCardListResponse userCards = myDataCardClient.getCardList(userCI.getToken());

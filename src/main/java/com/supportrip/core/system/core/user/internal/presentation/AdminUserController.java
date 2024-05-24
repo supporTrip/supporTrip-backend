@@ -1,16 +1,14 @@
 package com.supportrip.core.system.core.user.internal.presentation;
 
-import com.supportrip.core.system.core.auth.internal.domain.OidcUser;
-import com.supportrip.core.system.core.user.internal.presentation.response.AdminUserDetailResponse;
+import com.supportrip.core.system.core.user.internal.application.UserService;
 import com.supportrip.core.system.core.user.internal.presentation.request.AdminUserEnabledUpdateRequest;
+import com.supportrip.core.system.core.user.internal.presentation.response.AdminUserDetailResponse;
 import com.supportrip.core.system.core.user.internal.presentation.response.AdminUserEnabledUpdatedResponse;
 import com.supportrip.core.system.core.user.internal.presentation.response.AdminUserResponse;
+import com.supportrip.core.system.core.userlog.internal.application.UserLogService;
 import com.supportrip.core.system.core.userlog.internal.domain.UserLog;
 import com.supportrip.core.system.core.userlog.internal.presentation.response.UserLogListResponse;
-import com.supportrip.core.system.core.userlog.internal.application.UserLogService;
-import com.supportrip.core.system.core.user.internal.application.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,20 +20,18 @@ public class AdminUserController {
     private final UserLogService userLogService;
 
     @GetMapping("/api/v1/admin/users")
-    public List<AdminUserResponse> adminGetUsersInfo(@AuthenticationPrincipal OidcUser oidcUser) {
-        return userService.getUsers(oidcUser.getUserId());
+    public List<AdminUserResponse> adminGetUsersInfo() {
+        return userService.getUsers();
     }
 
     @GetMapping("/api/v1/admin/users/{id}")
-    public AdminUserDetailResponse adminGetUserInfo(@AuthenticationPrincipal OidcUser oidcUser,
-                                                    @PathVariable("id") Long id) {
-        return userService.getUserInfo(oidcUser.getUserId(), id);
+    public AdminUserDetailResponse adminGetUserInfo(@PathVariable("id") Long id) {
+        return userService.getUserInfo(id);
     }
 
     @PutMapping("/api/v1/admin/users")
-    public AdminUserEnabledUpdatedResponse adminUserUpdate(@AuthenticationPrincipal OidcUser oidcUser,
-                                                           @RequestBody AdminUserEnabledUpdateRequest request) {
-        return userService.userEnabledUpdate(oidcUser.getUserId(), request);
+    public AdminUserEnabledUpdatedResponse adminUserUpdate(@RequestBody AdminUserEnabledUpdateRequest request) {
+        return userService.userEnabledUpdate(request);
     }
 
     @GetMapping("/api/v1/admin/users/{userId}/logs")

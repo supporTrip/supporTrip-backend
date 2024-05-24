@@ -70,9 +70,7 @@ public class ExchangeService {
         return (long) (toAmount * latestExchangeRate.getDealBaseRate());
     }
 
-    public List<ExchangeTradingResponse> getInProgressExchangeTradings(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public List<ExchangeTradingResponse> getInProgressExchangeTradings(User user) {
         if (foreignAccountRepository.findByUser(user).isEmpty()) {
             throw new ExchangeAccessDeniedException();
         }
@@ -92,9 +90,7 @@ public class ExchangeService {
     }
 
     @Transactional
-    public Long createExchangeTrading(Long userId, CreateExchangeTradingRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
+    public Long createExchangeTrading(User user, CreateExchangeTradingRequest request) {
         if (foreignAccountRepository.findByUser(user).isEmpty()) {
             throw new ExchangeAccessDeniedException();
         }

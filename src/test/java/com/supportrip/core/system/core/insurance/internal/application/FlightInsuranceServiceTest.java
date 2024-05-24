@@ -54,7 +54,6 @@ class FlightInsuranceServiceTest {
     @Test
     @DisplayName("필터링 보험 검색 조회")
     void findFlightInsuranceFilter() {
-
         InsuranceCompany insuranceCompany1 = InsuranceCompany.from("한화생명");
         InsuranceCompany insuranceCompany2 = InsuranceCompany.from("삼성생명");
 
@@ -77,8 +76,7 @@ class FlightInsuranceServiceTest {
 
         FlightInsurance mockCalExpected = FlightInsurance.of(insuranceCompany1, "한화생명 해외여행자 보험", 4440, 15, 60, true, true, true);
 
-        when(flightInsuranceRepository.findByAge(eq(25)))
-                .thenReturn(mockFlightInsurances);
+        when(flightInsuranceRepository.findByAge(eq(26))).thenReturn(mockFlightInsurances);
 
         SearchFlightInsuranceRequest request = SearchFlightInsuranceRequest.of(
                 LocalDateTime.of(2024, 4, 8, 10, 0),
@@ -124,12 +122,11 @@ class FlightInsuranceServiceTest {
                 true
         );
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(flightInsuranceRepository.findById(request.getFlightInsuranceId())).thenReturn(Optional.of(flightInsurance));
         when(userCIRepository.findByUser(user)).thenReturn(UserCI.of(user, "1234"));
 
         // When
-        InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(userId, request);
+        InsuranceSubscription insuranceSubscription = flightInsuranceService.insuranceSubscription(user, request);
 
         // Then
         verify(subscriptionRepository, times(1)).save(any(InsuranceSubscription.class));

@@ -10,14 +10,14 @@ import java.util.Collection;
 import java.util.Set;
 
 public class OidcUser implements UserDetails {
-    private final Long userId;
+    private final User user;
     private final Set<GrantedAuthority> authorities;
     private final boolean accountNonLocked;
     private final boolean enabled;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private OidcUser(Long userId, Set<GrantedAuthority> authorities, boolean accountNonLocked, boolean enabled) {
-        this.userId = userId;
+    private OidcUser(User user, Set<GrantedAuthority> authorities, boolean accountNonLocked, boolean enabled) {
+        this.user = user;
         this.authorities = authorities;
         this.accountNonLocked = accountNonLocked;
         this.enabled = enabled;
@@ -25,7 +25,7 @@ public class OidcUser implements UserDetails {
 
     public static OidcUser from(User user) {
         return OidcUser.builder()
-                .userId(user.getId())
+                .user(user)
                 .authorities(user.getAuthorities())
                 .accountNonLocked(user.isLocked())
                 .enabled(user.isEnabled())
@@ -44,7 +44,7 @@ public class OidcUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userId.toString();
+        return user.getId().toString();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class OidcUser implements UserDetails {
         return enabled;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 }
